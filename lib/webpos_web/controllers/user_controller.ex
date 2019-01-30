@@ -41,6 +41,17 @@ defmodule WebposWeb.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Settings.get_user!(id)
 
+    if user_params["password"] != nil do
+      user_params =
+        Map.put(
+          user_params,
+          "crypted_password",
+          Comeonin.Bcrypt.hashpwsalt(user_params["password"])
+        )
+
+      user_params = Map.put(user_params, "password", nil)
+    end
+
     case Settings.update_user(user, user_params) do
       {:ok, user} ->
         conn
@@ -103,8 +114,7 @@ defmodule WebposWeb.UserController do
       p2 = String.replace(crypted_password, "$2b", "$2y")
       user_params = %{password: p2}
 
-      changeset =
-        Webpos.Settings.User.changeset(user, user_params, Settings.current_user(conn), "Update")
+      changeset = Webpos.Settings.User.changeset(user, user_params)
 
       Webpos.Repo.update(changeset)
       password_not_set = true

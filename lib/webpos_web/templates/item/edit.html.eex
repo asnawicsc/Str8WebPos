@@ -1,0 +1,5 @@
+<h2>Edit Item</h2>
+
+<%= render "form.html", Map.put(assigns, :action, item_path(@conn, :update, @item)) %>
+
+<span><%= link "Back", to: item_path(@conn, :index,  Base.url_encode64(Settings.get_org_name(@conn))) %></span>

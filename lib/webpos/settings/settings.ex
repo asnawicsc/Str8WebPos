@@ -2,14 +2,24 @@ defmodule Webpos.Settings do
   @moduledoc """
   The Settings context.
   """
-
+  require IEx
   import Ecto.Query, warn: false
   alias Webpos.Repo
 
   alias Webpos.Settings.User
 
+  def get_org_id(conn) do
+    Repo.get(
+      Webpos.Settings.Organization,
+      Repo.get(User, conn.private.plug_session["user_id"]).organization_id
+    ).id
+  end
+
   def get_org_name(conn) do
-    conn.private.plug_session["organization"]
+    Repo.get(
+      Webpos.Settings.Organization,
+      Repo.get(User, conn.private.plug_session["user_id"]).organization_id
+    ).name
   end
 
   @doc """

@@ -1,0 +1,33 @@
+<h2>Show Item</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @item.name %>
+  </li>
+
+  <li>
+    <strong>Img url:</strong>
+    <%= @item.img_url %>
+  </li>
+
+  <li>
+    <strong>Code:</strong>
+    <%= @item.code %>
+  </li>
+
+  <li>
+    <strong>Desc:</strong>
+    <%= @item.desc %>
+  </li>
+
+  <li>
+    <strong>Customizations:</strong>
+    <%= @item.customizations %>
+  </li>
+
+</ul>
+<span><%= link "Combos", to: combo_path(@conn, :index, @item) %></span>
+<span><%= link "Edit", to: item_path(@conn, :edit, @item) %></span>
+<span><%= link "Back", to: item_path(@conn, :index, Base.url_encode64(Settings.get_org_name(@conn))) %></span>

@@ -15,11 +15,14 @@ defmodule WebposWeb.RestaurantController do
   end
 
   def create(conn, %{"restaurant" => restaurant_params}) do
+    restaurant_params = Map.put(restaurant_params, "organization_id", Settings.get_org_id(conn))
+
     case Settings.create_restaurant(restaurant_params) do
       {:ok, restaurant} ->
         conn
         |> put_flash(:info, "Restaurant created successfully.")
         |> redirect(to: restaurant_path(conn, :show, restaurant))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -27,7 +30,10 @@ defmodule WebposWeb.RestaurantController do
 
   def show(conn, %{"id" => id}) do
     restaurant = Settings.get_restaurant!(id)
-    render(conn, "show.html", restaurant: restaurant)
+
+    items = Menu.list_items(restaurant.organization_id)
+    categories = Enum.map(items, fn x -> x.category end) |> Enum.uniq()
+    render(conn, "show.html", items: items, restaurant: restaurant, categories: categories)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -38,12 +44,14 @@ defmodule WebposWeb.RestaurantController do
 
   def update(conn, %{"id" => id, "restaurant" => restaurant_params}) do
     restaurant = Settings.get_restaurant!(id)
+    restaurant_params = Map.put(restaurant_params, "organization_id", Settings.get_org_id(conn))
 
     case Settings.update_restaurant(restaurant, restaurant_params) do
       {:ok, restaurant} ->
         conn
         |> put_flash(:info, "Restaurant updated successfully.")
         |> redirect(to: restaurant_path(conn, :show, restaurant))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", restaurant: restaurant, changeset: changeset)
     end

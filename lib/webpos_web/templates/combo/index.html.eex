@@ -1,0 +1,32 @@
+<h2>Listing Combos</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Combo</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Category limit</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for combo <- @combos do %>
+    <tr>
+      <td><%= Repo.get(Item, combo.combo_id).name %></td>
+      <td><%= Repo.get(Item,combo.item_id ).name%></td>
+      <td><%= combo.category %></td>
+      <td><%= combo.category_limit %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: combo_path(@conn, :show, combo), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: combo_path(@conn, :edit, combo), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: combo_path(@conn, :delete, combo), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Combo", to: combo_path(@conn, :new, @conn.params["item_id"]) %></span>

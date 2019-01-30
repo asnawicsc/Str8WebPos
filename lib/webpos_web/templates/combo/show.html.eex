@@ -1,0 +1,28 @@
+<h2>Show Combo</h2>
+
+<ul>
+
+  <li>
+    <strong>Combo:</strong>
+    <%= @combo.combo_id %>
+  </li>
+
+  <li>
+    <strong>Item:</strong>
+    <%= @combo.item_id %>
+  </li>
+
+  <li>
+    <strong>Category:</strong>
+    <%= @combo.category %>
+  </li>
+
+  <li>
+    <strong>Category limit:</strong>
+    <%= @combo.category_limit %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: combo_path(@conn, :edit, @combo) %></span>
+<span><%= link "Back", to: combo_path(@conn, :index, @conn.params["item_id"]) %></span>

@@ -1,43 +1,106 @@
 <h2>Show Restaurant</h2>
-
-<ul>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @restaurant.name %>
-  </li>
-
-  <li>
-    <strong>Code:</strong>
-    <%= @restaurant.code %>
-  </li>
-
-  <li>
-    <strong>Key:</strong>
-    <%= @restaurant.key %>
-  </li>
-
-  <li>
-    <strong>Address:</strong>
-    <%= @restaurant.address %>
-  </li>
-
-  <li>
-    <strong>Tax:</strong>
-    <%= @restaurant.tax_id %>
-  </li>
-
-  <li>
-    <strong>Reg:</strong>
-    <%= @restaurant.reg_id %>
-  </li>
-
-  <li>
-    <strong>Tax code:</strong>
-    <%= @restaurant.tax_code %>
-  </li>
-
-</ul>
-
-<span><%= link "Edit", to: restaurant_path(@conn, :edit, @restaurant) %></span>
-<span><%= link "Back", to: restaurant_path(@conn, :index) %></span>
+<div class="row">
+  <div class="col-lg-3">
+    <div class="card card-primary">
+      <div class="card-body">
+        
+        <ul>
+          <li>
+            <strong>Name:</strong>
+            <%= @restaurant.name %>
+          </li>
+          <li>
+            <strong>Code:</strong>
+            <%= @restaurant.code %>
+          </li>
+          <li>
+            <strong>Key:</strong>
+            <%= @restaurant.key %>
+          </li>
+          <li>
+            <strong>Address:</strong>
+            <%= @restaurant.address %>
+          </li>
+          <li>
+            <strong>Tax:</strong>
+            <%= @restaurant.tax_id %>
+          </li>
+          <li>
+            <strong>Reg:</strong>
+            <%= @restaurant.reg_id %>
+          </li>
+          <li>
+            <strong>Tax code:</strong>
+            <%= @restaurant.tax_code %>
+          </li>
+        </ul>
+        <span><%= link "Edit", to: restaurant_path(@conn, :edit, @restaurant) %></span>
+        <span><%= link "Back", to: restaurant_path(@conn, :index) %></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card card-primary">
+      <div class="card-body">
+        <em class="fa-2x far fa-list-alt"></em>
+         <em class="fa-2x fas fa-table"></em>
+       
+       
+        <p><small>Here is all the menu items presented in the mobile app...</small></p>
+        <div role="tabpanel">
+          <!-- Nav tabs-->
+          <ul class="nav nav-tabs" role="tablist">
+            <%= for category_index <- @categories |> Enum.with_index do %>
+            <% category = elem(category_index, 0) %>
+            <li class="nav-item" role="presentation" >
+            <%= if elem(category_index, 1) == 0 do %>
+                <a class="nav-link active show" href="#<%= String.downcase(category) |> String.replace(" ", "_") %>" aria-controls="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tab" data-toggle="tab" ><%= category %></a>
+              <% else %>
+             <a class="nav-link" href="#<%= String.downcase(category) |> String.replace(" ", "_") %>" aria-controls="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tab" data-toggle="tab" ><%= category %></a>
+                <% end %>
+              </li>
+              <% end %>
+              
+            </ul>
+            <!-- Tab panes-->
+            <div class="tab-content">
+              <%= for category_index <- @categories |> Enum.with_index do %>
+              <% category = elem(category_index, 0) %>
+              <%= if elem(category_index, 1) == 0 do %>
+              <div class="tab-pane active show" id="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tabpanel">
+                <% else %>
+                 <div class="tab-pane " id="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tabpanel">
+                <% end %>
+                <div class="row">
+                  
+                  <%= for item <- @items |> Enum.filter(fn x -> x.category == category end)  do %>
+                  
+                  <div class="col-md-3">
+                    <!-- START card-->
+                    <div class="card">
+                      <div class="card-body text-center bg-gray-lighter">
+                        <p class="mb-3">
+                          <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                        </p>
+                        <p class="m-0 text-center">
+                          <strong>   <%= item.code %></strong>
+                           <strong>   <%= item.name %></strong>
+                             <%= item.desc %>
+                          
+                        </p>
+                      </div>
+                    </div>
+                    <!-- END card-->
+                  </div>
+                  <% end %>
+                </div>
+              </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+  </script>

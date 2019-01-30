@@ -26,6 +26,8 @@ defmodule WebposWeb do
       alias Webpos.Repo
       alias Webpos.Settings
       alias Webpos.Settings.{User, Organization, Restaurant}
+      alias Webpos.Menu
+      alias Webpos.Menu.{Item, Combo}
       import Ecto.Query
     end
   end
@@ -45,6 +47,13 @@ defmodule WebposWeb do
       import WebposWeb.Router.Helpers
       import WebposWeb.ErrorHelpers
       import WebposWeb.Gettext
+
+      alias Webpos.Repo
+      alias Webpos.Settings
+      alias Webpos.Settings.{User, Organization, Restaurant}
+      alias Webpos.Menu
+      alias Webpos.Menu.{Item, Combo}
+      import Ecto.Query
     end
   end
 

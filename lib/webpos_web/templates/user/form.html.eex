@@ -18,10 +18,12 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :crypted_password, class: "control-label" %>
-    <%= text_input f, :crypted_password, class: "form-control" %>
-    <%= error_tag f, :crypted_password %>
+    <%= label f, :organization_id, class: "control-label" %>
+    <%= select f, :organization_id, Repo.all(from o in Organization, select: {o.name, o.id}), class: "form-control" %>
+    <%= error_tag f, :organization_id %>
   </div>
+
+
 
   <div class="form-group">
     <%= label f, :email, class: "control-label" %>

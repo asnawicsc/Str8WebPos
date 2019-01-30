@@ -12,13 +12,25 @@ defmodule Webpos.Settings.Restaurant do
     field(:tax_id, :string)
     field(:tax_perc, :decimal)
     field(:serv, :decimal)
+    field(:organization_id, :integer)
     timestamps()
   end
 
   @doc false
   def changeset(restaurant, attrs) do
     restaurant
-    |> cast(attrs, [:tax_perc, :serv, :name, :code, :key, :address, :tax_id, :reg_id, :tax_code])
+    |> cast(attrs, [
+      :organization_id,
+      :tax_perc,
+      :serv,
+      :name,
+      :code,
+      :key,
+      :address,
+      :tax_id,
+      :reg_id,
+      :tax_code
+    ])
     |> validate_required([:name, :code, :key, :address, :tax_id, :reg_id, :tax_code])
   end
 end

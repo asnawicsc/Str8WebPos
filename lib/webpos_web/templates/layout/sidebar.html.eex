@@ -61,14 +61,14 @@
                   </li>
            
                   <li class=" ">
-                     <a href="/menu_items" title="Widgets">
+                     <a href="/items" title="Widgets">
                         <div class="float-right badge badge-purple">30</div>
                         <em class="fas fa-lemon"></em>
                         <span >Menu Items</span>
                      </a>
                   </li>
                   <li class=" ">
-                     <a href="/combo_items" title="Widgets">
+                     <a href="/combos" title="Widgets">
                         <div class="float-right badge badge-inverse">30</div>
                         <em class="far fa-lemon"></em>
                         <span >Combo Items</span>

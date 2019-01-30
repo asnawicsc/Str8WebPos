@@ -32,7 +32,12 @@ defmodule WebposWeb.Router do
     get("/logout", UserController, :logout)
     resources("/users", UserController)
     resources("/organizations", OrganizationController)
+    get("/:org_name/items", ItemController, :index)
     resources("/restaurants", RestaurantController)
+    resources("/items", ItemController)
+    get("/items/:item_id/combos", ComboController, :index)
+    get("/items/:item_id/combos/new", ComboController, :new)
+    resources("/combos", ComboController)
     get("/*path", PageController, :no_page_found)
   end
 

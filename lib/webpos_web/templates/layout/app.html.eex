@@ -6,7 +6,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <meta name="description" content="Bootstrap Admin App + jQuery">
    <meta name="keywords" content="app, responsive, jquery, bootstrap, dashboard, admin">
-   <link rel="icon" type="image/x-icon" href="favicon.ico">
+   <link rel="icon" type="image/x-icon" href="/favicon.ico">
    <title>Angle - Bootstrap Admin Template</title>
    <!-- =============== VENDOR STYLES ===============-->
    <!-- FONT AWESOME-->
@@ -21,6 +21,8 @@
    <!-- WHIRL (spinners)-->
    <link rel="stylesheet" href="/vendor/whirl/dist/whirl.css">
    <!-- =============== PAGE VENDOR STYLES ===============-->
+      <!-- TAGS INPUT-->
+   <link rel="stylesheet" href="/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
    <!-- =============== BOOTSTRAP STYLES ===============-->
    <link rel="stylesheet" href="/css/bootstrap.css" id="bscss">
    <!-- =============== APP STYLES ===============-->
@@ -44,6 +46,8 @@
 
 
    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+      <!-- TAGS INPUT-->
+   <script src="/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
    <!-- =============== APP SCRIPTS ===============-->
    <script src="/js/app.js"></script>
 </head>
