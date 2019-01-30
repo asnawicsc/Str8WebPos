@@ -50,7 +50,7 @@ defmodule WebposWeb.OrganizationPriceController do
 
     conn
     |> put_flash(:info, "Item price updated successfully.")
-    |> redirect(to: organization_path(conn, :show, Settings.get_org_id(conn)))
+    |> redirect(to: restaurant_path(conn, :show, conn.params["rest_id"]))
   end
 
   def index(conn, _params) do
