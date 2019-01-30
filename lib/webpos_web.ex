@@ -23,13 +23,18 @@ defmodule WebposWeb do
       import Plug.Conn
       import WebposWeb.Router.Helpers
       import WebposWeb.Gettext
+      alias Webpos.Repo
+      alias Webpos.Settings
+      alias Webpos.Settings.{User, Organization, Restaurant}
+      import Ecto.Query
     end
   end
 
   def view do
     quote do
-      use Phoenix.View, root: "lib/webpos_web/templates",
-                        namespace: WebposWeb
+      use Phoenix.View,
+        root: "lib/webpos_web/templates",
+        namespace: WebposWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]

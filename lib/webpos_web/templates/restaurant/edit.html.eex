@@ -1,0 +1,5 @@
+<h2>Edit Restaurant</h2>
+
+<%= render "form.html", Map.put(assigns, :action, restaurant_path(@conn, :update, @restaurant)) %>
+
+<span><%= link "Back", to: restaurant_path(@conn, :index) %></span>

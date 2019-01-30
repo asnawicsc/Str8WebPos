@@ -23,11 +23,16 @@ defmodule WebposWeb.Router do
     post("/operations", ApiController, :webhook_post_operations)
   end
 
-  scope "/:organization", WebposWeb do
+  scope "/", WebposWeb do
     # Use the default browser stack
     pipe_through(:browser)
-
     get("/", PageController, :index)
+    get("/login", UserController, :login)
+    post("/authenticate_login", UserController, :authenticate_login)
+    get("/logout", UserController, :logout)
+    resources("/users", UserController)
+    resources("/organizations", OrganizationController)
+    resources("/restaurants", RestaurantController)
     get("/*path", PageController, :no_page_found)
   end
 

@@ -1,0 +1,42 @@
+<h2>Listing Restaurants</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Code</th>
+      <th>Key</th>
+      <th>Address</th>
+      <th>Tax</th>
+      <th>Reg</th>
+      <th>Tax code</th>
+      <th>Tax perc</th>
+      <th>Serv</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for restaurant <- @restaurants do %>
+    <tr>
+      <td><%= restaurant.name %></td>
+      <td><%= restaurant.code %></td>
+      <td><%= restaurant.key %></td>
+      <td><%= restaurant.address %></td>
+      <td><%= restaurant.tax_id %></td>
+      <td><%= restaurant.reg_id %></td>
+      <td><%= restaurant.tax_code %></td>
+      <td><%= restaurant.tax_perc %></td>
+      <td><%= restaurant.serv %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: restaurant_path(@conn, :show, restaurant), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: restaurant_path(@conn, :edit, restaurant), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: restaurant_path(@conn, :delete, restaurant), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Restaurant", to: restaurant_path(@conn, :new) %></span>

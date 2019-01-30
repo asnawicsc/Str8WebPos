@@ -1,0 +1,65 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :name, class: "control-label" %>
+    <%= text_input f, :name, class: "form-control" %>
+    <%= error_tag f, :name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :code, class: "control-label" %>
+    <%= text_input f, :code, class: "form-control" %>
+    <%= error_tag f, :code %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :key, class: "control-label" %>
+    <%= text_input f, :key, class: "form-control" %>
+    <%= error_tag f, :key %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :address, class: "control-label" %>
+    <%= text_input f, :address, class: "form-control" %>
+    <%= error_tag f, :address %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :tax_id, class: "control-label" %>
+    <%= text_input f, :tax_id, class: "form-control" %>
+    <%= error_tag f, :tax_id %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :reg_id, class: "control-label" %>
+    <%= text_input f, :reg_id, class: "form-control" %>
+    <%= error_tag f, :reg_id %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :tax_code, class: "control-label" %>
+    <%= text_input f, :tax_code, class: "form-control" %>
+    <%= error_tag f, :tax_code %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :tax_perc, class: "control-label" %>
+    <%= number_input f, :tax_perc, class: "form-control", min: 0.0, step: 0.01 %>
+    <%= error_tag f, :tax_perc %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :serv, class: "control-label" %>
+    <%= number_input f, :serv, class: "form-control", min: 0.0, step: 0.01 %>
+    <%= error_tag f, :serv %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

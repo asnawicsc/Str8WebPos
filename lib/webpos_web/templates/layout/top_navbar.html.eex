@@ -6,10 +6,10 @@
             <div class="navbar-header">
                <a class="navbar-brand" href="#/">
                   <div class="brand-logo">
-                     <img class="img-fluid" src="img/logo.png" alt="App Logo">
+                     <img class="img-fluid" src="/img/logo.png" alt="App Logo">
                   </div>
                   <div class="brand-logo-collapsed">
-                     <img class="img-fluid" src="img/logo-single.png" alt="App Logo">
+                     <img class="img-fluid" src="/img/logo-single.png" alt="App Logo">
                   </div>
                </a>
             </div>
@@ -36,7 +36,7 @@
                <!-- END User avatar toggle-->
                <!-- START lock screen-->
                <li class="nav-item d-none d-md-block">
-                  <a class="nav-link" href="lock.html" title="Lock screen">
+                  <a class="nav-link" href="/logout" title="Lock screen">
                      <em class="icon-lock"></em>
                   </a>
                </li>

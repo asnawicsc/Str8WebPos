@@ -1,0 +1,43 @@
+<h2>Show Restaurant</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @restaurant.name %>
+  </li>
+
+  <li>
+    <strong>Code:</strong>
+    <%= @restaurant.code %>
+  </li>
+
+  <li>
+    <strong>Key:</strong>
+    <%= @restaurant.key %>
+  </li>
+
+  <li>
+    <strong>Address:</strong>
+    <%= @restaurant.address %>
+  </li>
+
+  <li>
+    <strong>Tax:</strong>
+    <%= @restaurant.tax_id %>
+  </li>
+
+  <li>
+    <strong>Reg:</strong>
+    <%= @restaurant.reg_id %>
+  </li>
+
+  <li>
+    <strong>Tax code:</strong>
+    <%= @restaurant.tax_code %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: restaurant_path(@conn, :edit, @restaurant) %></span>
+<span><%= link "Back", to: restaurant_path(@conn, :index) %></span>

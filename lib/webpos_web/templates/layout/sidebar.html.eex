@@ -29,28 +29,28 @@
                      <span >Management</span>
                   </li>
                   <li class=" ">
-                     <a href="/menu_items" title="Widgets">
+                     <a href="/users" title="Widgets">
                         <div class="float-right badge badge-primary">30</div>
                         <em class="fa fa-user"></em>
                         <span >Users</span>
                      </a>
                   </li>
                   <li class=" ">
-                     <a href="/menu_items" title="Widgets">
+                     <a href="/staffs" title="Widgets">
                         <div class="float-right badge badge-info">30</div>
                         <em class="fa fa-users"></em>
                         <span >Staffs</span>
                      </a>
                   </li>
                   <li class=" ">
-                     <a href="/menu_items" title="Widgets">
+                     <a href="/restaurants" title="Widgets">
                         <div class="float-right badge badge-warning">30</div>
                         <em class="fa fa-store"></em>
                         <span >Restaurants</span>
                      </a>
                   </li>
                   <li class=" ">
-                     <a href="/menu_items" title="Widgets">
+                     <a href="/organizations" title="Widgets">
                         <div class="float-right badge badge-danger">30</div>
                         <em class="fa fa-building"></em>
                         <span >Organizations</span>
@@ -75,7 +75,7 @@
                      </a>
                   </li>
                   <li class=" ">
-                     <a href="/combo_items" title="Widgets">
+                     <a href="/discount_items" title="Widgets">
                         <div class="float-right badge badge-success">30</div>
                         <em class="icon-grid"></em>
                         <span >Discount Items</span>

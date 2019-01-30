@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/vendor/sweetalert/dist/sweetalert.css" >
+   <script src="/vendor/sweetalert/dist/sweetalert.min.js"></script>
 
 <script type="text/javascript">
   $(document).ready(function(){

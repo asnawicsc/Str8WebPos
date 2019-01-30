@@ -9,3 +9,15 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias Webpos.Settings
+alias Webpos.Settings.{User, Organization, Restaurant}
+alias Webpos.Repo
+import Ecto.Query
+
+Repo.delete_all(User)
+
+a =
+  Settings.create_user(%{username: "admin", crypted_password: Comeonin.Bcrypt.hashpwsalt("123")})
+
+IO.inspect(a)

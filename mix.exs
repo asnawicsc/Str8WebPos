@@ -41,7 +41,16 @@ defmodule Webpos.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:plug_cowboy, "~> 1.0"}
+      {:plug_cowboy, "~> 1.0"},
+      {:timex, "~> 3.0"},
+      {:bamboo, "~> 0.8"},
+      {:bamboo_smtp, "~> 1.4.0"},
+      {:mogrify, "~> 0.6.1"},
+      {:distillery, "~> 1.5", runtime: false},
+      {:comeonin, "~> 4.0"},
+      {:bcrypt_elixir, "~> 0.12"},
+      {:httpoison, "~> 1.0"},
+      {:csv, "~> 1.4.0"}
     ]
   end
 
