@@ -1,0 +1,5 @@
+<h2>New Organization price</h2>
+
+<%= render "form.html", Map.put(assigns, :action, organization_price_path(@conn, :create)) %>
+
+<span><%= link "Back", to: organization_price_path(@conn, :index, Settings.get_org_id(@conn)) %></span>

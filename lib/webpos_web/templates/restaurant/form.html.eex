@@ -59,6 +59,12 @@
     <%= error_tag f, :serv %>
   </div>
 
+    <div class="form-group">
+    <%= label f, :op_id, class: "control-label" %>
+    <%= select f, :op_id, Repo.all(from o in OrganizationPrice, where: o.organization_id == ^Settings.get_org_id(@conn), select: {o.name, o.id}), class: "form-control" %>
+    <%= error_tag f, :op_id %>
+  </div>
+
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>

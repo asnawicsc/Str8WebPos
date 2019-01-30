@@ -6,14 +6,14 @@ defmodule WebposWeb.ItemController do
   require IEx
 
   def index(conn, params) do
-    organization =
+    organization_id =
       if conn.params["org_name"] != nil do
-        Repo.get_by(Organization, name: conn.params["org_name"] |> Base.url_decode64!())
+        Repo.get_by(Organization, name: conn.params["org_name"] |> Base.url_decode64!()).id
       else
         nil
       end
 
-    items = Menu.list_items(organization.id)
+    items = Menu.list_items(organization_id)
     render(conn, "index.html", items: items)
   end
 

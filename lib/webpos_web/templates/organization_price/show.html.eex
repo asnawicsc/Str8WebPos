@@ -1,0 +1,18 @@
+<h2>Show Organization price</h2>
+
+<ul>
+
+  <li>
+    <strong>Organization:</strong>
+    <%= @organization_price.organization_id %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @organization_price.name %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: organization_price_path(@conn, :edit, @organization_price) %></span>
+<span><%= link "Back", to: organization_price_path(@conn, :index) %></span>

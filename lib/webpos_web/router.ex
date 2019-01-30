@@ -38,6 +38,10 @@ defmodule WebposWeb.Router do
     get("/items/:item_id/combos", ComboController, :index)
     get("/items/:item_id/combos/new", ComboController, :new)
     resources("/combos", ComboController)
+    get("/organization/:org_id/organization_prices", OrganizationPriceController, :index)
+    get("/organization/:org_id/organization_prices/new", OrganizationPriceController, :new)
+    resources("/organization_price", OrganizationPriceController)
+    post("/update_item_price", OrganizationPriceController, :update_item_price)
     get("/*path", PageController, :no_page_found)
   end
 

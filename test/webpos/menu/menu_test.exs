@@ -136,4 +136,66 @@ defmodule Webpos.MenuTest do
       assert %Ecto.Changeset{} = Menu.change_combo(combo)
     end
   end
+
+  describe "organization_price" do
+    alias Webpos.Menu.OrganizationPrice
+
+    @valid_attrs %{name: "some name", organization_id: 42}
+    @update_attrs %{name: "some updated name", organization_id: 43}
+    @invalid_attrs %{name: nil, organization_id: nil}
+
+    def organization_price_fixture(attrs \\ %{}) do
+      {:ok, organization_price} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Menu.create_organization_price()
+
+      organization_price
+    end
+
+    test "list_organization_price/0 returns all organization_price" do
+      organization_price = organization_price_fixture()
+      assert Menu.list_organization_price() == [organization_price]
+    end
+
+    test "get_organization_price!/1 returns the organization_price with given id" do
+      organization_price = organization_price_fixture()
+      assert Menu.get_organization_price!(organization_price.id) == organization_price
+    end
+
+    test "create_organization_price/1 with valid data creates a organization_price" do
+      assert {:ok, %OrganizationPrice{} = organization_price} = Menu.create_organization_price(@valid_attrs)
+      assert organization_price.name == "some name"
+      assert organization_price.organization_id == 42
+    end
+
+    test "create_organization_price/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Menu.create_organization_price(@invalid_attrs)
+    end
+
+    test "update_organization_price/2 with valid data updates the organization_price" do
+      organization_price = organization_price_fixture()
+      assert {:ok, organization_price} = Menu.update_organization_price(organization_price, @update_attrs)
+      assert %OrganizationPrice{} = organization_price
+      assert organization_price.name == "some updated name"
+      assert organization_price.organization_id == 43
+    end
+
+    test "update_organization_price/2 with invalid data returns error changeset" do
+      organization_price = organization_price_fixture()
+      assert {:error, %Ecto.Changeset{}} = Menu.update_organization_price(organization_price, @invalid_attrs)
+      assert organization_price == Menu.get_organization_price!(organization_price.id)
+    end
+
+    test "delete_organization_price/1 deletes the organization_price" do
+      organization_price = organization_price_fixture()
+      assert {:ok, %OrganizationPrice{}} = Menu.delete_organization_price(organization_price)
+      assert_raise Ecto.NoResultsError, fn -> Menu.get_organization_price!(organization_price.id) end
+    end
+
+    test "change_organization_price/1 returns a organization_price changeset" do
+      organization_price = organization_price_fixture()
+      assert %Ecto.Changeset{} = Menu.change_organization_price(organization_price)
+    end
+  end
 end

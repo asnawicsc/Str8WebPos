@@ -1,3 +1,6 @@
+<style type="text/css">
+.pricing {bottom: 10px;position: absolute;width: 80%;}
+</style>
 <h2>Show Restaurant</h2>
 <div class="row">
   <div class="col-lg-3">
@@ -33,7 +36,12 @@
             <strong>Tax code:</strong>
             <%= @restaurant.tax_code %>
           </li>
+          <li>
+            <strong>Pricing:</strong>
+            <%= Repo.get(OrganizationPrice, @restaurant.op_id).name %>
+          </li>
         </ul>
+        <span><%= link "Create Pricing", to: organization_price_path(@conn, :index, @restaurant) %></span>
         <span><%= link "Edit", to: restaurant_path(@conn, :edit, @restaurant) %></span>
         <span><%= link "Back", to: restaurant_path(@conn, :index) %></span>
       </div>
@@ -42,65 +50,103 @@
   <div class="col-lg-7">
     <div class="card card-primary">
       <div class="card-body">
-        <em class="fa-2x far fa-list-alt"></em>
-         <em class="fa-2x fas fa-table"></em>
-       
-       
-        <p><small>Here is all the menu items presented in the mobile app...</small></p>
-        <div role="tabpanel">
-          <!-- Nav tabs-->
-          <ul class="nav nav-tabs" role="tablist">
-            <%= for category_index <- @categories |> Enum.with_index do %>
-            <% category = elem(category_index, 0) %>
-            <li class="nav-item" role="presentation" >
-            <%= if elem(category_index, 1) == 0 do %>
-                <a class="nav-link active show" href="#<%= String.downcase(category) |> String.replace(" ", "_") %>" aria-controls="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tab" data-toggle="tab" ><%= category %></a>
-              <% else %>
-             <a class="nav-link" href="#<%= String.downcase(category) |> String.replace(" ", "_") %>" aria-controls="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tab" data-toggle="tab" ><%= category %></a>
+        
+        <form action="/update_item_price" method="POST">
+          <input type="hidden" name="_csrf_token" value="<%= Phoenix.Controller.get_csrf_token %>">
+          <input type="hidden" name="op_id" value="<%= @restaurant.op_id %>">
+          <em class="fa-2x far fa-list-alt"></em>
+          <em class="fa-2x fas fa-table"></em>
+          
+          <div class="form-group">
+            <div role="tabpanel">
+              <!-- Nav tabs-->
+              <ul class="nav nav-tabs" role="tablist">
+                <%= for category_index <- @categories |> Enum.with_index do %>
+                <% category = elem(category_index, 0) %>
+                <li class="nav-item" role="presentation" >
+                  <%= if elem(category_index, 1) == 0 do %>
+                  <a class="nav-link active show" href="#<%= String.downcase(category) |> String.replace(" ", "_") %>" aria-controls="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tab" data-toggle="tab" ><%= category %></a>
+                  <% else %>
+                  <a class="nav-link" href="#<%= String.downcase(category) |> String.replace(" ", "_") %>" aria-controls="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tab" data-toggle="tab" ><%= category %></a>
+                  <% end %>
+                </li>
                 <% end %>
-              </li>
-              <% end %>
-              
-            </ul>
-            <!-- Tab panes-->
-            <div class="tab-content">
-              <%= for category_index <- @categories |> Enum.with_index do %>
-              <% category = elem(category_index, 0) %>
-              <%= if elem(category_index, 1) == 0 do %>
-              <div class="tab-pane active show" id="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tabpanel">
-                <% else %>
-                 <div class="tab-pane " id="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tabpanel">
-                <% end %>
-                <div class="row">
-                  
-                  <%= for item <- @items |> Enum.filter(fn x -> x.category == category end)  do %>
-                  
-                  <div class="col-md-3">
-                    <!-- START card-->
-                    <div class="card">
-                      <div class="card-body text-center bg-gray-lighter">
-                        <p class="mb-3">
-                          <img class="circle thumb64" src="/img/user/08.jpg" alt="">
-                        </p>
-                        <p class="m-0 text-center">
-                          <strong>   <%= item.code %></strong>
-                           <strong>   <%= item.name %></strong>
-                             <%= item.desc %>
-                          
-                        </p>
+                
+              </ul>
+              <!-- Tab panes-->
+              <div class="tab-content">
+                <%= for category_index <- @categories |> Enum.with_index do %>
+                <% category = elem(category_index, 0) %>
+                <%= if elem(category_index, 1) == 0 do %>
+                <div class="tab-pane active show" id="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tabpanel">
+                  <% else %>
+                  <div class="tab-pane " id="<%= String.downcase(category) |> String.replace(" ", "_") %>" role="tabpanel">
+                    <% end %>
+                    <div class="row">
+                      
+                      
+                      
+                      <%= for item <- @items |> Enum.filter(fn x -> x.category == category end)  do %>
+                      
+                      <div class="col-md-3">
+                        <!-- START card-->
+                        <div class="card">
+                          <div class="card-body text-center bg-gray-lighter" style="height: 35vh;">
+                            <p class="mb-3">
+                              <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                            </p>
+                            <p class="m-0 text-center">
+                              <strong>   <%= item.code %></strong>
+                              <strong>   <%= item.name %></strong>
+                              <%= item.desc %>
+                              
+                            </p>
+                            <div class="pricing">
+                              <input type="text" name="item[<%= item.id%>]" class="form-control " style="margin-bottom: 5px;">
+                              
+                            </div>
+                          </div>
+                        </div>
+                        <!-- END card-->
                       </div>
+                      <% end %>
+                      
                     </div>
-                    <!-- END card-->
                   </div>
                   <% end %>
                 </div>
+                
               </div>
-              <% end %>
             </div>
           </div>
-        </div>
+          
+          
+          <div class="form-group" style="padding: 15px;">
+            <input type="submit" name="" value="Update Pricing" class="btn btn-primary">
+          </div>
+        </form>
+        
       </div>
     </div>
   </div>
   <script type="text/javascript">
+  $.ajax({
+  url: "/<%= BN.get_domain(@conn) %>/internal_api",
+  dataType: "json",
+  data: {
+  scope: "submit_item_remark",
+  target_item: subcat_id,
+  target_cat: cat,
+  price: price,
+  remark: remark,
+  brand_id: "<%= BN.get_brand_id(@conn) %>"
+  }
+  }).done(function(j) {
+  var result = j
+  $("#remark_body").html("")
+  for (i in result) {
+  var tr = "<tr><td>" + result[i]["name"] + "</td><td>" + result[i]["price"] + "</td><td><div class='btn btn-danger delete' id='" + result[i]["id"] + "'>delete</div></td></tr>"
+  $("#remark_body").append(tr)
+  }
+  })
   </script>

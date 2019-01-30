@@ -1,0 +1,28 @@
+<h2>Listing Organization price</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Organization</th>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for organization_price <- @organization_price do %>
+    <tr>
+      <td><%= organization_price.organization_id %></td>
+      <td><%= organization_price.name %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: organization_price_path(@conn, :show, organization_price), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: organization_price_path(@conn, :edit, organization_price), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: organization_price_path(@conn, :delete, organization_price), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Organization price", to: organization_price_path(@conn, :new, Settings.get_org_id(@conn)) %></span>

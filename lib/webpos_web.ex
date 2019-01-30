@@ -27,7 +27,7 @@ defmodule WebposWeb do
       alias Webpos.Settings
       alias Webpos.Settings.{User, Organization, Restaurant}
       alias Webpos.Menu
-      alias Webpos.Menu.{Item, Combo}
+      alias Webpos.Menu.{Item, Combo, OrganizationPrice, ItemPrice, ComboPrice}
       import Ecto.Query
     end
   end
@@ -52,7 +52,7 @@ defmodule WebposWeb do
       alias Webpos.Settings
       alias Webpos.Settings.{User, Organization, Restaurant}
       alias Webpos.Menu
-      alias Webpos.Menu.{Item, Combo}
+      alias Webpos.Menu.{Item, Combo, OrganizationPrice, ItemPrice, ComboPrice}
       import Ecto.Query
     end
   end

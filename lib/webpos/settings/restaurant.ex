@@ -13,6 +13,7 @@ defmodule Webpos.Settings.Restaurant do
     field(:tax_perc, :decimal)
     field(:serv, :decimal)
     field(:organization_id, :integer)
+    field(:op_id, :integer)
     timestamps()
   end
 
@@ -20,6 +21,7 @@ defmodule Webpos.Settings.Restaurant do
   def changeset(restaurant, attrs) do
     restaurant
     |> cast(attrs, [
+      :op_id,
       :organization_id,
       :tax_perc,
       :serv,
@@ -31,6 +33,6 @@ defmodule Webpos.Settings.Restaurant do
       :reg_id,
       :tax_code
     ])
-    |> validate_required([:name, :code, :key, :address, :tax_id, :reg_id, :tax_code])
+    |> validate_required([:op_id, :name, :code, :key, :address, :tax_id, :reg_id, :tax_code])
   end
 end

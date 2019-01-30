@@ -201,4 +201,100 @@ defmodule Webpos.Menu do
   def change_combo(%Combo{} = combo) do
     Combo.changeset(combo, %{})
   end
+
+  alias Webpos.Menu.OrganizationPrice
+
+  @doc """
+  Returns the list of organization_price.
+
+  ## Examples
+
+      iex> list_organization_price()
+      [%OrganizationPrice{}, ...]
+
+  """
+  def list_organization_price do
+    Repo.all(OrganizationPrice)
+  end
+
+  @doc """
+  Gets a single organization_price.
+
+  Raises `Ecto.NoResultsError` if the Organization price does not exist.
+
+  ## Examples
+
+      iex> get_organization_price!(123)
+      %OrganizationPrice{}
+
+      iex> get_organization_price!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_organization_price!(id), do: Repo.get!(OrganizationPrice, id)
+
+  @doc """
+  Creates a organization_price.
+
+  ## Examples
+
+      iex> create_organization_price(%{field: value})
+      {:ok, %OrganizationPrice{}}
+
+      iex> create_organization_price(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_organization_price(attrs \\ %{}) do
+    %OrganizationPrice{}
+    |> OrganizationPrice.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a organization_price.
+
+  ## Examples
+
+      iex> update_organization_price(organization_price, %{field: new_value})
+      {:ok, %OrganizationPrice{}}
+
+      iex> update_organization_price(organization_price, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_organization_price(%OrganizationPrice{} = organization_price, attrs) do
+    organization_price
+    |> OrganizationPrice.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a OrganizationPrice.
+
+  ## Examples
+
+      iex> delete_organization_price(organization_price)
+      {:ok, %OrganizationPrice{}}
+
+      iex> delete_organization_price(organization_price)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_organization_price(%OrganizationPrice{} = organization_price) do
+    Repo.delete(organization_price)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking organization_price changes.
+
+  ## Examples
+
+      iex> change_organization_price(organization_price)
+      %Ecto.Changeset{source: %OrganizationPrice{}}
+
+  """
+  def change_organization_price(%OrganizationPrice{} = organization_price) do
+    OrganizationPrice.changeset(organization_price, %{})
+  end
 end
