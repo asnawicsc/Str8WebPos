@@ -33,7 +33,25 @@ defmodule WebposWeb.RestaurantController do
 
     items = Menu.list_items(restaurant.organization_id)
     categories = Enum.map(items, fn x -> x.category end) |> Enum.uniq()
-    render(conn, "show.html", items: items, restaurant: restaurant, categories: categories)
+
+    printers =
+      Repo.all(
+        from(
+          p in Printer,
+          left_join: i in RestItemPrinter,
+          on: p.id == i.printer_id,
+          where: i.rest_id == ^id and is_nil(i.item_id)
+        )
+      )
+
+    render(
+      conn,
+      "show.html",
+      items: items,
+      restaurant: restaurant,
+      categories: categories,
+      printers: printers
+    )
   end
 
   def edit(conn, %{"id" => id}) do

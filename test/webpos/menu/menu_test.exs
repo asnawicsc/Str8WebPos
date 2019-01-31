@@ -198,4 +198,70 @@ defmodule Webpos.MenuTest do
       assert %Ecto.Changeset{} = Menu.change_organization_price(organization_price)
     end
   end
+
+  describe "printers" do
+    alias Webpos.Menu.Printer
+
+    @valid_attrs %{ip_address: "some ip_address", name: "some name", organization_id: 42, port_no: "some port_no"}
+    @update_attrs %{ip_address: "some updated ip_address", name: "some updated name", organization_id: 43, port_no: "some updated port_no"}
+    @invalid_attrs %{ip_address: nil, name: nil, organization_id: nil, port_no: nil}
+
+    def printer_fixture(attrs \\ %{}) do
+      {:ok, printer} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Menu.create_printer()
+
+      printer
+    end
+
+    test "list_printers/0 returns all printers" do
+      printer = printer_fixture()
+      assert Menu.list_printers() == [printer]
+    end
+
+    test "get_printer!/1 returns the printer with given id" do
+      printer = printer_fixture()
+      assert Menu.get_printer!(printer.id) == printer
+    end
+
+    test "create_printer/1 with valid data creates a printer" do
+      assert {:ok, %Printer{} = printer} = Menu.create_printer(@valid_attrs)
+      assert printer.ip_address == "some ip_address"
+      assert printer.name == "some name"
+      assert printer.organization_id == 42
+      assert printer.port_no == "some port_no"
+    end
+
+    test "create_printer/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Menu.create_printer(@invalid_attrs)
+    end
+
+    test "update_printer/2 with valid data updates the printer" do
+      printer = printer_fixture()
+      assert {:ok, printer} = Menu.update_printer(printer, @update_attrs)
+      assert %Printer{} = printer
+      assert printer.ip_address == "some updated ip_address"
+      assert printer.name == "some updated name"
+      assert printer.organization_id == 43
+      assert printer.port_no == "some updated port_no"
+    end
+
+    test "update_printer/2 with invalid data returns error changeset" do
+      printer = printer_fixture()
+      assert {:error, %Ecto.Changeset{}} = Menu.update_printer(printer, @invalid_attrs)
+      assert printer == Menu.get_printer!(printer.id)
+    end
+
+    test "delete_printer/1 deletes the printer" do
+      printer = printer_fixture()
+      assert {:ok, %Printer{}} = Menu.delete_printer(printer)
+      assert_raise Ecto.NoResultsError, fn -> Menu.get_printer!(printer.id) end
+    end
+
+    test "change_printer/1 returns a printer changeset" do
+      printer = printer_fixture()
+      assert %Ecto.Changeset{} = Menu.change_printer(printer)
+    end
+  end
 end

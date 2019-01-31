@@ -14,10 +14,18 @@ alias Webpos.Settings
 alias Webpos.Settings.{User, Organization, Restaurant}
 alias Webpos.Repo
 import Ecto.Query
+Repo.delete_all(Organization)
 
+{:ok, org} = Settings.create_organization(%{address: "Serdang", name: "Resertech"})
 Repo.delete_all(User)
 
-a =
-  Settings.create_user(%{username: "admin", crypted_password: Comeonin.Bcrypt.hashpwsalt("123")})
+{:ok, user} =
+  Settings.create_user(%{
+    username: "admin",
+    crypted_password: Comeonin.Bcrypt.hashpwsalt("123"),
+    organization_id: org.id
+  })
+
+IO.inspect(a)
 
 IO.inspect(a)

@@ -38,7 +38,7 @@
 </div>
 <div class="form-group">
   <%= label f, :customizations, class: "control-label" %>
-  <%= text_input f, :customizations, class: "form-control" %>
+  <%= text_input f, :customizations, "data-role": "tagsinput", class: "form-control" %>
   <%= error_tag f, :customizations %>
 </div>
 <div class="form-group">

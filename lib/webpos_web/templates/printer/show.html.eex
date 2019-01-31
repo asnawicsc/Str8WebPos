@@ -1,0 +1,28 @@
+<h2>Show Printer</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @printer.name %>
+  </li>
+
+  <li>
+    <strong>Ip address:</strong>
+    <%= @printer.ip_address %>
+  </li>
+
+  <li>
+    <strong>Port no:</strong>
+    <%= @printer.port_no %>
+  </li>
+
+  <li>
+    <strong>Organization:</strong>
+    <%= @printer.organization_id %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: printer_path(@conn, :edit, @printer) %></span>
+<span><%= link "Back", to: printer_path(@conn, :index) %></span>

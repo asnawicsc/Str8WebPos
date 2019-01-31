@@ -1,0 +1,5 @@
+<h2>New Printer</h2>
+
+<%= render "form.html", Map.put(assigns, :action, printer_path(@conn, :create)) %>
+
+<span><%= link "Back", to: printer_path(@conn, :index, @conn.params["org_name"]) %></span>

@@ -1,54 +1,83 @@
 <style type="text/css">
 .pricing {bottom: 10px;position: absolute;width: 80%;}
 </style>
-<h2>Show Restaurant</h2>
+
 <div class="row">
   <div class="col-lg-3">
-    <div class="card card-primary">
-      <div class="card-body">
+    <div id="info" class="card card-default" >
+      <div class="card-header"><b>Restaurant Info</b>
+        <a class="float-right" href="#" data-tool="card-collapse" data-toggle="tooltip" title="" data-original-title="Collapse Card">
+          <em class="fa fa-minus"></em>
+        </a>
+      </div>
+      <div class="card-wrapper collapse show" style="">
+        <div class="card-body">
+          
+          <ul>
+            <li>
+              <strong>Name:</strong>
+              <%= @restaurant.name %>
+            </li>
+            <li>
+              <strong>Code:</strong>
+              <%= @restaurant.code %>
+            </li>
+            <li>
+              <strong>Key:</strong>
+              <%= @restaurant.key %>
+            </li>
+            <li>
+              <strong>Address:</strong>
+              <%= @restaurant.address %>
+            </li>
+            <li>
+              <strong>Tax:</strong>
+              <%= @restaurant.tax_id %>
+            </li>
+            <li>
+              <strong>Reg:</strong>
+              <%= @restaurant.reg_id %>
+            </li>
+            <li>
+              <strong>Tax code:</strong>
+              <%= @restaurant.tax_code %>
+            </li>
+            <li>
+              <strong>Pricing:</strong>
+              <%= Repo.get(OrganizationPrice, @restaurant.op_id).name %>
+            </li>
+          </ul>
+          <span><%= link "Choose Printers", to: printer_path(@conn, :index, @conn.params["org_name"], choose: "#{@restaurant.code}") %></span>
+          <span><%= link "Create Pricing", to: organization_price_path(@conn, :index, @restaurant) %></span>
+          <span><%= link "Edit", to: restaurant_path(@conn, :edit, @restaurant) %></span>
+          <span><%= link "Back", to: restaurant_path(@conn, :index, @conn.params["org_name"]) %></span>
+        </div>
         
-        <ul>
-          <li>
-            <strong>Name:</strong>
-            <%= @restaurant.name %>
-          </li>
-          <li>
-            <strong>Code:</strong>
-            <%= @restaurant.code %>
-          </li>
-          <li>
-            <strong>Key:</strong>
-            <%= @restaurant.key %>
-          </li>
-          <li>
-            <strong>Address:</strong>
-            <%= @restaurant.address %>
-          </li>
-          <li>
-            <strong>Tax:</strong>
-            <%= @restaurant.tax_id %>
-          </li>
-          <li>
-            <strong>Reg:</strong>
-            <%= @restaurant.reg_id %>
-          </li>
-          <li>
-            <strong>Tax code:</strong>
-            <%= @restaurant.tax_code %>
-          </li>
-          <li>
-            <strong>Pricing:</strong>
-            <%= Repo.get(OrganizationPrice, @restaurant.op_id).name %>
-          </li>
-        </ul>
-        <span><%= link "Create Pricing", to: organization_price_path(@conn, :index, @restaurant) %></span>
-        <span><%= link "Edit", to: restaurant_path(@conn, :edit, @restaurant) %></span>
-        <span><%= link "Back", to: restaurant_path(@conn, :index) %></span>
       </div>
     </div>
+    
     <div class="card card-primary">
       <div class="card-header"><h4>Printers</h4></div>
       <div class="card-body">
+        <%= for printer <- @printers do %>
+        <div class="col-lg-12">
+          <!-- START card-->
+          <div class="card card-default" >
+            <div class="card-header"><%= printer.name %>
+              <a class="float-right" href="#" data-tool="card-collapse" data-toggle="tooltip" title="" data-original-title="Collapse Card">
+                <em class="fa fa-minus"></em>
+              </a>
+            </div>
+            <div class="card-wrapper collapse show" style="">
+              <div class="card-body">
+                <p>Card can be collapsed clicking on the chevron up/down icon on the top right corner</p>
+              </div>
+              
+            </div>
+          </div>
+          <!-- END card-->
+        </div>
+        <% end %>
       </div>
     </div>
   </div>
@@ -56,12 +85,12 @@
     <div class="card card-primary">
       <div class="card-header"><h4>Menu Item Pricing <br><small>Choose a pricing by editing the restaurant and update the food item price accordingly.</small></h4></div>
       <div class="card-body">
- 
+        
         <form action="/update_item_price" method="POST">
           <input type="hidden" name="_csrf_token" value="<%= Phoenix.Controller.get_csrf_token %>">
           <input type="hidden" name="op_id" value="<%= @restaurant.op_id %>">
           <input type="hidden" name="rest_id" value="<%= @restaurant.id %>">
-         
+          
           
           <div class="form-group">
             <div role="tabpanel">
@@ -100,14 +129,13 @@
                           <div class="card-body text-center bg-gray-lighter" style="height: 35vh;">
                             <p class="mb-3">
                               <%= if item.img_url != nil do %>
-                                <%= if File.exists?( File.cwd!() <> "/media/" <> item.img_url) do %>
-                                  <img class="circle thumb64" src="/images/uploads/<%= item.img_url %>">
-
-                                <% else %>
-                                  <img class="circle thumb64" src="/img/user/08.jpg" alt="">
-                                <% end %>
+                              <%= if File.exists?( File.cwd!() <> "/media/" <> item.img_url) do %>
+                              <img class="circle thumb64" src="/images/uploads/<%= item.img_url %>">
                               <% else %>
-                                <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                              <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                              <% end %>
+                              <% else %>
+                              <img class="circle thumb64" src="/img/user/08.jpg" alt="">
                               <% end %>
                               
                               

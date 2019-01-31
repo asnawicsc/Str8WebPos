@@ -1,0 +1,124 @@
+<style type="text/css">
+  .choose {display: none;}
+</style>
+<h2>Listing Printers</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Ip address</th>
+      <th>Port no</th>
+      <th class="choose">Check</th>
+      
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for printer <- @printers do %>
+    <tr>
+      <td><%= printer.name %></td>
+      <td><%= printer.ip_address %></td>
+      <td><%= printer.port_no %></td>
+      <td class="choose">
+        <div class="checkbox c-checkbox">
+          <label>
+            <input type="checkbox" value="" name="<%= printer.id%>">
+            <span class="fa fa-check"></span> </label>
+          </div>
+          
+        </td>
+        <td class="text-right">
+          <span><%= link "Show", to: printer_path(@conn, :show, printer), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Edit", to: printer_path(@conn, :edit, printer), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Delete", to: printer_path(@conn, :delete, printer), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <span><%= link "New Printer", to: printer_path(@conn, :new, @conn.params["org_name"]) %></span>
+  <span><div class="btn btn-primary choose" id="save">Save Changes</div></span>
+
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    var code = getUrlParameter('choose');
+    if ( code != null ) {
+      $(".choose").show(); 
+
+      $("td.choose").find("input").each(function(){
+        var printer_id = $(this).attr("name")
+        var checker = $(this).prop("checked")
+       
+            // show save this printer for the restaurant
+
+          $.ajax({
+            url: "/<%= @conn.params["org_name"] %>/check_printer",
+            dataType: "json",
+            data: {
+
+              code: code,
+              printer_id: printer_id
+            }
+          }).done(function(j) {
+          var result = j
+
+            for (i in result) {
+              console.log(
+              result[i]["stats"])
+
+
+              if (result[i]["stats"] == "ok") {
+                $("input[name="+printer_id+"]").prop("checked", true) 
+              } else {
+                $("input[name="+printer_id+"]").prop("checked", false) 
+              }
+
+            }
+          })
+
+      
+        
+      }) 
+    }
+
+    $("div#save").click(function(){
+
+      $("td.choose").find("input").each(function(){
+        var printer_id = $(this).attr("name")
+        var checker = $(this).prop("checked")
+        if ( checker == true) {
+            // show save this printer for the restaurant
+
+          $.ajax({
+            url: "/<%= @conn.params["org_name"] %>/toggle_printer",
+            dataType: "json",
+            data: {
+
+              code: code,
+              printer_id: printer_id
+            }
+          }).done(function(j) {
+          var result = j
+
+            for (i in result) {
+              result[i]["stats"]
+            }
+          })
+
+        } else {
+
+        }
+        
+      })
+
+      swal(
+    'Saved!',
+    '',
+    'success'
+  )
+    })
+
+
+  });
+</script>

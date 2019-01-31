@@ -1,5 +1,6 @@
 defmodule WebposWeb.RestaurantChannel do
   use WebposWeb, :channel
+  require IEx
 
   def join("restaurant:" <> code, payload, socket) do
     if authorized?(payload, code) do
@@ -50,22 +51,7 @@ defmodule WebposWeb.RestaurantChannel do
     # rest has its own organization pricing(op)
     # each op has many item price
     # each op has 1 item
-    items =
-      Repo.all(
-        from(
-          i in ItemPrice,
-          left_join: t in Item,
-          on: t.id == i.item_id,
-          where: i.op_id == ^1,
-          select: %{
-            id: t.id,
-            name: t.name,
-            category: t.category,
-            price: i.price,
-            img_url: t.img_url
-          }
-        )
-      )
+    items = map_items(restaurant.op_id)
 
     broadcast(socket, "new_menu_items", %{menu_items: items})
     {:noreply, socket}
@@ -131,19 +117,52 @@ defmodule WebposWeb.RestaurantChannel do
   #   {:noreply, socket}
   # end
 
-  def customization(target_item, brand_id) do
-    Repo.all(
-      from(
-        i in Remark,
-        where: i.target_item == ^target_item and i.brand_id == ^brand_id,
-        select: %{
-          id: i.itemsremarkid,
-          name: i.remark,
-          price: i.price
-        }
+  def map_items(op_id) do
+    items =
+      Repo.all(
+        from(
+          i in ItemPrice,
+          left_join: t in Item,
+          on: t.id == i.item_id,
+          where: i.op_id == ^op_id,
+          select: %{
+            id: t.id,
+            name: t.name,
+            category_name: t.category,
+            price: i.price,
+            img_url: t.img_url,
+            customization: t.customizations,
+            printer_ip: "10.239.30.114",
+            port_no: 9100
+          }
+        )
       )
-    )
-    |> Poison.encode!()
+      |> Enum.map(fn x -> Map.put(x, :customization, customization(x.customization)) end)
+  end
+
+  def customization(customizations) do
+    if customizations != nil do
+      items =
+        customizations |> String.split(",") |> Enum.map(fn x -> String.trim(x) end)
+        |> Enum.reject(fn x -> x == " " end)
+
+      list = Enum.map(items, fn x -> map_price(x) end)
+    end
+  end
+
+  def map_price(string) do
+    list = string |> String.split("(")
+
+    case Enum.count(list) do
+      1 ->
+        %{name: hd(list), price: Decimal.new("0.00")}
+
+      2 ->
+        %{name: hd(list), price: Decimal.new(String.replace(List.last(list), ")", ""))}
+
+      _ ->
+        %{name: "none", price: Decimal.new("0.00")}
+    end
   end
 
   # EcomBackendWeb.Endpoint.broadcast(topic, event, message)

@@ -43,7 +43,7 @@
                      </a>
                   </li>
                   <li class=" ">
-                     <a href="/restaurants" title="Widgets">
+                     <a href="/<%= @conn.private.plug_session["org_name"]%>/restaurants" title="Widgets">
                         <div class="float-right badge badge-warning">30</div>
                         <em class="fa fa-store"></em>
                         <span >Restaurants</span>

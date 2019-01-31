@@ -77,12 +77,15 @@ defmodule WebposWeb.UserController do
 
   def authenticate_login(conn, %{"name" => name, "password" => password}) do
     user = Repo.get_by(User, username: name)
+    org = Repo.get(Organization, user.organization_id)
+    org_name = Base.url_encode64(org.name)
 
     if user != nil do
       if Comeonin.Bcrypt.checkpw(password, user.crypted_password) do
         conn
         |> put_flash(:info, "Welcome!")
         |> put_session(:user_id, user.id)
+        |> put_session(:org_name, org_name)
         |> redirect(to: page_path(conn, :index))
       else
         conn

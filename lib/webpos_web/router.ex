@@ -33,6 +33,8 @@ defmodule WebposWeb.Router do
     resources("/users", UserController)
     resources("/organizations", OrganizationController)
     get("/:org_name/items", ItemController, :index)
+    get("/:org_name/restaurants", RestaurantController, :index)
+    get("/:org_name/restaurants/:id", RestaurantController, :show)
     resources("/restaurants", RestaurantController)
     resources("/items", ItemController)
     get("/items/:item_id/combos", ComboController, :index)
@@ -43,6 +45,12 @@ defmodule WebposWeb.Router do
     resources("/organization_price", OrganizationPriceController)
     post("/update_item_price", OrganizationPriceController, :update_item_price)
     get("/:org_name/get_item_price", OrganizationPriceController, :get_item_price)
+
+    get("/:org_name/printers", PrinterController, :index)
+    get("/:org_name/printers/new", PrinterController, :new)
+    get("/:org_name/toggle_printer", PrinterController, :toggle_printer)
+    get("/:org_name/check_printer", PrinterController, :check_printer)
+    resources("/printers", PrinterController)
     get("/*path", PageController, :no_page_found)
   end
 

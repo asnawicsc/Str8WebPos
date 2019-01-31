@@ -297,4 +297,100 @@ defmodule Webpos.Menu do
   def change_organization_price(%OrganizationPrice{} = organization_price) do
     OrganizationPrice.changeset(organization_price, %{})
   end
+
+  alias Webpos.Menu.Printer
+
+  @doc """
+  Returns the list of printers.
+
+  ## Examples
+
+      iex> list_printers()
+      [%Printer{}, ...]
+
+  """
+  def list_printers(organization_id) do
+    Repo.all(from(p in Printer, where: p.organization_id == ^organization_id))
+  end
+
+  @doc """
+  Gets a single printer.
+
+  Raises `Ecto.NoResultsError` if the Printer does not exist.
+
+  ## Examples
+
+      iex> get_printer!(123)
+      %Printer{}
+
+      iex> get_printer!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_printer!(id), do: Repo.get!(Printer, id)
+
+  @doc """
+  Creates a printer.
+
+  ## Examples
+
+      iex> create_printer(%{field: value})
+      {:ok, %Printer{}}
+
+      iex> create_printer(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_printer(attrs \\ %{}) do
+    %Printer{}
+    |> Printer.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a printer.
+
+  ## Examples
+
+      iex> update_printer(printer, %{field: new_value})
+      {:ok, %Printer{}}
+
+      iex> update_printer(printer, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_printer(%Printer{} = printer, attrs) do
+    printer
+    |> Printer.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Printer.
+
+  ## Examples
+
+      iex> delete_printer(printer)
+      {:ok, %Printer{}}
+
+      iex> delete_printer(printer)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_printer(%Printer{} = printer) do
+    Repo.delete(printer)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking printer changes.
+
+  ## Examples
+
+      iex> change_printer(printer)
+      %Ecto.Changeset{source: %Printer{}}
+
+  """
+  def change_printer(%Printer{} = printer) do
+    Printer.changeset(printer, %{})
+  end
 end

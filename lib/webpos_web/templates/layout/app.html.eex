@@ -64,7 +64,7 @@
 
 
       <!-- sidebar-->
-    <%= render("sidebar.html")%>
+    <%= render("sidebar.html", conn: @conn)%>
 
       <!-- offsidebar-->
     <%= render("offsidebar.html")%>
