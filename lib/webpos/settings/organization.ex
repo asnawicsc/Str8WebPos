@@ -47,6 +47,7 @@ defmodule Webpos.Menu.ComboPrice do
 
   schema "combo_price" do
     field(:op_id, :integer)
+    field(:combo_id, :integer)
     field(:item_id, :integer)
     field(:price, :decimal)
     timestamps()
@@ -56,10 +57,11 @@ defmodule Webpos.Menu.ComboPrice do
   def changeset(organization_price, attrs) do
     organization_price
     |> cast(attrs, [
+      :combo_id,
       :op_id,
       :item_id,
       :price
     ])
-    |> validate_required([:op_id, :item_id, :price])
+    |> validate_required([:combo_id, :op_id, :item_id, :price])
   end
 end

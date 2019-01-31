@@ -19,7 +19,7 @@ defmodule WebposWeb.PageController do
         if branch != nil do
           case params["fields"] do
             "staffs" ->
-              get_scope_staffs(conn, branch.organization, params["code"])
+              get_scope_staffs(conn, branch.organization_id, params["code"])
 
             _ ->
               send_resp(conn, 200, "request not available. \n")

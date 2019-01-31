@@ -5,6 +5,26 @@ defmodule WebposWeb.OrganizationPriceController do
   alias Webpos.Menu.OrganizationPrice
   require IEx
 
+  def get_combo_price(conn, params) do
+    json_map =
+      Repo.all(
+        from(
+          i in ComboPrice,
+          where:
+            i.combo_id == ^params["combo_id"] and i.op_id == ^params["op_id"] and
+              i.item_id == ^params["item_id"],
+          select: %{
+            price: i.price
+          }
+        )
+      )
+      |> Poison.encode!()
+
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(200, json_map)
+  end
+
   def get_item_price(conn, params) do
     json_map =
       Repo.all(
@@ -23,7 +43,7 @@ defmodule WebposWeb.OrganizationPriceController do
     |> send_resp(200, json_map)
   end
 
-  def update_item_price(conn, %{"op_id" => op_id, "item" => items}) do
+  def update_item_price(conn, %{"op_id" => op_id, "item" => items, "combo" => combos}) do
     item_ids = Map.keys(items)
 
     for item_id <- item_ids do
@@ -48,9 +68,44 @@ defmodule WebposWeb.OrganizationPriceController do
       IO.inspect(result)
     end
 
+    combo_ids = Map.keys(combos)
+
+    for combo_id <- combo_ids do
+      header = combos[combo_id]
+      item_ids = Map.keys(header)
+
+      for item_id <- item_ids do
+        changes = %{
+          op_id: op_id,
+          combo_id: combo_id,
+          item_id: item_id,
+          price: Decimal.new(header[item_id])
+        }
+
+        result =
+          case Repo.get_by(ComboPrice, op_id: op_id, combo_id: combo_id, item_id: item_id) do
+            nil ->
+              %ComboPrice{}
+
+            cp ->
+              cp
+          end
+          |> ComboPrice.changeset(changes)
+          |> Repo.insert_or_update()
+      end
+    end
+
     conn
     |> put_flash(:info, "Item price updated successfully.")
-    |> redirect(to: restaurant_path(conn, :show, conn.params["rest_id"]))
+    |> redirect(
+      to:
+        restaurant_path(
+          conn,
+          :show,
+          conn.private.plug_session["org_name"],
+          conn.params["rest_id"]
+        )
+    )
   end
 
   def index(conn, _params) do

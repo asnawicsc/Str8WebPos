@@ -46,7 +46,7 @@ defmodule WebposWeb.Router do
     resources("/organization_price", OrganizationPriceController)
     post("/update_item_price", OrganizationPriceController, :update_item_price)
     get("/:org_name/get_item_price", OrganizationPriceController, :get_item_price)
-
+    get("/:org_name/get_combo_price", OrganizationPriceController, :get_combo_price)
     get("/:org_name/printers", PrinterController, :index)
     get("/:org_name/printers/new", PrinterController, :new)
     get("/:org_name/toggle_printer", PrinterController, :toggle_printer)

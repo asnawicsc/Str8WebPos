@@ -1,7 +1,6 @@
 <style type="text/css">
 .pricing {bottom: 10px;position: absolute;width: 80%;}
 </style>
-
 <div class="row">
   <div class="col-lg-3">
     <div id="info" class="card card-default" >
@@ -81,7 +80,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-7">
+  <div class="col-lg-9">
     <div class="card card-primary">
       <div class="card-header"><h4>Menu Item Pricing <br><small>Choose a pricing by editing the restaurant and update the food item price accordingly.</small></h4></div>
       <div class="card-body">
@@ -122,75 +121,121 @@
                       
                       
                       <%= for item <- @items |> Enum.filter(fn x -> x.category == category end)  do %>
-                      
-                      <div class="col-md-3">
-                        <!-- START card-->
-                        <div class="card">
-                          <div class="card-body text-center bg-gray-lighter" style="height: 35vh;">
-                            <p class="mb-3">
-                              <%= if item.img_url != nil do %>
-                              <%= if File.exists?( File.cwd!() <> "/media/" <> item.img_url) do %>
-                              <img class="circle thumb64" src="/images/uploads/<%= item.img_url %>">
-                              <% else %>
-                              <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                      <%= if item.is_combo do %>
+                      <div class="col-md-4  ">
+                        <% else %>
+                        <div class="col-md-2">
+                          <% end %>
+                          <!-- START card-->
+                          <div class="card">
+                            <div class="card-body text-center bg-gray-lighter" style="height: 30vh;">
+                              <p class="mb-3">
+                                <%= if item.img_url != nil do %>
+                                <%= if File.exists?( File.cwd!() <> "/media/" <> item.img_url) do %>
+                                <img class="circle thumb64" src="/images/uploads/<%= item.img_url %>">
+                                <% else %>
+                                <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                                <% end %>
+                                <% else %>
+                                <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                                <% end %>
+                                
+                                
+                              </p>
+                              <p class="m-0 text-center">
+                                <strong>   <%= item.code %></strong>
+                                <strong>   <%= item.name %></strong>
+                                <%= item.desc %>
+                                
+                              </p>
+                           
+                                <div class="pricing" >
+                             
+                                  <input type="text" name="item[<%= item.id%>]" item_id="<%= item.id%>" class="form-control item_price">
+                                  
+                                </div>
+                              </div>
+                              <%= if item.is_combo do %>
+                              <div class="card-footer">
+                                <table class="table" style="margin-bottom: 50px;">
+                                  <tr>
+                                    <td>Category</td>
+                                    <td colspan="2">Limit from this category</td>
+                                    <td>Add on Price</td>
+                                  </tr>
+                                  <% combo_details = Repo.all(from c in Combo, left_join: i in Item, on: i.id == c.item_id, where: c.combo_id == ^item.id, select: %{name: i.name, category: c.category, limit: c.category_limit , item_id: c.item_id})%>
+                                  <%= for combo_detail <- combo_details do %>
+                                  <tr>
+                                    <td><%= combo_detail.category %></td>
+                                    <td><%= combo_detail.limit %></td>
+                                    <td><%= combo_detail.name %></td>
+                                    <td> <input type="text" name="combo[<%= item.id%>][<%= combo_detail.item_id%>]" combo_id="<%= item.id%>" item_id="<%= combo_detail.item_id%>" class="form-control combo_price"></td>
+                                  </tr>
+                                  <% end %>
+                                </table>
+                              </div>
                               <% end %>
-                              <% else %>
-                              <img class="circle thumb64" src="/img/user/08.jpg" alt="">
-                              <% end %>
-                              
-                              
-                            </p>
-                            <p class="m-0 text-center">
-                              <strong>   <%= item.code %></strong>
-                              <strong>   <%= item.name %></strong>
-                              <%= item.desc %>
-                              
-                            </p>
-                            <div class="pricing">
-                              <input type="text" name="item[<%= item.id%>]" item_id="<%= item.id%>" class="form-control item_price" style="margin-bottom: 5px;">
-                              
                             </div>
+                            <!-- END card-->
                           </div>
+                          <% end %>
+                          
                         </div>
-                        <!-- END card-->
                       </div>
                       <% end %>
-                      
                     </div>
+                    
                   </div>
-                  <% end %>
                 </div>
-                
               </div>
-            </div>
+              
+              
+              <div class="form-group" style="padding: 15px;">
+                <input type="submit" name="" value="Update Pricing" class="btn btn-primary">
+              </div>
+            </form>
+            
           </div>
-          
-          
-          <div class="form-group" style="padding: 15px;">
-            <input type="submit" name="" value="Update Pricing" class="btn btn-primary">
-          </div>
-        </form>
-        
+        </div>
       </div>
-    </div>
-  </div>
-  <script type="text/javascript">
-  $("input.item_price").each(function(){
-  var item_id = $(this).attr("item_id")
-  var ob = $(this)
-  $.ajax({
-  url: "/<%= Settings.get_org_name(@conn) %>/get_item_price",
-  dataType: "json",
-  data: {
-  op_id: $("input[name='op_id']").val(),
-  item_id: item_id
-  }
-  }).done(function(j) {
-  var result = j
-  for (i in result) {
-  
-  ob.val(result[i]["price"])
-  }
-  })
-  })
-  </script>
+      <script type="text/javascript">
+      $("input.item_price").each(function(){
+      var item_id = $(this).attr("item_id")
+      var ob = $(this)
+      $.ajax({
+      url: "/<%= @conn.private.plug_session["org_name"] %>/get_item_price",
+      dataType: "json",
+      data: {
+      op_id: $("input[name='op_id']").val(),
+      item_id: item_id
+      }
+      }).done(function(j) {
+      var result = j
+      for (i in result) {
+      
+      ob.val(result[i]["price"])
+      }
+      })
+      })
+
+      $("input.combo_price").each(function(){
+      var combo_id = $(this).attr("combo_id")
+      var item_id = $(this).attr("item_id")
+      var ob = $(this)
+      $.ajax({
+      url: "/<%= @conn.private.plug_session["org_name"] %>/get_combo_price",
+      dataType: "json",
+      data: {
+      op_id: $("input[name='op_id']").val(),
+      combo_id: combo_id,
+      item_id: item_id
+      }
+      }).done(function(j) {
+      var result = j
+      for (i in result) {
+      
+      ob.val(result[i]["price"])
+      }
+      })
+      })
+      </script>

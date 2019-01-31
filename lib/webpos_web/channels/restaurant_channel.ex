@@ -10,6 +10,94 @@ defmodule WebposWeb.RestaurantChannel do
     end
   end
 
+  def handle_in("get_menu_items", payload, socket) do
+    code = String.split(socket.topic, ":") |> List.last()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+
+    # rest has its own organization pricing(op)
+    # each op has many item price
+    # each op has 1 item
+    items = map_items(restaurant.op_id)
+
+    broadcast(socket, "new_menu_items", %{menu_items: items})
+    {:noreply, socket}
+  end
+
+  def map_items(op_id) do
+    items =
+      Repo.all(
+        from(
+          i in ItemPrice,
+          left_join: t in Item,
+          on: t.id == i.item_id,
+          where: i.op_id == ^op_id,
+          select: %{
+            id: t.id,
+            name: t.name,
+            category_name: t.category,
+            price: i.price,
+            img_url: t.img_url,
+            customization: t.customizations,
+            printer_ip: "10.239.30.114",
+            port_no: 9100,
+            is_combo: t.is_combo
+          }
+        )
+      )
+      |> Enum.map(fn x -> Map.put(x, :customization, customization(x.customization)) end)
+      |> Enum.map(fn x -> Map.put(x, :combo_items, combo_items(x.id, x.is_combo)) end)
+  end
+
+  def combo_items(item_id, bool) do
+    if bool do
+      Repo.all(from(c in Combo, where: c.combo_id == ^item_id))
+      []
+    else
+      []
+    end
+  end
+
+  def customization(customizations) do
+    if customizations != nil do
+      items =
+        customizations |> String.split(",") |> Enum.map(fn x -> String.trim(x) end)
+        |> Enum.reject(fn x -> x == " " end)
+
+      list = Enum.map(items, fn x -> map_price(x) end)
+    end
+  end
+
+  def map_price(string) do
+    list = string |> String.split("(")
+
+    case Enum.count(list) do
+      1 ->
+        %{name: hd(list), price: Decimal.new("0.00")}
+
+      2 ->
+        %{name: hd(list), price: Decimal.new(String.replace(List.last(list), ")", ""))}
+
+      _ ->
+        %{name: "none", price: Decimal.new("0.00")}
+    end
+  end
+
+  # EcomBackendWeb.Endpoint.broadcast(topic, event, message)
+  # Add authorization logic here as required.
+  defp authorized?(payload, code) do
+    IO.inspect(payload)
+    restaurants = Repo.all(from(b in Restaurant, where: b.code == ^code))
+
+    restaurant =
+      if restaurants != [] do
+        restaurants |> List.first()
+      else
+        %{key: nil}
+      end
+
+    payload["license_key"] == restaurant.key
+  end
+
   # def handle_in("order_completed", payload, socket) do
   #   # broadcast(socket, "shout", payload)
   #   IO.inspect(payload)
@@ -43,19 +131,6 @@ defmodule WebposWeb.RestaurantChannel do
 
   #   {:noreply, socket}
   # end
-
-  def handle_in("get_menu_items", payload, socket) do
-    code = String.split(socket.topic, ":") |> List.last()
-    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
-
-    # rest has its own organization pricing(op)
-    # each op has many item price
-    # each op has 1 item
-    items = map_items(restaurant.op_id)
-
-    broadcast(socket, "new_menu_items", %{menu_items: items})
-    {:noreply, socket}
-  end
 
   # def handle_in("get_combo_items", payload, socket) do
   #   code = String.split(socket.topic, ":") |> List.last()
@@ -116,68 +191,4 @@ defmodule WebposWeb.RestaurantChannel do
 
   #   {:noreply, socket}
   # end
-
-  def map_items(op_id) do
-    items =
-      Repo.all(
-        from(
-          i in ItemPrice,
-          left_join: t in Item,
-          on: t.id == i.item_id,
-          where: i.op_id == ^op_id,
-          select: %{
-            id: t.id,
-            name: t.name,
-            category_name: t.category,
-            price: i.price,
-            img_url: t.img_url,
-            customization: t.customizations,
-            printer_ip: "10.239.30.114",
-            port_no: 9100
-          }
-        )
-      )
-      |> Enum.map(fn x -> Map.put(x, :customization, customization(x.customization)) end)
-  end
-
-  def customization(customizations) do
-    if customizations != nil do
-      items =
-        customizations |> String.split(",") |> Enum.map(fn x -> String.trim(x) end)
-        |> Enum.reject(fn x -> x == " " end)
-
-      list = Enum.map(items, fn x -> map_price(x) end)
-    end
-  end
-
-  def map_price(string) do
-    list = string |> String.split("(")
-
-    case Enum.count(list) do
-      1 ->
-        %{name: hd(list), price: Decimal.new("0.00")}
-
-      2 ->
-        %{name: hd(list), price: Decimal.new(String.replace(List.last(list), ")", ""))}
-
-      _ ->
-        %{name: "none", price: Decimal.new("0.00")}
-    end
-  end
-
-  # EcomBackendWeb.Endpoint.broadcast(topic, event, message)
-  # Add authorization logic here as required.
-  defp authorized?(payload, code) do
-    IO.inspect(payload)
-    restaurants = Repo.all(from(b in Restaurant, where: b.code == ^code))
-
-    restaurant =
-      if restaurants != [] do
-        restaurants |> List.first()
-      else
-        %{key: nil}
-      end
-
-    payload["license_key"] == restaurant.key
-  end
 end
