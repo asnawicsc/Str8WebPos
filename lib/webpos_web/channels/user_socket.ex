@@ -3,9 +3,11 @@ defmodule WebposWeb.UserSocket do
 
   ## Channels
   # channel "room:*", WebposWeb.RoomChannel
+  channel("user:*", WebposWeb.UserChannel)
+  channel("restaurant:*", WebposWeb.RestaurantChannel)
 
   ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket
+  transport(:websocket, Phoenix.Transports.WebSocket)
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can

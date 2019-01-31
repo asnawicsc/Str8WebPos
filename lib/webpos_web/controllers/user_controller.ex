@@ -41,16 +41,15 @@ defmodule WebposWeb.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Settings.get_user!(id)
 
-    if user_params["password"] != nil do
-      user_params =
+    user_params =
+      if user_params["password"] != nil do
         Map.put(
           user_params,
           "crypted_password",
           Comeonin.Bcrypt.hashpwsalt(user_params["password"])
         )
-
-      user_params = Map.put(user_params, "password", nil)
-    end
+        |> Map.put("password", nil)
+      end
 
     case Settings.update_user(user, user_params) do
       {:ok, user} ->
@@ -72,7 +71,7 @@ defmodule WebposWeb.UserController do
     |> redirect(to: user_path(conn, :index))
   end
 
-  def login(conn, params) do
+  def login(conn, _params) do
     render(conn, "login.html", layout: {WebposWeb.LayoutView, "full_bg.html"})
   end
 
@@ -97,41 +96,41 @@ defmodule WebposWeb.UserController do
     end
   end
 
-  def forget_password(conn, params) do
-    render(conn, "forget_password.html", layout: {WebposWeb.LayoutView, "full_bg.html"})
-  end
+  # def forget_password(conn, params) do
+  #   render(conn, "forget_password.html", layout: {WebposWeb.LayoutView, "full_bg.html"})
+  # end
 
-  def forget_password_email(conn, params) do
-    user = Repo.get_by(User, email: params["email"])
+  # def forget_password_email(conn, params) do
+  #   user = Repo.get_by(User, email: params["email"])
 
-    if user == nil do
-      conn
-      |> put_flash(:error, "User not found")
-      |> redirect(to: user_path(conn, :forget_password, Settings.get_domain(conn)))
-    else
-      preset_password = "8888"
-      crypted_password = Comeonin.Bcrypt.hashpwsalt(preset_password)
-      p2 = String.replace(crypted_password, "$2b", "$2y")
-      user_params = %{password: p2}
+  #   if user == nil do
+  #     conn
+  #     |> put_flash(:error, "User not found")
+  #     |> redirect(to: user_path(conn, :forget_password, Settings.get_domain(conn)))
+  #   else
+  #     preset_password = "8888"
+  #     crypted_password = Comeonin.Bcrypt.hashpwsalt(preset_password)
+  #     p2 = String.replace(crypted_password, "$2b", "$2y")
+  #     user_params = %{password: p2}
 
-      changeset = Webpos.Settings.User.changeset(user, user_params)
+  #     changeset = Webpos.Settings.User.changeset(user, user_params)
 
-      Webpos.Repo.update(changeset)
-      password_not_set = true
+  #     Webpos.Repo.update(changeset)
+  #     password_not_set = true
 
-      Webpos.Email.forget_password(
-        user.email,
-        preset_password,
-        user.name,
-        password_not_set
-      )
-      |> Webpos.Mailer.deliver_later()
+  #     Webpos.Email.forget_password(
+  #       user.email,
+  #       preset_password,
+  #       user.name,
+  #       password_not_set
+  #     )
+  #     |> Webpos.Mailer.deliver_later()
 
-      conn
-      |> put_flash(:info, "Password has been sent to your email. Please check !")
-      |> redirect(to: user_path(conn, :login))
-    end
-  end
+  #     conn
+  #     |> put_flash(:info, "Password has been sent to your email. Please check !")
+  #     |> redirect(to: user_path(conn, :login))
+  #   end
+  # end
 
   def logout(conn, _params) do
     conn

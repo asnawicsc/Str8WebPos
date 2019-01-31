@@ -46,17 +46,22 @@
         <span><%= link "Back", to: restaurant_path(@conn, :index) %></span>
       </div>
     </div>
+    <div class="card card-primary">
+      <div class="card-header"><h4>Printers</h4></div>
+      <div class="card-body">
+      </div>
+    </div>
   </div>
   <div class="col-lg-7">
     <div class="card card-primary">
+      <div class="card-header"><h4>Menu Item Pricing <br><small>Choose a pricing by editing the restaurant and update the food item price accordingly.</small></h4></div>
       <div class="card-body">
-        
+ 
         <form action="/update_item_price" method="POST">
           <input type="hidden" name="_csrf_token" value="<%= Phoenix.Controller.get_csrf_token %>">
           <input type="hidden" name="op_id" value="<%= @restaurant.op_id %>">
           <input type="hidden" name="rest_id" value="<%= @restaurant.id %>">
-          <em class="fa-2x far fa-list-alt"></em>
-          <em class="fa-2x fas fa-table"></em>
+         
           
           <div class="form-group">
             <div role="tabpanel">
@@ -94,7 +99,18 @@
                         <div class="card">
                           <div class="card-body text-center bg-gray-lighter" style="height: 35vh;">
                             <p class="mb-3">
-                              <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                              <%= if item.img_url != nil do %>
+                                <%= if File.exists?( File.cwd!() <> "/media/" <> item.img_url) do %>
+                                  <img class="circle thumb64" src="/images/uploads/<%= item.img_url %>">
+
+                                <% else %>
+                                  <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                                <% end %>
+                              <% else %>
+                                <img class="circle thumb64" src="/img/user/08.jpg" alt="">
+                              <% end %>
+                              
+                              
                             </p>
                             <p class="m-0 text-center">
                               <strong>   <%= item.code %></strong>
@@ -131,24 +147,22 @@
     </div>
   </div>
   <script type="text/javascript">
-    $("input.item_price").each(function(){
-      var item_id = $(this).attr("item_id")
-      var ob = $(this)
-      $.ajax({
-      url: "/<%= Settings.get_org_name(@conn) %>/get_item_price",
-      dataType: "json",
-      data: {
-
-        op_id: $("input[name='op_id']").val(),
-        item_id: item_id
-      }
-      }).done(function(j) {
-      var result = j
-
-      for (i in result) {
-   
-          ob.val(result[i]["price"])
-      }
-      })
-    })
+  $("input.item_price").each(function(){
+  var item_id = $(this).attr("item_id")
+  var ob = $(this)
+  $.ajax({
+  url: "/<%= Settings.get_org_name(@conn) %>/get_item_price",
+  dataType: "json",
+  data: {
+  op_id: $("input[name='op_id']").val(),
+  item_id: item_id
+  }
+  }).done(function(j) {
+  var result = j
+  for (i in result) {
+  
+  ob.val(result[i]["price"])
+  }
+  })
+  })
   </script>

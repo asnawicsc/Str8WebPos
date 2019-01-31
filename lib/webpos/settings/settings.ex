@@ -4,7 +4,38 @@ defmodule Webpos.Settings do
   """
   require IEx
   import Ecto.Query, warn: false
+  import Mogrify
   alias Webpos.Repo
+
+  def image_upload(param, organization_id) do
+    path = File.cwd!() <> "/media"
+    image_path = Application.app_dir(:webpos, "priv/static/images")
+
+    if File.exists?(path) == false do
+      File.mkdir(File.cwd!() <> "/media")
+    end
+
+    fl = param.filename |> String.replace(" ", "_")
+    absolute_path = path <> "/#{organization_id}_#{fl}"
+    absolute_path_bin = path <> "/bin_" <> "#{organization_id}_#{fl}"
+    File.cp(param.path, absolute_path)
+    File.rm(image_path <> "/uploads")
+    File.ln_s(path, image_path <> "/uploads")
+
+    resized =
+      Mogrify.open(absolute_path)
+      |> resize("150x150")
+      |> save(path: absolute_path_bin)
+
+    File.cp(resized.path, absolute_path)
+    File.rm(image_path <> "/uploads")
+    File.ln_s(path, image_path <> "/uploads")
+
+    {:ok, bin} = File.read(resized.path)
+
+    File.rm(resized.path)
+    "#{organization_id}_#{fl}"
+  end
 
   alias Webpos.Settings.User
 

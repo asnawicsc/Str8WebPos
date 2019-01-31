@@ -49,6 +49,11 @@
       <!-- TAGS INPUT-->
    <script src="/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
    <!-- =============== APP SCRIPTS ===============-->
+   <script type="text/javascript">
+      window.userToken = ""
+      window.currentUser = "<%= @conn.private.plug_session["user_id"] %>"
+   </script>
+   <script src="/js/phoenix.js"></script>
    <script src="/js/app.js"></script>
 </head>
 

@@ -69,6 +69,13 @@ defmodule WebposWeb do
     quote do
       use Phoenix.Channel
       import WebposWeb.Gettext
+
+      alias Webpos.Repo
+      alias Webpos.Settings
+      alias Webpos.Settings.{User, Organization, Restaurant}
+      alias Webpos.Menu
+      alias Webpos.Menu.{Item, Combo, OrganizationPrice, ItemPrice, ComboPrice}
+      import Ecto.Query
     end
   end
 

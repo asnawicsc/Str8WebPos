@@ -25,6 +25,9 @@ defmodule WebposWeb.ItemController do
   def create(conn, %{"item" => item_params}) do
     item_params = Map.put(item_params, "organization_id", Settings.get_org_id(conn))
 
+    img_url = Settings.image_upload(item_params["img"], Settings.get_org_id(conn))
+    item_params = Map.put(item_params, "img_url", img_url)
+
     case Menu.create_item(item_params) do
       {:ok, item} ->
         conn
@@ -49,6 +52,9 @@ defmodule WebposWeb.ItemController do
 
   def update(conn, %{"id" => id, "item" => item_params}) do
     item = Menu.get_item!(id)
+
+    img_url = Settings.image_upload(item_params["img"], Settings.get_org_id(conn))
+    item_params = Map.put(item_params, "img_url", img_url)
 
     case Menu.update_item(item, item_params) do
       {:ok, item} ->
