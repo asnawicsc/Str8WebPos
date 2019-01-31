@@ -45,13 +45,22 @@ defmodule WebposWeb.RestaurantChannel do
         )
       )
       |> Enum.map(fn x -> Map.put(x, :customization, customization(x.customization)) end)
-      |> Enum.map(fn x -> Map.put(x, :combo_items, combo_items(x.id, x.is_combo)) end)
+      |> Enum.map(fn x -> Map.put(x, :combo_items, combo_items(x.id, x.is_combo, op_id)) end)
   end
 
-  def combo_items(item_id, bool) do
+  def combo_items(item_id, bool, op_id) do
     if bool do
-      Repo.all(from(c in Combo, where: c.combo_id == ^item_id))
-      []
+      Repo.all(
+        from(
+          c in Combo,
+          left_join: p in ComboPrice,
+          on: c.combo_id == p.combo_id and c.item_id == p.item_id,
+          left_join: i in Item,
+          on: i.id == c.item_id and i.id == p.item_id,
+          where: c.combo_id == ^item_id,
+          select: %{limit: c.category_limit, category: c.category, price: p.price, name: i.name}
+        )
+      )
     else
       []
     end
