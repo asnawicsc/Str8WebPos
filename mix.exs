@@ -20,7 +20,7 @@ defmodule Webpos.Mixfile do
   def application do
     [
       mod: {Webpos.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :elixir_make, :parse_trans]
     ]
   end
 

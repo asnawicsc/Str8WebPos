@@ -16,11 +16,11 @@ defmodule WebposWeb.Router do
 
   scope "/api", WebposWeb do
     pipe_through(:api)
+    get("/:code/get_api2", RestaurantController, :get_api2)
+    get("/sales", PageController, :webhook_get)
+    post("/sales", PageController, :webhook_post)
 
-    get("/sales", ApiController, :webhook_get)
-    post("/sales", ApiController, :webhook_post)
-
-    post("/operations", ApiController, :webhook_post_operations)
+    post("/operations", PageController, :webhook_post_operations)
   end
 
   scope "/", WebposWeb do
@@ -30,6 +30,7 @@ defmodule WebposWeb.Router do
     get("/login", UserController, :login)
     post("/authenticate_login", UserController, :authenticate_login)
     get("/logout", UserController, :logout)
+
     resources("/users", UserController)
     resources("/organizations", OrganizationController)
     get("/:org_name/items", ItemController, :index)

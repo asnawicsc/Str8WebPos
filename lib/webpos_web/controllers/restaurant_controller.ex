@@ -4,6 +4,24 @@ defmodule WebposWeb.RestaurantController do
   alias Webpos.Settings
   alias Webpos.Settings.Restaurant
 
+  def get_api2(conn, %{"code" => branch_code, "license_key" => api_key}) do
+    IO.inspect(conn)
+    branch = Repo.all(from(b in Restaurant, where: b.code == ^branch_code))
+
+    if branch != [] do
+      IO.inspect(api_key)
+      IO.inspect(hd(branch).key)
+
+      if api_key == hd(branch).key do
+        send_resp(conn, 200, "ok")
+      else
+        send_resp(conn, 500, "not ok")
+      end
+    else
+      send_resp(conn, 500, "not ok")
+    end
+  end
+
   def index(conn, _params) do
     restaurants = Settings.list_restaurants()
     render(conn, "index.html", restaurants: restaurants)

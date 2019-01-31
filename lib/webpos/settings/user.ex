@@ -25,6 +25,6 @@ defmodule Webpos.Settings.User do
       :crypted_password,
       :email
     ])
-    |> validate_required([:username, :crypted_password])
+    |> validate_required([:organization_id, :username, :crypted_password])
   end
 end

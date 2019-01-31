@@ -27,10 +27,12 @@ config :webpos, WebposWeb.Endpoint, server: true
 #   pool_size: 10,
 #   timeout: 90000
 
-config :webpos, Webpos.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "webpos_prod",
-  hostname: "localhost",
-  pool_size: 10
+# config :webpos, Webpos.Repo,
+#   adapter: Ecto.Adapters.Postgres,
+#   username: "postgres",
+#   password: "postgres",
+#   database: "webpos_prod",
+#   hostname: "localhost",
+#   pool_size: 10
+
+import_config "prod.secret.exs"

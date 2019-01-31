@@ -5,8 +5,14 @@ defmodule WebposWeb.UserController do
   alias Webpos.Settings.User
   require IEx
 
-  def index(conn, _params) do
-    users = Settings.list_users()
+  def index(conn, params) do
+    users =
+      if params["q"] != nil do
+        Repo.all(from(u in User, where: u.user_type == "Staff"))
+      else
+        Settings.list_users()
+      end
+
     render(conn, "index.html", users: users)
   end
 
@@ -16,6 +22,18 @@ defmodule WebposWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
+    user_params = Map.put(user_params, "organization_id", Settings.get_org_id(conn))
+
+    user_params =
+      if user_params["password"] != nil do
+        Map.put(
+          user_params,
+          "crypted_password",
+          Comeonin.Bcrypt.hashpwsalt(user_params["password"])
+        )
+        |> Map.put("password", nil)
+      end
+
     case Settings.create_user(user_params) do
       {:ok, user} ->
         conn
@@ -40,6 +58,7 @@ defmodule WebposWeb.UserController do
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Settings.get_user!(id)
+    user_params = Map.put(user_params, "organization_id", Settings.get_org_id(conn))
 
     user_params =
       if user_params["password"] != nil do

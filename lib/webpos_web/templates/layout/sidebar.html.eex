@@ -36,7 +36,7 @@
                      </a>
                   </li>
                   <li class=" ">
-                     <a href="/staffs" title="Widgets">
+                     <a href="/users?q=staff" title="Widgets">
                         <div class="float-right badge badge-info">30</div>
                         <em class="fa fa-users"></em>
                         <span >Staffs</span>

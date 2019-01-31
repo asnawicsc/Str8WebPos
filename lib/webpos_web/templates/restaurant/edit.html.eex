@@ -2,4 +2,4 @@
 
 <%= render "form.html", Map.put(assigns, :action, restaurant_path(@conn, :update, @restaurant)) %>
 
-<span><%= link "Back", to: restaurant_path(@conn, :index) %></span>
+<span><%= link "Back", to: restaurant_path(@conn, :index, @conn.private.plug_session["org_name"]) %></span>

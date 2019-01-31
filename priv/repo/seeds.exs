@@ -25,7 +25,3 @@ Repo.delete_all(User)
     crypted_password: Comeonin.Bcrypt.hashpwsalt("123"),
     organization_id: org.id
   })
-
-IO.inspect(a)
-
-IO.inspect(a)
