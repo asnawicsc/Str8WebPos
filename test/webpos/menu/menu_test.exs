@@ -264,4 +264,76 @@ defmodule Webpos.MenuTest do
       assert %Ecto.Changeset{} = Menu.change_printer(printer)
     end
   end
+
+  describe "discounts" do
+    alias Webpos.Menu.Discount
+
+    @valid_attrs %{amount: 120.5, category: "some category", description: "some description", disc_type: "some disc_type", name: "some name", requirements: "some requirements", targets: "some targets"}
+    @update_attrs %{amount: 456.7, category: "some updated category", description: "some updated description", disc_type: "some updated disc_type", name: "some updated name", requirements: "some updated requirements", targets: "some updated targets"}
+    @invalid_attrs %{amount: nil, category: nil, description: nil, disc_type: nil, name: nil, requirements: nil, targets: nil}
+
+    def discount_fixture(attrs \\ %{}) do
+      {:ok, discount} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Menu.create_discount()
+
+      discount
+    end
+
+    test "list_discounts/0 returns all discounts" do
+      discount = discount_fixture()
+      assert Menu.list_discounts() == [discount]
+    end
+
+    test "get_discount!/1 returns the discount with given id" do
+      discount = discount_fixture()
+      assert Menu.get_discount!(discount.id) == discount
+    end
+
+    test "create_discount/1 with valid data creates a discount" do
+      assert {:ok, %Discount{} = discount} = Menu.create_discount(@valid_attrs)
+      assert discount.amount == 120.5
+      assert discount.category == "some category"
+      assert discount.description == "some description"
+      assert discount.disc_type == "some disc_type"
+      assert discount.name == "some name"
+      assert discount.requirements == "some requirements"
+      assert discount.targets == "some targets"
+    end
+
+    test "create_discount/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Menu.create_discount(@invalid_attrs)
+    end
+
+    test "update_discount/2 with valid data updates the discount" do
+      discount = discount_fixture()
+      assert {:ok, discount} = Menu.update_discount(discount, @update_attrs)
+      assert %Discount{} = discount
+      assert discount.amount == 456.7
+      assert discount.category == "some updated category"
+      assert discount.description == "some updated description"
+      assert discount.disc_type == "some updated disc_type"
+      assert discount.name == "some updated name"
+      assert discount.requirements == "some updated requirements"
+      assert discount.targets == "some updated targets"
+    end
+
+    test "update_discount/2 with invalid data returns error changeset" do
+      discount = discount_fixture()
+      assert {:error, %Ecto.Changeset{}} = Menu.update_discount(discount, @invalid_attrs)
+      assert discount == Menu.get_discount!(discount.id)
+    end
+
+    test "delete_discount/1 deletes the discount" do
+      discount = discount_fixture()
+      assert {:ok, %Discount{}} = Menu.delete_discount(discount)
+      assert_raise Ecto.NoResultsError, fn -> Menu.get_discount!(discount.id) end
+    end
+
+    test "change_discount/1 returns a discount changeset" do
+      discount = discount_fixture()
+      assert %Ecto.Changeset{} = Menu.change_discount(discount)
+    end
+  end
 end

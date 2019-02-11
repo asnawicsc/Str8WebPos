@@ -3,6 +3,7 @@ defmodule WebposWeb.RestaurantController do
 
   alias Webpos.Settings
   alias Webpos.Settings.Restaurant
+  require IEx
 
   def get_api2(conn, %{"code" => branch_code, "license_key" => api_key}) do
     IO.inspect(conn)
@@ -49,27 +50,33 @@ defmodule WebposWeb.RestaurantController do
   def show(conn, %{"id" => id}) do
     restaurant = Settings.get_restaurant!(id)
 
-    items = Menu.list_items(restaurant.organization_id)
-    categories = Enum.map(items, fn x -> x.category end) |> Enum.uniq()
+    if Settings.get_org_name_encoded(conn) == conn.params["org_name"] do
+      items = Menu.list_items(restaurant.organization_id)
+      categories = Enum.map(items, fn x -> x.category end) |> Enum.uniq()
 
-    printers =
-      Repo.all(
-        from(
-          p in Printer,
-          left_join: i in RestItemPrinter,
-          on: p.id == i.printer_id,
-          where: i.rest_id == ^id and is_nil(i.item_id)
+      printers =
+        Repo.all(
+          from(
+            p in Printer,
+            left_join: i in RestItemPrinter,
+            on: p.id == i.printer_id,
+            where: i.rest_id == ^id and is_nil(i.item_id)
+          )
         )
-      )
 
-    render(
-      conn,
-      "show.html",
-      items: items,
-      restaurant: restaurant,
-      categories: categories,
-      printers: printers
-    )
+      render(
+        conn,
+        "show.html",
+        items: items,
+        restaurant: restaurant,
+        categories: categories,
+        printers: printers
+      )
+    else
+      conn
+      |> put_flash(:error, "Invalid organization name")
+      |> redirect(to: organization_path(conn, :index))
+    end
   end
 
   def edit(conn, %{"id" => id}) do
@@ -86,7 +93,9 @@ defmodule WebposWeb.RestaurantController do
       {:ok, restaurant} ->
         conn
         |> put_flash(:info, "Restaurant updated successfully.")
-        |> redirect(to: restaurant_path(conn, :show, restaurant))
+        |> redirect(
+          to: restaurant_path(conn, :show, Settings.get_org_name_encoded(conn), restaurant)
+        )
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", restaurant: restaurant, changeset: changeset)

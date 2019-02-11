@@ -35,7 +35,9 @@ defmodule WebposWeb do
         ItemPrice,
         ComboPrice,
         RestItemPrinter,
-        Printer
+        Printer,
+        Discount,
+        RestDiscount
       }
 
       import Ecto.Query
@@ -70,7 +72,9 @@ defmodule WebposWeb do
         ItemPrice,
         ComboPrice,
         RestItemPrinter,
-        Printer
+        Printer,
+        Discount,
+        RestDiscount
       }
 
       import Ecto.Query
@@ -102,7 +106,9 @@ defmodule WebposWeb do
         ItemPrice,
         ComboPrice,
         RestItemPrinter,
-        Printer
+        Printer,
+        Discount,
+        RestDiscount
       }
 
       import Ecto.Query

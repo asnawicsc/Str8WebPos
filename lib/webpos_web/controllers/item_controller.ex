@@ -54,6 +54,7 @@ defmodule WebposWeb.ItemController do
 
   def update(conn, %{"id" => id, "item" => item_params}) do
     item = Menu.get_item!(id)
+    item_params = Map.put(item_params, "organization_id", Settings.get_org_id(conn))
 
     if item_params["img"] != nil do
       img_url = Settings.image_upload(item_params["img"], Settings.get_org_id(conn))

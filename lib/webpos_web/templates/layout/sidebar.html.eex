@@ -67,15 +67,9 @@
                         <span >Menu Items</span>
                      </a>
                   </li>
+             
                   <li class=" ">
-                     <a href="/combos" title="Widgets">
-                        <div class="float-right badge badge-inverse">30</div>
-                        <em class="far fa-lemon"></em>
-                        <span >Combo Items</span>
-                     </a>
-                  </li>
-                  <li class=" ">
-                     <a href="/discount_items" title="Widgets">
+                     <a href="/discounts" title="Widgets">
                         <div class="float-right badge badge-success">30</div>
                         <em class="icon-grid"></em>
                         <span >Discount Items</span>

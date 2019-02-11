@@ -53,6 +53,14 @@ defmodule Webpos.Settings do
     ).name
   end
 
+  def get_org_name_encoded(conn) do
+    Repo.get(
+      Webpos.Settings.Organization,
+      Repo.get(User, conn.private.plug_session["user_id"]).organization_id
+    ).name
+    |> Base.url_encode64()
+  end
+
   @doc """
   Returns the list of users.
 

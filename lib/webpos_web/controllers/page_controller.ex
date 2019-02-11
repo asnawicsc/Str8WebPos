@@ -18,6 +18,9 @@ defmodule WebposWeb.PageController do
 
         if branch != nil do
           case params["fields"] do
+            "discount" ->
+              get_scope_discounts(conn, branch.organization_id, params["code"])
+
             "staffs" ->
               get_scope_staffs(conn, branch.organization_id, params["code"])
 
@@ -28,6 +31,24 @@ defmodule WebposWeb.PageController do
           send_resp(conn, 200, "branch doesnt exist. \n")
         end
     end
+  end
+
+  def get_scope_discounts(conn, organization_id, code) do
+    rest = Repo.get_by(Restaurant, code: code)
+
+    discount_data =
+      Repo.all(
+        from(
+          d in Discount,
+          left_join: r in RestDiscount,
+          on: r.discount_id == d.id,
+          where: r.rest_id == ^rest.id
+        )
+      )
+
+    discount_list = %{discounts: discount_data} |> Poison.encode!()
+
+    send_resp(conn, 200, discount_list)
   end
 
   def get_scope_staffs(conn, organization_id, code) do
@@ -43,6 +64,7 @@ defmodule WebposWeb.PageController do
           }
         )
       )
+      |> Enum.map(fn x -> Map.put(x, :staff_pin, String.to_integer(x.staff_pin)) end)
 
     staff_list = %{staffs: staff_data} |> Poison.encode!()
 

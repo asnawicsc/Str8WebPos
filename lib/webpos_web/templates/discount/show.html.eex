@@ -1,0 +1,43 @@
+<h2>Show Discount</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @discount.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @discount.description %>
+  </li>
+
+  <li>
+    <strong>Category:</strong>
+    <%= @discount.category %>
+  </li>
+
+  <li>
+    <strong>Disc type:</strong>
+    <%= @discount.disc_type %>
+  </li>
+
+  <li>
+    <strong>Amount:</strong>
+    <%= @discount.amount %>
+  </li>
+
+  <li>
+    <strong>Requirements:</strong>
+    <%= @discount.requirements %>
+  </li>
+
+  <li>
+    <strong>Targets:</strong>
+    <%= @discount.targets %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: discount_path(@conn, :edit, @discount) %></span>
+<span><%= link "Back", to: discount_path(@conn, :index) %></span>

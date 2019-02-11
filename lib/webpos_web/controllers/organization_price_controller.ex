@@ -148,7 +148,9 @@ defmodule WebposWeb.OrganizationPriceController do
       {:ok, organization_price} ->
         conn
         |> put_flash(:info, "Organization price updated successfully.")
-        |> redirect(to: organization_price_path(conn, :show, organization_price))
+        |> redirect(
+          to: organization_path(conn, :show, organization_price_params["organization_id"])
+        )
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", organization_price: organization_price, changeset: changeset)

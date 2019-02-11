@@ -46,6 +46,7 @@
               <%= Repo.get(OrganizationPrice, @restaurant.op_id).name %>
             </li>
           </ul>
+           <span><%= link "Choose Discounts", to: discount_path(@conn, :index, @conn.params["org_name"], choose: "#{@restaurant.code}") %></span>
           <span><%= link "Choose Printers", to: printer_path(@conn, :index, @conn.params["org_name"], choose: "#{@restaurant.code}") %></span>
           <span><%= link "Create Pricing", to: organization_price_path(@conn, :index, @restaurant) %></span>
           <span><%= link "Edit", to: restaurant_path(@conn, :edit, @restaurant) %></span>
