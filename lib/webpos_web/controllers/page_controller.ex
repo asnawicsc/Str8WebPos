@@ -42,10 +42,20 @@ defmodule WebposWeb.PageController do
           d in Discount,
           left_join: r in RestDiscount,
           on: r.discount_id == d.id,
-          where: r.rest_id == ^rest.id
+          where: r.rest_id == ^rest.id,
+          select: %{
+            name: d.name,
+            description: d.description,
+            category: d.category,
+            disc_type: d.disc_type,
+            amount: d.amount,
+            requirements: d.requirements,
+            targets: d.targets
+          }
         )
       )
 
+    IO.inspect(discount_data)
     discount_list = %{discounts: discount_data} |> Poison.encode!()
 
     send_resp(conn, 200, discount_list)
