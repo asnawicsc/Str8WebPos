@@ -24,7 +24,7 @@ defmodule Webpos.Settings do
 
     resized =
       Mogrify.open(absolute_path)
-      |> resize("150x150")
+      |> resize("100x100")
       |> save(path: absolute_path_bin)
 
     File.cp(resized.path, absolute_path)

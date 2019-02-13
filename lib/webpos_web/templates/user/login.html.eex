@@ -42,8 +42,9 @@
                   </div>
                   <button class="btn btn-block btn-primary mt-3" type="submit">Login</button>
                </form>
-               <p class="pt-3 text-center">Need to Signup?</p>
-               <a class="btn btn-block btn-secondary" href="register.html">Register Now</a>
+               <p class="pt-3 text-center">Android Version</p>
+               <a class="btn btn-block btn-secondary" href="/images/uploads/app_server.apk">Mainpos APK</a>
+               <a class="btn btn-block btn-secondary" href="/images/uploads/app.apk">Sidepos APK</a>
             </div>
          </div>
          <!-- END card-->

@@ -56,7 +56,7 @@ defmodule WebposWeb.RestaurantChannel do
 
     printer =
       if result != [] do
-        Repo.get_by(Printer, hd(result).printer_id)
+        Repo.get(Printer, hd(result).printer_id)
       else
         %{ip_address: "10.239.30.114", port_no: 9100}
       end
