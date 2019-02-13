@@ -17,13 +17,13 @@ defmodule WebposWeb.RestaurantChannel do
     # rest has its own organization pricing(op)
     # each op has many item price
     # each op has 1 item
-    items = map_items(restaurant.op_id)
+    items = map_items(restaurant.op_id, restaurant.id)
 
     broadcast(socket, "new_menu_items", %{menu_items: items})
     {:noreply, socket}
   end
 
-  def map_items(op_id) do
+  def map_items(op_id, rest_id) do
     items =
       Repo.all(
         from(
@@ -46,6 +46,22 @@ defmodule WebposWeb.RestaurantChannel do
       )
       |> Enum.map(fn x -> Map.put(x, :customization, customization(x.customization)) end)
       |> Enum.map(fn x -> Map.put(x, :combo_items, combo_items(x.id, x.is_combo, op_id)) end)
+      |> Enum.map(fn x -> Map.put(x, :printer_ip, elem(printer(x.id, rest_id), 0)) end)
+      |> Enum.map(fn x -> Map.put(x, :port_no, elem(printer(x.id, rest_id), 1)) end)
+  end
+
+  def printer(item_id, rest_id) do
+    result =
+      Repo.all(from(i in RestItemPrinter, where: i.rest_id == ^rest_id and i.item_id == ^item_id))
+
+    printer =
+      if result != [] do
+        Repo.get_by(Printer, hd(result).printer_id)
+      else
+        %{ip_address: "10.239.30.114", port_no: 9100}
+      end
+
+    {printer.ip_address, printer.port_no}
   end
 
   def combo_items(item_id, bool, op_id) do
