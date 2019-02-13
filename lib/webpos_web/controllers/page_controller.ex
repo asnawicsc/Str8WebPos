@@ -24,6 +24,9 @@ defmodule WebposWeb.PageController do
             "staffs" ->
               get_scope_staffs(conn, branch.organization_id, params["code"])
 
+            "sales_payment" ->
+              sales_payment(conn, branch, params["code"], params)
+
             _ ->
               send_resp(conn, 200, "request not available. \n")
           end
@@ -31,6 +34,19 @@ defmodule WebposWeb.PageController do
           send_resp(conn, 200, "branch doesnt exist. \n")
         end
     end
+  end
+
+  def sales_payment(conn, restaurant, code, params) do
+    payment_list =
+      Reports.list_sales_payment(params["start"], params["end"])
+      |> Enum.map(fn x -> Map.put(x, :name, restaurant.name) end)
+      |> Poison.encode!()
+
+    IO.inspect(payment_list)
+
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(200, payment_list)
   end
 
   def get_scope_discounts(conn, organization_id, code) do

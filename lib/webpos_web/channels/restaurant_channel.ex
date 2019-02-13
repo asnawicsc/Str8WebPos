@@ -109,25 +109,26 @@ defmodule WebposWeb.RestaurantChannel do
     # broadcast(socket, "shout", payload)
     IO.inspect(payload)
     code = socket.topic |> String.split(":") |> List.last()
-    Restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
 
-    brand_id = Restaurant.brand_id()
     sales_param = payload["sales"]["sales"]
-    sales_param = Map.put(sales_param, "brand_id", brand_id)
-    sales_param = Map.put(sales_param, "Restaurantid", Integer.to_string(Restaurant.Restaurantid))
-    a = Sales.changeset(%Sales{}, sales_param) |> Repo.insert()
+
+    sales_param = Map.put(sales_param, "organization_id", restaurant.organization_id)
+    sales_param = Map.put(sales_param, "rest_name", restaurant.name)
+
+    a = Sale.changeset(%Sale{}, sales_param) |> Repo.insert()
     IO.inspect(a)
 
     for map <- payload["sales"]["sales_details"] do
       sales_detail_param = map
-      sales_detail_param = Map.put(sales_detail_param, "brand_id", brand_id)
+      # sales_detail_param = Map.put(sales_detail_param, "brand_id", brand_id)
       b = SalesDetail.changeset(%SalesDetail{}, sales_detail_param) |> Repo.insert()
       IO.inspect(b)
     end
 
     for map <- payload["sales"]["sales_payment"] do
       sales_payment_param = map
-      sales_payment_param = Map.put(sales_payment_param, "brand_id", brand_id)
+      # sales_payment_param = Map.put(sales_payment_param, "brand_id", brand_id)
 
       c =
         SalesPayment.changeset(%SalesPayment{}, sales_payment_param)

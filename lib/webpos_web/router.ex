@@ -51,6 +51,8 @@ defmodule WebposWeb.Router do
     get("/:org_name/printers/new", PrinterController, :new)
     get("/:org_name/toggle_printer", PrinterController, :toggle_printer)
     get("/:org_name/check_printer", PrinterController, :check_printer)
+    get("/:org_name/update_printer_item", PrinterController, :update_printer_item)
+    get("/:org_name/check_printer_item", PrinterController, :check_printer_item)
     resources("/printers", PrinterController)
     get("/:org_name/discounts", DiscountController, :index)
     get("/:org_name/discounts/new", DiscountController, :new)
@@ -58,6 +60,7 @@ defmodule WebposWeb.Router do
     get("/:org_name/toggle_discount", DiscountController, :toggle_discount)
     get("/:org_name/check_discount", DiscountController, :check_discount)
     resources("/discounts", DiscountController)
+    resources("/reports/sales", SaleController)
     get("/*path", PageController, :no_page_found)
   end
 

@@ -24,7 +24,8 @@ defmodule WebposWeb.RestaurantController do
   end
 
   def index(conn, _params) do
-    restaurants = Settings.list_restaurants()
+    user = Settings.current_user(conn)
+    restaurants = Settings.list_restaurants(user.organization_id)
     render(conn, "index.html", restaurants: restaurants)
   end
 

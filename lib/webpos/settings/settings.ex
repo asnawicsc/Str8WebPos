@@ -61,6 +61,10 @@ defmodule Webpos.Settings do
     |> Base.url_encode64()
   end
 
+  def current_user(conn) do
+    Repo.get(User, conn.private.plug_session["user_id"])
+  end
+
   @doc """
   Returns the list of users.
 
@@ -262,8 +266,12 @@ defmodule Webpos.Settings do
       [%Restaurant{}, ...]
 
   """
-  def list_restaurants do
-    Repo.all(Restaurant)
+  def list_restaurants(org_id) do
+    if org_id == nil do
+      Repo.all(Restaurant)
+    else
+      Repo.all(from(r in Restaurant, where: r.organization_id == ^org_id))
+    end
   end
 
   @doc """

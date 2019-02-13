@@ -18,8 +18,9 @@
    <link rel="stylesheet" href="/vendor/simple-line-icons/css/simple-line-icons.css">
    <!-- ANIMATE.CSS-->
    <link rel="stylesheet" href="/vendor/animate.css/animate.css">
-   <!-- WHIRL (spinners)-->
-   <link rel="stylesheet" href="/vendor/whirl/dist/whirl.css">
+   <!--  (spinners)-->
+  
+   <link rel="stylesheet" href="/vendor/loaders.css/loaders.css">
    <!-- =============== PAGE VENDOR STYLES ===============-->
       <!-- TAGS INPUT-->
    <link rel="stylesheet" href="/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
@@ -48,6 +49,7 @@
    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
       <!-- TAGS INPUT-->
    <script src="/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+   <script src="/vendor/components-jqueryui/jquery-ui.js"></script>
    <!-- =============== APP SCRIPTS ===============-->
    <script type="text/javascript">
       window.userToken = ""

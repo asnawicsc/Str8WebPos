@@ -70,7 +70,9 @@
             </div>
             <div class="card-wrapper collapse show" style="">
               <div class="card-body">
-                <p>Card can be collapsed clicking on the chevron up/down icon on the top right corner</p>
+                <ul class="pp" printer_id="<%= printer.id %>" style="list-style: none; min-height: 100px;">
+               
+                </ul>
               </div>
               
             </div>
@@ -143,9 +145,12 @@
                                 
                                 
                               </p>
-                              <p class="m-0 text-center">
-                                <strong>   <%= item.code %></strong>
-                                <strong>   <%= item.name %></strong>
+                              <p  class="m-0 text-center ">
+                                <ul style="list-style: none; padding-left: 0px; margin-bottom: 0px;">
+                                  
+                               <li item_id="<%= item.id %>" style="cursor: pointer;" class="dpp"> <strong>   <%= item.code %></strong>
+                                <strong>   <%= item.name %></strong></li>
+                                </ul>
                                 <%= item.desc %>
                                 
                               </p>
@@ -199,44 +204,101 @@
           </div>
         </div>
       </div>
-      <script type="text/javascript">
-      $("input.item_price").each(function(){
-      var item_id = $(this).attr("item_id")
-      var ob = $(this)
-      $.ajax({
+   <script type="text/javascript">
+  (function($) {
+    $.fn.start_drag = function() {
+      $(".dpp").draggable({
+        revert: "valid",
+        snap: "ul.pp",
+        helper: "clone",
+        cursor: "move"
+      });
+    };
+
+        $("ul.pp").droppable({
+      drop: function(event, ui) {
+        var printer_id = $(this).attr("printer_id")
+        var item_id = $(ui.draggable).attr("item_id")
+
+        $(this).append(ui.draggable)
+
+        $.ajax({
+          url: "/<%= @conn.private.plug_session["org_name"] %>/update_printer_item",
+          dataType: "json",
+          data: {
+            printer_id: printer_id,
+            item_id: item_id,
+            code: "<%= @restaurant.code %>"
+          }
+        })
+
+
+      }
+    });
+  })(jQuery);
+  $(document).ready(function() {
+
+          $(document).start_drag()
+
+    $("ul.pp").each(function(){
+        var printer_id = $(this).attr("printer_id")
+        $.ajax({
+          url: "/<%= @conn.private.plug_session["org_name"] %>/check_printer_item",
+          dataType: "json",
+          data: {
+            printer_id: printer_id,
+              code: "<%= @restaurant.code %>"
+          }
+        }).done(function(j) {
+          var result = j[0]["printers"]
+          console.log(result)
+          for (i in result) {
+            
+
+            var html = '<li item_id='+result[i]["id"]+' style="cursor: pointer;" class="dpp"> <strong>'+result[i]["code"]+'</strong> <strong>'+result[i]["name"]+'</strong></li>'
+
+            $("ul.pp[printer_id='"+ printer_id +"']").append(html);
+          }
+                    $(document).start_drag()
+        })
+    })
+
+
+  })
+  $("input.item_price").each(function() {
+    var item_id = $(this).attr("item_id")
+    var ob = $(this)
+    $.ajax({
       url: "/<%= @conn.private.plug_session["org_name"] %>/get_item_price",
       dataType: "json",
       data: {
-      op_id: $("input[name='op_id']").val(),
-      item_id: item_id
+        op_id: $("input[name='op_id']").val(),
+        item_id: item_id
       }
-      }).done(function(j) {
+    }).done(function(j) {
       var result = j
       for (i in result) {
-      
-      ob.val(result[i]["price"])
+        ob.val(result[i]["price"])
       }
-      })
-      })
-
-      $("input.combo_price").each(function(){
-      var combo_id = $(this).attr("combo_id")
-      var item_id = $(this).attr("item_id")
-      var ob = $(this)
-      $.ajax({
+    })
+  })
+  $("input.combo_price").each(function() {
+    var combo_id = $(this).attr("combo_id")
+    var item_id = $(this).attr("item_id")
+    var ob = $(this)
+    $.ajax({
       url: "/<%= @conn.private.plug_session["org_name"] %>/get_combo_price",
       dataType: "json",
       data: {
-      op_id: $("input[name='op_id']").val(),
-      combo_id: combo_id,
-      item_id: item_id
+        op_id: $("input[name='op_id']").val(),
+        combo_id: combo_id,
+        item_id: item_id
       }
-      }).done(function(j) {
+    }).done(function(j) {
       var result = j
       for (i in result) {
-      
-      ob.val(result[i]["price"])
+        ob.val(result[i]["price"])
       }
-      })
-      })
-      </script>
+    })
+  })
+</script>

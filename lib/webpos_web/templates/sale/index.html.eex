@@ -1,0 +1,56 @@
+<h2>Listing Sales</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Salesid</th>
+      <th>Pax</th>
+      <th>Tbl no</th>
+      <th>Sub total</th>
+      <th>Tax</th>
+      <th>Service charge</th>
+      <th>Rounding</th>
+      <th>Grand total</th>
+      <th>Salesdate</th>
+      <th>Salesdatetime</th>
+      <th>Invoiceno</th>
+      <th>Staffid</th>
+      <th>Transaction type</th>
+      <th>Discount name</th>
+      <th>Discounted amount</th>
+      <th>Discount description</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for sale <- @sales do %>
+    <tr>
+      <td><%= sale.salesid %></td>
+      <td><%= sale.pax %></td>
+      <td><%= sale.tbl_no %></td>
+      <td><%= sale.sub_total %></td>
+      <td><%= sale.tax %></td>
+      <td><%= sale.service_charge %></td>
+      <td><%= sale.rounding %></td>
+      <td><%= sale.grand_total %></td>
+      <td><%= sale.salesdate %></td>
+      <td><%= sale.salesdatetime %></td>
+      <td><%= sale.invoiceno %></td>
+      <td><%= sale.staffid %></td>
+      <td><%= sale.transaction_type %></td>
+      <td><%= sale.discount_name %></td>
+      <td><%= sale.discounted_amount %></td>
+      <td><%= sale.discount_description %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: sale_path(@conn, :show, sale), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: sale_path(@conn, :edit, sale), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: sale_path(@conn, :delete, sale), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Sale", to: sale_path(@conn, :new) %></span>

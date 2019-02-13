@@ -129,4 +129,72 @@ defmodule WebposWeb.PrinterController do
     |> put_resp_content_type("application/json")
     |> send_resp(200, json_map)
   end
+
+  def update_printer_item(conn, params) do
+    rest = Repo.get_by(Restaurant, code: params["code"])
+
+    old_result =
+      Repo.all(
+        from(
+          r in RestItemPrinter,
+          where: r.rest_id == ^rest.id and r.item_id == ^params["item_id"]
+        )
+      )
+
+    json_map =
+      if old_result == [] do
+        {:ok, printer} =
+          RestItemPrinter.changeset(%RestItemPrinter{}, %{
+            rest_id: rest.id,
+            printer_id: params["printer_id"],
+            item_id: params["item_id"]
+          })
+          |> Repo.insert()
+
+        [%{stats: "none"}] |> Poison.encode!()
+      else
+        printer = hd(old_result)
+
+        {:ok, printer} =
+          RestItemPrinter.changeset(printer, %{
+            rest_id: rest.id,
+            printer_id: params["printer_id"],
+            item_id: params["item_id"]
+          })
+          |> Repo.update()
+
+        [%{stats: "ok"}] |> Poison.encode!()
+      end
+
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(200, json_map)
+  end
+
+  def check_printer_item(conn, params) do
+    rest = Repo.get_by(Restaurant, code: params["code"])
+
+    old_result =
+      Repo.all(
+        from(
+          r in RestItemPrinter,
+          left_join: i in Item,
+          on: r.item_id == i.id,
+          where: r.rest_id == ^rest.id and r.printer_id == ^params["printer_id"],
+          select: %{name: i.name, code: i.code, id: i.id}
+        )
+      )
+      |> Enum.reject(fn x -> x.code == nil end)
+
+    json_map =
+      if old_result == [] do
+        [%{stats: "none", printers: []}] |> Poison.encode!()
+      else
+        [%{stats: "ok", printers: old_result}] |> Poison.encode!()
+      end
+
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(200, json_map)
+  end
 end

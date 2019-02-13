@@ -69,7 +69,7 @@
                   </li>
              
                   <li class=" ">
-                     <a href="/discounts" title="Widgets">
+                     <a href="/<%= @conn.private.plug_session["org_name"]%>/discounts" title="Widgets">
                         <div class="float-right badge badge-success">30</div>
                         <em class="icon-grid"></em>
                         <span >Discount Items</span>

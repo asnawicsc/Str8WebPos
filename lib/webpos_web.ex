@@ -40,6 +40,9 @@ defmodule WebposWeb do
         RestDiscount
       }
 
+      alias Webpos.Reports
+      alias Webpos.Reports.{Sale, SalesDetail, SalesPayment}
+
       import Ecto.Query
     end
   end
@@ -77,6 +80,8 @@ defmodule WebposWeb do
         RestDiscount
       }
 
+      alias Webpos.Reports
+      alias Webpos.Reports.{Sale, SalesDetail, SalesPayment}
       import Ecto.Query
     end
   end
@@ -111,6 +116,8 @@ defmodule WebposWeb do
         RestDiscount
       }
 
+      alias Webpos.Reports
+      alias Webpos.Reports.{Sale, SalesDetail, SalesPayment}
       import Ecto.Query
     end
   end

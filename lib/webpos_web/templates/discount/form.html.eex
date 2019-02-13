@@ -1,53 +1,93 @@
 <%= form_for @changeset, @action, fn f -> %>
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
-    </div>
-  <% end %>
-
-  <div class="form-group">
-    <%= label f, :name, class: "control-label" %>
-    <%= text_input f, :name, class: "form-control" %>
-    <%= error_tag f, :name %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :description, class: "control-label" %>
-    <%= text_input f, :description, class: "form-control" %>
-    <%= error_tag f, :description %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :category, class: "control-label" %>
-    <%= text_input f, :category, class: "form-control" %>
-    <%= error_tag f, :category %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :disc_type, class: "control-label" %>
-    <%= text_input f, :disc_type, class: "form-control" %>
-    <%= error_tag f, :disc_type %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :amount, class: "control-label" %>
-    <%= number_input f, :amount, step: "any", class: "form-control" %>
-    <%= error_tag f, :amount %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :requirements, class: "control-label" %>
-    <%= text_input f, :requirements, class: "form-control" %>
-    <%= error_tag f, :requirements %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :targets, class: "control-label" %>
-    <%= text_input f, :targets, class: "form-control" %>
-    <%= error_tag f, :targets %>
-  </div>
-
-  <div class="form-group">
-    <%= submit "Submit", class: "btn btn-primary" %>
-  </div>
+<%= if @changeset.action do %>
+<div class="alert alert-danger">
+  <p>Oops, something went wrong! Please check the errors below.</p>
+</div>
 <% end %>
+<div class="form-group">
+  <%= label f, :name, class: "control-label" %>
+  <%= text_input f, :name, class: "form-control" %>
+  <%= error_tag f, :name %>
+</div>
+<div class="form-group">
+  <%= label f, :description, class: "control-label" %>
+  <%= text_input f, :description, class: "form-control" %>
+  <%= error_tag f, :description %>
+</div>
+<div class="form-group">
+  <%= label f, :category, class: "control-label" %>
+  <%= text_input f, :category, class: "form-control" %>
+  <%= error_tag f, :category %>
+</div>
+<div class="form-group">
+  <%= label f, :disc_type, class: "control-label" %>
+  <%= select f, :disc_type, [{"by percentage, with requirements and targets","item"}, {"by amount, flat rate", "cash"}, {"by percentage, flat rate", "percentage"}],  class: "form-control" %>
+  <%= error_tag f, :disc_type %>
+</div>
+<div class="form-group">
+  <%= label f, :amount, class: "control-label" %>
+  <%= number_input f, :amount, step: "any", class: "form-control" %>
+  <%= error_tag f, :amount %>
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <%= label f, :requirements, class: "control-label" %>
+      <%= text_input f, :requirements, class: "form-control" %>
+      <%= error_tag f, :requirements %>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card card-primary">
+      <div class="card-header">Click on the tabs to select</div>
+      <div class="card-body">
+        
+        
+        <% items = Menu.list_items(Settings.current_user(@conn).organization_id) %>
+        <%= for item <- items do %>
+        <span style="cursor: pointer;" class="req badge badge-primary"><%= item.name %></span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <%= label f, :targets, class: "control-label" %>
+      <%= text_input f, :targets, "data-role": "tagsinput", class: "form-control" %>
+      <%= error_tag f, :targets %>
+    </div>
+    
+  </div>
+  <div class="col-sm-6">
+    <div class="card card-primary">
+        <div class="card-header">Click on the tabs to select</div>
+      <div class="card-body">
+        <%= for item <- items do %>
+        <span style="cursor: pointer;" class="item badge badge-primary"><%= item.name %></span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="form-group">
+  <%= submit "Submit", class: "btn btn-primary" %>
+</div>
+<% end %>
+<script type="text/javascript">
+$("input[name='discount[requirements]']").tagsinput({
+allowDuplicates: true
+});
+$("input[name='discount[targets]']").tagsinput({
+allowDuplicates: true
+});
+$("span.req").click(function(){
+var cur_val = $(this).html()
+$("input[name='discount[requirements]']").tagsinput("add", cur_val)
+})
+$("span.item").click(function(){
+var cur_val = $(this).html()
+$("input[name='discount[targets]']").tagsinput("add", cur_val)
+})
+</script>

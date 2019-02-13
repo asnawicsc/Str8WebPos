@@ -1,18 +1,133 @@
 <h2>Show Organization</h2>
+<div class="row">
+	<div class="col-lg-2">
+		<ul>
+			<li>
+				<strong>Name:</strong>
+				<%= @organization.name %>
+			</li>
+			<li>
+				<strong>Address:</strong>
+				<%= @organization.address %>
+			</li>
+		</ul>
+		<span><%= link "Edit", to: organization_path(@conn, :edit, @organization) %></span>
+		<span><%= link "Back", to: organization_path(@conn, :index) %></span>
+	</div>
+	<div class="col-lg-10">
+		<div class="card card-primary">
+			<div class="card-header">
+				<form >
+					<div class="row">
+						<div class="col-lg-3">
+							
+							<div class="form-group">
+								<label class="control-label">Start Date</label>
+								<input type="date" name="s_date" required="required">
+							</div>
+						</div>
+						<div class="col-lg-3">
+							<div class="form-group"><label class="control-label">End Date</label>
+							<input type="date" name="e_date" required="required">
+						</div>
+						
+					</div>
+				</div>
+				<div  class="btn btn-primary" id="submit">Submit</div>
+				
+			</form>
+		</div>
+		<div class="card-body" style="height: 200px;">
+			<div class="table-responsive">
+				
+			
+			<table class="table">
+				<tr>
+					<td>Restaurant</td>
+					<td>Subtotal</td>
+					<td>Tax</td>
+					<td>Service Charge</td>
+					<td>Roundings</td>
+					<td>Grandtotal</td>
+					<td>Received</td>
+					<td>Changes</td>
+					<td>Actions</td>
+				</tr>
+				<%= for rest <- @restaurants do %>
+			
+				<tr class="report" rest_id="<%= rest.id %>" key="<%= rest.key %>" code="<%= rest.code %>">
+					<td colspan="9">
+						<center>
+							
+						<div class="ball-pulse">
+							<div></div>
+							<div></div>
+							<div></div>
+						</div>
+						</center>
+					</td>
+				</tr>
+				<% end %>
+			</table>
+			</div>
+			
+		</div>
+		<div class="card-footer">
+			<small>	list of restaurants , a summary on their sales payment, a link to download the sales payment csv.</small>
+		</div>
+	</div>
+</div>
+</div>
 
-<ul>
+<script type="text/javascript">
+  (function($) {
+    $.fn.populateSalesPayment = function(key, code, start, end) {
+    	
+      $.ajax({
+        url: "/api/sales",
+        dataType: "json",
+        data: {
+        	key: key,
+        	code: code,
+          fields: "sales_payment",
+          start: start,
+          end: end
+        }
+      }).done(function(j) {
+        var result = j
+        $("tr[code='"+ code +"']").find("td").fadeOut();
+        for (i in result) {
+      
 
-  <li>
-    <strong>Name:</strong>
-    <%= @organization.name %>
-  </li>
+					html = 	"<td>"+ result[i]["name"] +"</td>" + 
+									"<td>"+ result[i]["st"] +"</td>" + 
+									"<td>"+ result[i]["tax"] +"</td>" + 
+									"<td>"+ result[i]["serv"] +"</td>" +
+									"<td>"+ result[i]["round"] +"</td>" +
+									"<td>"+ result[i]["gt"] +"</td>" +
+									"<td>"+ result[i]["cash"] +"</td>" +
+									"<td>"+ result[i]["changes"] +"</td>" +
+									"<td></td>"
+					$("tr[code='"+ code +"']").hide()
+					$("tr[code='"+ code +"']").html(html);					
+					$("tr[code='"+ code +"']").fadeIn()
 
-  <li>
-    <strong>Address:</strong>
-    <%= @organization.address %>
-  </li>
+        }
+      })
+    };
+  })(jQuery);
 
-</ul>
 
-<span><%= link "Edit", to: organization_path(@conn, :edit, @organization) %></span>
-<span><%= link "Back", to: organization_path(@conn, :index) %></span>
+$("#submit").click(function(){
+
+  $("tr.report").each(function(){
+  	var key = $(this).attr("key")
+  	  	var code = $(this).attr("code")
+  	  	  	var start = $("input[name='s_date']").val()
+  	  	  	  	var end  = $("input[name='e_date']").val()
+  	 $(document).populateSalesPayment(key, code, start, end);
+
+  });
+});
+
+</script>

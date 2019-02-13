@@ -1,8 +1,7 @@
 <style type="text/css">
-  .choose {display: none;}
+.choose {display: none;}
 </style>
 <h2>Listing Discounts</h2>
-
 <table class="table">
   <thead>
     <tr>
@@ -18,15 +17,30 @@
     </tr>
   </thead>
   <tbody>
-<%= for discount <- @discounts do %>
+    <%= for discount <- @discounts do %>
     <tr>
       <td><%= discount.name %></td>
       <td><%= discount.description %></td>
       <td><%= discount.category %></td>
       <td><%= discount.disc_type %></td>
       <td><%= discount.amount %></td>
-      <td><%= discount.requirements %></td>
-      <td><%= discount.targets %></td>
+      <td>
+        <%= if discount.requirements != nil do %>
+        <% reqs = discount.requirements |> String.split(",") %>
+        <%= for req <- reqs do %>
+        <span class="item badge badge-primary"><%= req %></span>
+        <% end %>
+        <% end %>
+      </td>
+      <td>
+   
+          <%= if discount.targets != nil do %>
+        <% reqs = discount.targets |> String.split(",") %>
+        <%= for req <- reqs do %>
+        <span class="item badge badge-info"><%= req %></span>
+        <% end %>
+        <% end %>
+        </td>
       <td class="choose">
         <div class="checkbox c-checkbox">
           <label>
@@ -35,113 +49,93 @@
           </div>
           
         </td>
-      <td class="text-right">
-        <span><%= link "Show", to: discount_path(@conn, :show, discount), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Edit", to: discount_path(@conn, :edit, @conn.params["org_name"], discount.id), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: discount_path(@conn, :delete, discount), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
-      </td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
-
-<span><%= link "New Discount", to: discount_path(@conn, :new, @conn.params["org_name"]) %></span>
+        <td class="text-right">
+          <span><% link "Show", to: discount_path(@conn, :show, discount), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Edit", to: discount_path(@conn, :edit, @conn.params["org_name"], discount.id), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Delete", to: discount_path(@conn, :delete, discount), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <span><%= link "New Discount", to: discount_path(@conn, :new, @conn.params["org_name"]) %></span>
   <span><div class="btn btn-primary choose" id="save">Save Changes</div></span>
   <script type="text/javascript">
-
   $(document).ready(function () {
-    var code = getUrlParameter('choose');
-    if ( code != null ) {
-      $(".choose").show(); 
-
-      $("td.choose").find("input").each(function(){
-        var discount_id = $(this).attr("name")
-        var checker = $(this).prop("checked")
-       
-            // show save this printer for the restaurant
-
-          $.ajax({
-            url: "/<%= @conn.params["org_name"] %>/check_discount",
-            dataType: "json",
-            data: {
-
-              code: code,
-              discount_id: discount_id
-            }
-          }).done(function(j) {
-          var result = j
-
-            for (i in result) {
-              console.log(
-              result[i]["stats"])
-
-
-              if (result[i]["stats"] == "ok") {
-                $("input[name="+discount_id+"]").prop("checked", true) 
-              } else {
-                $("input[name="+discount_id+"]").prop("checked", false) 
-              }
-
-            }
-          })
-
-      
-        
-      }) 
-    }
-
-    $("div#save").click(function(){
-
-      $("td.choose").find("input").each(function(){
-        var discount_id = $(this).attr("name")
-        var checker = $(this).prop("checked")
-        if ( checker == true) {
-            // show save this printer for the restaurant
-
-          $.ajax({
-            url: "/<%= @conn.params["org_name"] %>/toggle_discount",
-            dataType: "json",
-            data: {
-              check: true,
-              code: code,
-              discount_id: discount_id
-            }
-          }).done(function(j) {
-          var result = j
-
-            for (i in result) {
-              result[i]["stats"]
-            }
-          })
-
-        } else {
-          $.ajax({
-            url: "/<%= @conn.params["org_name"] %>/toggle_discount",
-            dataType: "json",
-            data: {
-              check: false,
-              code: code,
-              discount_id: discount_id
-            }
-          }).done(function(j) {
-          var result = j
-
-            for (i in result) {
-              result[i]["stats"]
-            }
-          })
-
-        }
-        
-      })
-
-      swal(
-    'Saved!',
-    '',
-    'success'
+  var code = getUrlParameter('choose');
+  if ( code != null ) {
+  $(".choose").show();
+  $("td.choose").find("input").each(function(){
+  var discount_id = $(this).attr("name")
+  var checker = $(this).prop("checked")
+  
+  // show save this printer for the restaurant
+  $.ajax({
+  url: "/<%= @conn.params["org_name"] %>/check_discount",
+  dataType: "json",
+  data: {
+  code: code,
+  discount_id: discount_id
+  }
+  }).done(function(j) {
+  var result = j
+  for (i in result) {
+  console.log(
+  result[i]["stats"])
+  if (result[i]["stats"] == "ok") {
+  $("input[name="+discount_id+"]").prop("checked", true)
+  } else {
+  $("input[name="+discount_id+"]").prop("checked", false)
+  }
+  }
+  })
+  
+  
+  })
+  }
+  $("div#save").click(function(){
+  $("td.choose").find("input").each(function(){
+  var discount_id = $(this).attr("name")
+  var checker = $(this).prop("checked")
+  if ( checker == true) {
+  // show save this printer for the restaurant
+  $.ajax({
+  url: "/<%= @conn.params["org_name"] %>/toggle_discount",
+  dataType: "json",
+  data: {
+  check: true,
+  code: code,
+  discount_id: discount_id
+  }
+  }).done(function(j) {
+  var result = j
+  for (i in result) {
+  result[i]["stats"]
+  }
+  })
+  } else {
+  $.ajax({
+  url: "/<%= @conn.params["org_name"] %>/toggle_discount",
+  dataType: "json",
+  data: {
+  check: false,
+  code: code,
+  discount_id: discount_id
+  }
+  }).done(function(j) {
+  var result = j
+  for (i in result) {
+  result[i]["stats"]
+  }
+  })
+  }
+  
+  })
+  swal(
+  'Saved!',
+  '',
+  'success'
   )
-    })
-
-
+  })
   });
-</script>
+  </script>

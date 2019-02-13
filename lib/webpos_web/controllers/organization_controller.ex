@@ -20,6 +20,7 @@ defmodule WebposWeb.OrganizationController do
         conn
         |> put_flash(:info, "Organization created successfully.")
         |> redirect(to: organization_path(conn, :show, organization))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -27,7 +28,11 @@ defmodule WebposWeb.OrganizationController do
 
   def show(conn, %{"id" => id}) do
     organization = Settings.get_organization!(id)
-    render(conn, "show.html", organization: organization)
+
+    # list of restaurants
+
+    restaurants = Settings.list_restaurants(id)
+    render(conn, "show.html", organization: organization, restaurants: restaurants)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -44,6 +49,7 @@ defmodule WebposWeb.OrganizationController do
         conn
         |> put_flash(:info, "Organization updated successfully.")
         |> redirect(to: organization_path(conn, :show, organization))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", organization: organization, changeset: changeset)
     end

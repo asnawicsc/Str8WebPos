@@ -1,0 +1,107 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :salesid, class: "control-label" %>
+    <%= text_input f, :salesid, class: "form-control" %>
+    <%= error_tag f, :salesid %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :pax, class: "control-label" %>
+    <%= number_input f, :pax, class: "form-control" %>
+    <%= error_tag f, :pax %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :tbl_no, class: "control-label" %>
+    <%= text_input f, :tbl_no, class: "form-control" %>
+    <%= error_tag f, :tbl_no %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :sub_total, class: "control-label" %>
+    <%= number_input f, :sub_total, step: "any", class: "form-control" %>
+    <%= error_tag f, :sub_total %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :tax, class: "control-label" %>
+    <%= number_input f, :tax, step: "any", class: "form-control" %>
+    <%= error_tag f, :tax %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :service_charge, class: "control-label" %>
+    <%= number_input f, :service_charge, step: "any", class: "form-control" %>
+    <%= error_tag f, :service_charge %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :rounding, class: "control-label" %>
+    <%= number_input f, :rounding, step: "any", class: "form-control" %>
+    <%= error_tag f, :rounding %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :grand_total, class: "control-label" %>
+    <%= number_input f, :grand_total, step: "any", class: "form-control" %>
+    <%= error_tag f, :grand_total %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :salesdate, class: "control-label" %>
+    <%= date_select f, :salesdate, class: "form-control" %>
+    <%= error_tag f, :salesdate %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :salesdatetime, class: "control-label" %>
+    <%= datetime_select f, :salesdatetime, class: "form-control" %>
+    <%= error_tag f, :salesdatetime %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :invoiceno, class: "control-label" %>
+    <%= text_input f, :invoiceno, class: "form-control" %>
+    <%= error_tag f, :invoiceno %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :staffid, class: "control-label" %>
+    <%= text_input f, :staffid, class: "form-control" %>
+    <%= error_tag f, :staffid %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :transaction_type, class: "control-label" %>
+    <%= text_input f, :transaction_type, class: "form-control" %>
+    <%= error_tag f, :transaction_type %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :discount_name, class: "control-label" %>
+    <%= text_input f, :discount_name, class: "form-control" %>
+    <%= error_tag f, :discount_name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :discounted_amount, class: "control-label" %>
+    <%= number_input f, :discounted_amount, step: "any", class: "form-control" %>
+    <%= error_tag f, :discounted_amount %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :discount_description, class: "control-label" %>
+    <%= text_input f, :discount_description, class: "form-control" %>
+    <%= error_tag f, :discount_description %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

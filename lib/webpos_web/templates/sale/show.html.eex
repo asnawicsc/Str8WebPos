@@ -1,0 +1,88 @@
+<h2>Show Sale</h2>
+
+<ul>
+
+  <li>
+    <strong>Salesid:</strong>
+    <%= @sale.salesid %>
+  </li>
+
+  <li>
+    <strong>Pax:</strong>
+    <%= @sale.pax %>
+  </li>
+
+  <li>
+    <strong>Tbl no:</strong>
+    <%= @sale.tbl_no %>
+  </li>
+
+  <li>
+    <strong>Sub total:</strong>
+    <%= @sale.sub_total %>
+  </li>
+
+  <li>
+    <strong>Tax:</strong>
+    <%= @sale.tax %>
+  </li>
+
+  <li>
+    <strong>Service charge:</strong>
+    <%= @sale.service_charge %>
+  </li>
+
+  <li>
+    <strong>Rounding:</strong>
+    <%= @sale.rounding %>
+  </li>
+
+  <li>
+    <strong>Grand total:</strong>
+    <%= @sale.grand_total %>
+  </li>
+
+  <li>
+    <strong>Salesdate:</strong>
+    <%= @sale.salesdate %>
+  </li>
+
+  <li>
+    <strong>Salesdatetime:</strong>
+    <%= @sale.salesdatetime %>
+  </li>
+
+  <li>
+    <strong>Invoiceno:</strong>
+    <%= @sale.invoiceno %>
+  </li>
+
+  <li>
+    <strong>Staffid:</strong>
+    <%= @sale.staffid %>
+  </li>
+
+  <li>
+    <strong>Transaction type:</strong>
+    <%= @sale.transaction_type %>
+  </li>
+
+  <li>
+    <strong>Discount name:</strong>
+    <%= @sale.discount_name %>
+  </li>
+
+  <li>
+    <strong>Discounted amount:</strong>
+    <%= @sale.discounted_amount %>
+  </li>
+
+  <li>
+    <strong>Discount description:</strong>
+    <%= @sale.discount_description %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: sale_path(@conn, :edit, @sale) %></span>
+<span><%= link "Back", to: sale_path(@conn, :index) %></span>
