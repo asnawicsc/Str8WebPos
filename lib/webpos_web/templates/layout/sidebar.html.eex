@@ -17,8 +17,8 @@
                            </div>
                            <!-- Name and Job-->
                            <div class="user-block-info">
-                              <span class="user-block-name">Hello, Mike</span>
-                              <span class="user-block-role">Designer</span>
+                              <span class="user-block-name">Hello, <%= @conn.private.plug_session["user_name"]%></span>
+                              <span class="user-block-role"> <%= @conn.private.plug_session["user_type"]%></span>
                            </div>
                         </div>
                      </div>
@@ -28,6 +28,7 @@
                   <li class="nav-heading ">
                      <span >Management</span>
                   </li>
+                  <%= if @conn.private.plug_session["user_type"] == "Admin" do %>
                   <li class=" ">
                      <a href="/users" title="Widgets">
                         <div class="float-right badge badge-primary">30</div>
@@ -35,6 +36,7 @@
                         <span >Users</span>
                      </a>
                   </li>
+                  <% end %>
                   <li class=" ">
                      <a href="/users?q=staff" title="Widgets">
                         <div class="float-right badge badge-info">30</div>
@@ -61,7 +63,7 @@
                   </li>
            
                   <li class=" ">
-                     <a href="/items" title="Widgets">
+                     <a href="/<%= @conn.private.plug_session["org_name"]%>/items" title="Widgets">
                         <div class="float-right badge badge-purple">30</div>
                         <em class="fas fa-lemon"></em>
                         <span >Menu Items</span>

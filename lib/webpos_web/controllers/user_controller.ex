@@ -6,11 +6,18 @@ defmodule WebposWeb.UserController do
   require IEx
 
   def index(conn, params) do
+    user = Settings.current_user(conn)
+
     users =
       if params["q"] != nil do
-        Repo.all(from(u in User, where: u.user_type == "Staff"))
+        Repo.all(
+          from(
+            u in User,
+            where: u.user_type == "Staff" and u.organization_id == ^user.organization_id
+          )
+        )
       else
-        Settings.list_users()
+        Settings.list_users(user.organization_id)
       end
 
     render(conn, "index.html", users: users)
@@ -58,10 +65,14 @@ defmodule WebposWeb.UserController do
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Settings.get_user!(id)
-    user_params = Map.put(user_params, "organization_id", Settings.get_org_id(conn))
+
+    if user.user_type == "Admin" do
+    else
+      user_params = Map.put(user_params, "organization_id", Settings.get_org_id(conn))
+    end
 
     user_params =
-      if user_params["password"] != nil do
+      if user_params["password"] != nil or user_params["password"] != "" do
         Map.put(
           user_params,
           "crypted_password",
@@ -96,15 +107,19 @@ defmodule WebposWeb.UserController do
 
   def authenticate_login(conn, %{"name" => name, "password" => password}) do
     user = Repo.get_by(User, username: name)
-    org = Repo.get(Organization, user.organization_id)
-    org_name = Base.url_encode64(org.name)
 
     if user != nil do
+      org = Repo.get(Organization, user.organization_id)
+      org_name = Base.url_encode64(org.name)
+
       if Comeonin.Bcrypt.checkpw(password, user.crypted_password) do
         conn
         |> put_flash(:info, "Welcome!")
         |> put_session(:user_id, user.id)
         |> put_session(:org_name, org_name)
+        |> put_session(:user_name, user.username)
+        |> put_session(:user_type, user.user_type)
+        |> put_session(:super_admin, check_super(user.id))
         |> redirect(to: page_path(conn, :index))
       else
         conn
@@ -116,6 +131,11 @@ defmodule WebposWeb.UserController do
       |> put_flash(:error, "User not found")
       |> redirect(to: user_path(conn, :login))
     end
+  end
+
+  def check_super(id) do
+    user = Repo.get(User, id)
+    user.organization_id == 1
   end
 
   # def forget_password(conn, params) do

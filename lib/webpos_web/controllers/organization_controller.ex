@@ -5,7 +5,7 @@ defmodule WebposWeb.OrganizationController do
   alias Webpos.Settings.Organization
 
   def index(conn, _params) do
-    organizations = Settings.list_organizations()
+    organizations = Settings.list_organizations(conn)
     render(conn, "index.html", organizations: organizations)
   end
 

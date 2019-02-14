@@ -74,8 +74,12 @@ defmodule Webpos.Settings do
       [%User{}, ...]
 
   """
-  def list_users do
-    Repo.all(User)
+  def list_users(organization_id) do
+    if organization_id != nil do
+      Repo.all(from(u in User, where: u.organization_id == ^organization_id))
+    else
+      Repo.all(User)
+    end
   end
 
   @doc """
@@ -170,8 +174,13 @@ defmodule Webpos.Settings do
       [%Organization{}, ...]
 
   """
-  def list_organizations do
-    Repo.all(Organization)
+  def list_organizations(conn) do
+    if conn.private.plug_session["super_admin"] do
+      Repo.all(Organization)
+    else
+      user = current_user(conn)
+      Repo.all(from(o in Organization, where: o.id == ^user.organization_id))
+    end
   end
 
   @doc """

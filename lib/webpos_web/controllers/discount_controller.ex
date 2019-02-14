@@ -8,7 +8,7 @@ defmodule WebposWeb.DiscountController do
   def index(conn, _params) do
     organization_id = Settings.get_org_id(conn)
 
-    discounts = Menu.list_discounts()
+    discounts = Menu.list_discounts(organization_id)
     render(conn, "index.html", discounts: discounts)
   end
 

@@ -47,8 +47,12 @@ defmodule Webpos.Reports do
       [%Sale{}, ...]
 
   """
-  def list_sales do
-    Repo.all(Sale)
+  def list_sales(organization_id) do
+    if organization_id != nil do
+      Repo.all(from(s in Sale, where: s.organization_id == ^organization_id))
+    else
+      Repo.all(Sale)
+    end
   end
 
   @doc """

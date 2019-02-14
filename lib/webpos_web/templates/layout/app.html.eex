@@ -7,7 +7,7 @@
    <meta name="description" content="Bootstrap Admin App + jQuery">
    <meta name="keywords" content="app, responsive, jquery, bootstrap, dashboard, admin">
    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-   <title>Angle - Bootstrap Admin Template</title>
+   <title>STR8 POS</title>
    <!-- =============== VENDOR STYLES ===============-->
    <!-- FONT AWESOME-->
    <link rel="stylesheet" href="/vendor/@fortawesome/fontawesome-free-webfonts/css/fa-brands.css">
@@ -83,7 +83,7 @@
       </section>
       <!-- Page footer-->
       <footer class="footer-container">
-         <span>&copy; 2018 - Angle</span>
+         <span>&copy; 2019 - <span>STR<span style="font-size: 15px; font-weight: bolder;">8</span>POS</span></span>
       </footer>
    </div>
 

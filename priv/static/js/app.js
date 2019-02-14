@@ -1,3 +1,9 @@
+$(document).ready(function(){
+    
+var title = $("h2").first().html()
+$("title").html(title)
+})
+
 
 "use strict";
 

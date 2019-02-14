@@ -405,8 +405,12 @@ defmodule Webpos.Menu do
       [%Discount{}, ...]
 
   """
-  def list_discounts do
-    Repo.all(Discount)
+  def list_discounts(organization_id) do
+    if organization_id != nil do
+      Repo.all(from(d in Discount, where: d.organization_id == ^organization_id))
+    else
+      Repo.all(Discount)
+    end
   end
 
   @doc """

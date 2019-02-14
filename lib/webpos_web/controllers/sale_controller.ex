@@ -5,7 +5,8 @@ defmodule WebposWeb.SaleController do
   alias Webpos.Reports.Sale
 
   def index(conn, _params) do
-    sales = Reports.list_sales()
+    organization_id = Settings.get_org_id(conn)
+    sales = Reports.list_sales(organization_id)
     render(conn, "index.html", sales: sales)
   end
 
@@ -20,6 +21,7 @@ defmodule WebposWeb.SaleController do
         conn
         |> put_flash(:info, "Sale created successfully.")
         |> redirect(to: sale_path(conn, :show, sale))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -44,6 +46,7 @@ defmodule WebposWeb.SaleController do
         conn
         |> put_flash(:info, "Sale updated successfully.")
         |> redirect(to: sale_path(conn, :show, sale))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", sale: sale, changeset: changeset)
     end
