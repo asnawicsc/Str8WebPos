@@ -115,7 +115,7 @@
 									"<td>"+ result[i]["gt"] +"</td>" +
 									"<td>"+ result[i]["cash"] +"</td>" +
 									"<td>"+ result[i]["changes"] +"</td>" +
-									"<td><div class='btn-group'><button type='button' class='btn btn-danger'>Action</button><button type='button' class='btn btn-danger dropdown-toggle' data-toggle='dropdown'><span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></button><ul class='dropdown-menu' role='menu'><li><a href='"+ code +"/sales_by_category/"+start+"/"+end+"'>&nbsp; Sales By Category</a></li><li><a href='"+ code +"/top_10_sales/"+start+"/"+end+"''>&nbsp; Top 10 Sales</a></li><li><a href='#'>&nbsp; Something else here</a></li></ul></div></td>" +
+									"<td><div class='btn-group'><button type='button' class='btn btn-danger'>Action</button><button type='button' class='btn btn-danger dropdown-toggle' data-toggle='dropdown'><span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></button><ul class='dropdown-menu' role='menu'><li><a href='"+ code +"/sales_by_category/"+start+"/"+end+"'>&nbsp; Sales By Item</a></li><li><a href='"+ code +"/top_10_sales/"+start+"/"+end+"''>&nbsp; Top 10 Sales</a></li><li><a href='"+ code +"/hourly_sales/"+start+"/"+end+"'>&nbsp; Hourly Sales</a></li></ul></div></td>" +
 					$("tr[code='"+ code +"']").hide()
 									
 					$("tr[code='"+ code +"']").html(html);					

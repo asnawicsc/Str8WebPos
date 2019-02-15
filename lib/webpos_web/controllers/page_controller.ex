@@ -202,4 +202,59 @@ defmodule WebposWeb.PageController do
       |> Enum.to_list()
       |> to_string
   end
+
+  def hourly_sales(conn, params) do
+    conn
+    |> put_resp_content_type("text/csv")
+    |> put_resp_header(
+      "content-disposition",
+      "attachment; filename=\"Hourly Sales.csv.csv\""
+    )
+    |> send_resp(200, csv_content_hourly_sales(conn, params))
+  end
+
+  def csv_content_hourly_sales(conn, params) do
+    branch = Repo.get_by(Restaurant, code: params["branch"])
+
+    all =
+      Repo.all(
+        from(
+          sd in Webpos.Reports.SalesDetail,
+          left_join: s in Webpos.Reports.Sale,
+          on: s.salesid == sd.salesid,
+          where:
+            s.salesdate >= ^params["start_date"] and s.salesdate <= ^params["end_date"] and
+              s.rest_name == ^branch.name,
+          select: %{
+            itemname: sd.itemname,
+            sub_total: sd.sub_total,
+            qty: sd.qty,
+            salesdate: s.salesdate,
+            salesdatetime: s.salesdatetime
+          }
+        )
+      )
+
+    days = 1..30
+    hours = 1..24
+
+    data =
+      for day <- days do
+        for hour <- hours do
+          IEx.pry()
+        end
+      end
+
+    csv_content = [
+      'Item Name',
+      'Total Quantity',
+      'Sub Total'
+    ]
+
+    csv_content =
+      List.insert_at(data, 0, csv_content)
+      |> CSV.encode()
+      |> Enum.to_list()
+      |> to_string
+  end
 end
