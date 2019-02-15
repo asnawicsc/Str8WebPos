@@ -87,10 +87,18 @@
 </div>
 </div>
 
+<span id="download" style="display: none;">
+	<button class="btn dropdown-toggle btn-danger" type="button" data-toggle="dropdown">Downloads</button>
+   <div class="dropdown-menu" role="menu">
+      <a class="dropdown-item" id="salesbycategory" href='/sales_by_category/'>Sales By Category</a>
+			<a class="dropdown-item" id="top10sales" href='/top_10_sales/'>Top 10 Sales</a>
+   </div>
+</span>
+
 <script type="text/javascript">
   (function($) {
     $.fn.populateSalesPayment = function(key, code, start, end) {
-    	
+    	   		
       $.ajax({
         url: "/api/sales",
         dataType: "json",
@@ -105,8 +113,13 @@
         var result = j
         $("tr[code='"+ code +"']").find("td").fadeOut();
         for (i in result) {
-      
-
+   
+        	download = $("span#download")
+        	salesbycategory_href = code + download.find("#salesbycategory").attr("href") + start + "/" + end
+        	top10sales_href = code + download.find("#top10sales").attr("href") + start + "/" + end
+					download.find("#salesbycategory").attr("href", salesbycategory_href)
+					download.find("#top10sales").attr("href", top10sales_href)
+        	console.log(download.find("#top10sales").attr("href"))
 					html = 	"<td>"+ result[i]["name"] +"</td>" + 
 									"<td>"+ result[i]["st"] +"</td>" + 
 									"<td>"+ result[i]["tax"] +"</td>" + 
@@ -115,7 +128,7 @@
 									"<td>"+ result[i]["gt"] +"</td>" +
 									"<td>"+ result[i]["cash"] +"</td>" +
 									"<td>"+ result[i]["changes"] +"</td>" +
-									"<td><div class='btn-group'><button type='button' class='btn btn-danger'>Action</button><button type='button' class='btn btn-danger dropdown-toggle' data-toggle='dropdown'><span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></button><ul class='dropdown-menu' role='menu'><li><a href='"+ code +"/sales_by_category/"+start+"/"+end+"'>&nbsp; Sales By Category</a></li><li><a href='"+ code +"/top_10_sales/"+start+"/"+end+"''>&nbsp; Top 10 Sales</a></li><li><a href='#'>&nbsp; Something else here</a></li></ul></div></td>" +
+									"<td>"+ download.html() +"</td>" +
 					$("tr[code='"+ code +"']").hide()
 									
 					$("tr[code='"+ code +"']").html(html);					

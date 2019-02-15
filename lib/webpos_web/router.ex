@@ -68,6 +68,12 @@ defmodule WebposWeb.Router do
     get(
       "/organizations/:branch/sales_by_category/:start_date/:end_date",
       PageController,
+      :sales_details
+    )
+
+    get(
+      "/organizations/:branch/sales_by_category/:start_date/:end_date",
+      PageController,
       :sales_by_category
     )
 
