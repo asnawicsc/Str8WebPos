@@ -117,8 +117,12 @@ defmodule Webpos.Menu do
       [%Combo{}, ...]
 
   """
-  def list_combos do
-    Repo.all(Combo)
+  def list_combos(item_id) do
+    if item_id != nil do
+      Repo.all(from(c in Combo, where: c.combo_id == ^item_id))
+    else
+      Repo.all(Combo)
+    end
   end
 
   @doc """
@@ -213,8 +217,12 @@ defmodule Webpos.Menu do
       [%OrganizationPrice{}, ...]
 
   """
-  def list_organization_price do
-    Repo.all(OrganizationPrice)
+  def list_organization_price(organization_id) do
+    if organization_id != nil do
+      Repo.all(from(o in OrganizationPrice, where: o.organization_id == ^organization_id))
+    else
+      Repo.all(OrganizationPrice)
+    end
   end
 
   @doc """

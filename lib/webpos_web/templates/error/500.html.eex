@@ -67,7 +67,7 @@
    <!-- PARSLEY-->
    <script src="/vendor/parsleyjs/dist/parsley.js"></script>
    <!-- =============== APP SCRIPTS ===============-->
-   <script src="/js/app_angle.js"></script>
+   <script src="/js/app.js"></script>
 </body>
 
 </html>

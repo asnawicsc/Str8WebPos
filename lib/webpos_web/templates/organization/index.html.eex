@@ -19,6 +19,7 @@
         <span><%= link "Restaurants", to: restaurant_path(@conn, :index, Base.url_encode64(organization.name)), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Printers", to: printer_path(@conn, :index, Base.url_encode64(organization.name)), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Items", to: item_path(@conn, :index, Base.url_encode64(organization.name)), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Pricings", to: organization_price_path(@conn, :index, organization), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Show", to: organization_path(@conn, :show, organization), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Edit", to: organization_path(@conn, :edit, organization), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Delete", to: organization_path(@conn, :delete, organization), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
