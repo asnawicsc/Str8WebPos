@@ -72,13 +72,15 @@ defmodule WebposWeb.UserController do
     end
 
     user_params =
-      if user_params["password"] != nil or user_params["password"] != "" do
+      if user_params["password"] != "" do
         Map.put(
           user_params,
           "crypted_password",
           Comeonin.Bcrypt.hashpwsalt(user_params["password"])
         )
         |> Map.put("password", nil)
+      else
+        Map.delete(user_params, "password")
       end
 
     case Settings.update_user(user, user_params) do
@@ -116,6 +118,7 @@ defmodule WebposWeb.UserController do
         conn
         |> put_flash(:info, "Welcome!")
         |> put_session(:user_id, user.id)
+        |> put_session(:org_id, user.organization_id)
         |> put_session(:org_name, org_name)
         |> put_session(:user_name, user.username)
         |> put_session(:user_type, user.user_type)

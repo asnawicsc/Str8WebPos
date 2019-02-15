@@ -11,7 +11,7 @@
 
   <div class="form-group">
     <%= label f, :item_id, class: "control-label" %>
-    <%= select f, :item_id, Repo.all(from i in Item, where: i.is_combo == ^false, select: {i.name, i.id}), class: "form-control" %>
+    <%= select f, :item_id, Repo.all(from i in Item, where: i.is_combo == ^false and i.organization_id == ^ @conn.private.plug_session["org_id"], select: {i.name, i.id}), class: "form-control" %>
     <%= error_tag f, :item_id %>
   </div>
 

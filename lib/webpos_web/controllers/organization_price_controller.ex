@@ -43,7 +43,12 @@ defmodule WebposWeb.OrganizationPriceController do
     |> send_resp(200, json_map)
   end
 
-  def update_item_price(conn, %{"op_id" => op_id, "item" => items, "combo" => combos}) do
+  def update_item_price(conn, %{
+        "_csrf_token" => _csrf_token,
+        "op_id" => op_id,
+        "item" => items,
+        "combo" => combos
+      }) do
     item_ids = Map.keys(items)
 
     for item_id <- item_ids do
@@ -109,7 +114,8 @@ defmodule WebposWeb.OrganizationPriceController do
   end
 
   def index(conn, _params) do
-    organization_price = Menu.list_organization_price()
+    organization_id = Settings.current_user(conn).organization_id
+    organization_price = Menu.list_organization_price(organization_id)
     render(conn, "index.html", organization_price: organization_price)
   end
 

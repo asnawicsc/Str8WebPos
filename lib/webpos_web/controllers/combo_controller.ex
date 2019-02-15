@@ -5,8 +5,9 @@ defmodule WebposWeb.ComboController do
   alias Webpos.Menu.Combo
   require IEx
 
-  def index(conn, _params) do
-    combos = Menu.list_combos()
+  def index(conn, params) do
+    combo_id = conn.params["item_id"]
+    combos = Menu.list_combos(combo_id)
     render(conn, "index.html", combos: combos)
   end
 
