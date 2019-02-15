@@ -92,6 +92,7 @@
    <div class="dropdown-menu" role="menu">
       <a class="dropdown-item" id="salesbycategory" href='/sales_by_category/'>Sales By Category</a>
 			<a class="dropdown-item" id="top10sales" href='/top_10_sales/'>Top 10 Sales</a>
+			<a class="dropdown-item" id="salesdetails" href='/sales_details/'>Details</a>
    </div>
 </span>
 
@@ -117,8 +118,10 @@
         	download = $("span#download")
         	salesbycategory_href = code + download.find("#salesbycategory").attr("href") + start + "/" + end
         	top10sales_href = code + download.find("#top10sales").attr("href") + start + "/" + end
+        	salesdetails_href = code + download.find("#salesdetails").attr("href") + start + "/" + end
 					download.find("#salesbycategory").attr("href", salesbycategory_href)
 					download.find("#top10sales").attr("href", top10sales_href)
+						download.find("#salesdetails").attr("href", salesdetails_href)
         	console.log(download.find("#top10sales").attr("href"))
 					html = 	"<td>"+ result[i]["name"] +"</td>" + 
 									"<td>"+ result[i]["st"] +"</td>" + 

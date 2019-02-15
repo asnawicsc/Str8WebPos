@@ -38,6 +38,28 @@ defmodule Webpos.Reports do
     a
   end
 
+  def list_sales_details(startd, endd, rest_name) do
+    a =
+      Repo.all(
+        from(
+          s in Sale,
+          left_join: p in SalesDetail,
+          on: s.salesid == p.salesid,
+          where: s.salesdate >= ^startd and s.salesdate <= ^endd and s.rest_name == ^rest_name,
+          select: %{
+            salesdate: s.salesdate,
+            branch: s.rest_name,
+            itemname: p.itemname,
+            unit_price: p.unit_price,
+            sub_total: p.sub_total,
+            qty: p.qty
+          }
+        )
+      )
+
+    a
+  end
+
   @doc """
   Returns the list of sales.
 
