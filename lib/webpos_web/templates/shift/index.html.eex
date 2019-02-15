@@ -1,0 +1,40 @@
+<h2>Listing Shifts</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Opening staff</th>
+      <th>Start datetime</th>
+      <th>Open amount</th>
+      <th>Closing staff</th>
+      <th>End datetime</th>
+      <th>Close amount</th>
+      <th>Organization</th>
+      <th>Rest</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for shift <- @shifts do %>
+    <tr>
+      <td><%= shift.opening_staff %></td>
+      <td><%= shift.start_datetime %></td>
+      <td><%= shift.open_amount %></td>
+      <td><%= shift.closing_staff %></td>
+      <td><%= shift.end_datetime %></td>
+      <td><%= shift.close_amount %></td>
+      <td><%= shift.organization_id %></td>
+      <td><%= shift.rest_id %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: shift_path(@conn, :show, shift), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: shift_path(@conn, :edit, shift), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: shift_path(@conn, :delete, shift), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Shift", to: shift_path(@conn, :new) %></span>

@@ -155,4 +155,74 @@ defmodule WebposWeb.RestaurantChannel do
 
     {:noreply, socket}
   end
+
+  def handle_in("open_shift", payload, socket) do
+    # broadcast(socket, "shout", payload)
+    IO.inspect(payload)
+    code = socket.topic |> String.split(":") |> List.last()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+    shiftMap = payload["shift"]
+
+    {:ok, datetime} =
+      DateTime.from_unix(String.to_integer(shiftMap["start_datetime"]), :millisecond)
+
+    shiftMap = Map.put(shiftMap, "start_datetime", datetime)
+    shiftMap = Map.put(shiftMap, "organization_id", restaurant.organization_id)
+    shiftMap = Map.put(shiftMap, "rest_id", restaurant.id)
+
+    result =
+      Repo.all(
+        from(
+          s in Shift,
+          where:
+            s.opening_staff == ^shiftMap["opening_staff"] and s.start_datetime == ^datetime and
+              s.organization_id == ^restaurant.organization_id and s.rest_id == ^restaurant.id
+        )
+      )
+
+    if result == [] do
+      a = Shift.changeset(%Shift{}, shiftMap) |> Repo.insert()
+      IO.inspect(a)
+    end
+
+    {:noreply, socket}
+  end
+
+  def handle_in("close_shift", payload, socket) do
+    # broadcast(socket, "shout", payload)
+    IO.inspect(payload)
+    code = socket.topic |> String.split(":") |> List.last()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+    shiftMap = payload["shift"]
+
+    {:ok, sdatetime} =
+      DateTime.from_unix(String.to_integer(shiftMap["start_datetime"]), :millisecond)
+
+    shiftMap = Map.put(shiftMap, "start_datetime", sdatetime)
+
+    {:ok, edatetime} =
+      DateTime.from_unix(String.to_integer(shiftMap["end_datetime"]), :millisecond)
+
+    shiftMap = Map.put(shiftMap, "end_datetime", edatetime)
+
+    shiftMap = Map.put(shiftMap, "organization_id", restaurant.organization_id)
+    shiftMap = Map.put(shiftMap, "rest_id", restaurant.id)
+
+    result =
+      Repo.all(
+        from(
+          s in Shift,
+          where:
+            s.opening_staff == ^shiftMap["opening_staff"] and s.start_datetime == ^sdatetime and
+              s.organization_id == ^restaurant.organization_id and s.rest_id == ^restaurant.id
+        )
+      )
+
+    if result != [] do
+      a = Shift.changeset(hd(result), shiftMap) |> Repo.update()
+      IO.inspect(a)
+    end
+
+    {:noreply, socket}
+  end
 end

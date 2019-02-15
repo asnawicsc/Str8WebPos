@@ -92,4 +92,78 @@ defmodule Webpos.ReportsTest do
       assert %Ecto.Changeset{} = Reports.change_sale(sale)
     end
   end
+
+  describe "shifts" do
+    alias Webpos.Reports.Shift
+
+    @valid_attrs %{close_amount: "120.5", closing_staff: "some closing_staff", end_datetime: ~N[2010-04-17 14:00:00.000000], open_amount: "120.5", opening_staff: "some opening_staff", organization_id: 42, rest_id: 42, start_datetime: ~N[2010-04-17 14:00:00.000000]}
+    @update_attrs %{close_amount: "456.7", closing_staff: "some updated closing_staff", end_datetime: ~N[2011-05-18 15:01:01.000000], open_amount: "456.7", opening_staff: "some updated opening_staff", organization_id: 43, rest_id: 43, start_datetime: ~N[2011-05-18 15:01:01.000000]}
+    @invalid_attrs %{close_amount: nil, closing_staff: nil, end_datetime: nil, open_amount: nil, opening_staff: nil, organization_id: nil, rest_id: nil, start_datetime: nil}
+
+    def shift_fixture(attrs \\ %{}) do
+      {:ok, shift} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Reports.create_shift()
+
+      shift
+    end
+
+    test "list_shifts/0 returns all shifts" do
+      shift = shift_fixture()
+      assert Reports.list_shifts() == [shift]
+    end
+
+    test "get_shift!/1 returns the shift with given id" do
+      shift = shift_fixture()
+      assert Reports.get_shift!(shift.id) == shift
+    end
+
+    test "create_shift/1 with valid data creates a shift" do
+      assert {:ok, %Shift{} = shift} = Reports.create_shift(@valid_attrs)
+      assert shift.close_amount == Decimal.new("120.5")
+      assert shift.closing_staff == "some closing_staff"
+      assert shift.end_datetime == ~N[2010-04-17 14:00:00.000000]
+      assert shift.open_amount == Decimal.new("120.5")
+      assert shift.opening_staff == "some opening_staff"
+      assert shift.organization_id == 42
+      assert shift.rest_id == 42
+      assert shift.start_datetime == ~N[2010-04-17 14:00:00.000000]
+    end
+
+    test "create_shift/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Reports.create_shift(@invalid_attrs)
+    end
+
+    test "update_shift/2 with valid data updates the shift" do
+      shift = shift_fixture()
+      assert {:ok, shift} = Reports.update_shift(shift, @update_attrs)
+      assert %Shift{} = shift
+      assert shift.close_amount == Decimal.new("456.7")
+      assert shift.closing_staff == "some updated closing_staff"
+      assert shift.end_datetime == ~N[2011-05-18 15:01:01.000000]
+      assert shift.open_amount == Decimal.new("456.7")
+      assert shift.opening_staff == "some updated opening_staff"
+      assert shift.organization_id == 43
+      assert shift.rest_id == 43
+      assert shift.start_datetime == ~N[2011-05-18 15:01:01.000000]
+    end
+
+    test "update_shift/2 with invalid data returns error changeset" do
+      shift = shift_fixture()
+      assert {:error, %Ecto.Changeset{}} = Reports.update_shift(shift, @invalid_attrs)
+      assert shift == Reports.get_shift!(shift.id)
+    end
+
+    test "delete_shift/1 deletes the shift" do
+      shift = shift_fixture()
+      assert {:ok, %Shift{}} = Reports.delete_shift(shift)
+      assert_raise Ecto.NoResultsError, fn -> Reports.get_shift!(shift.id) end
+    end
+
+    test "change_shift/1 returns a shift changeset" do
+      shift = shift_fixture()
+      assert %Ecto.Changeset{} = Reports.change_shift(shift)
+    end
+  end
 end

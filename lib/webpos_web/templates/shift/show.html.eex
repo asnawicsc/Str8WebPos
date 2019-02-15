@@ -1,0 +1,48 @@
+<h2>Show Shift</h2>
+
+<ul>
+
+  <li>
+    <strong>Opening staff:</strong>
+    <%= @shift.opening_staff %>
+  </li>
+
+  <li>
+    <strong>Start datetime:</strong>
+    <%= @shift.start_datetime %>
+  </li>
+
+  <li>
+    <strong>Open amount:</strong>
+    <%= @shift.open_amount %>
+  </li>
+
+  <li>
+    <strong>Closing staff:</strong>
+    <%= @shift.closing_staff %>
+  </li>
+
+  <li>
+    <strong>End datetime:</strong>
+    <%= @shift.end_datetime %>
+  </li>
+
+  <li>
+    <strong>Close amount:</strong>
+    <%= @shift.close_amount %>
+  </li>
+
+  <li>
+    <strong>Organization:</strong>
+    <%= @shift.organization_id %>
+  </li>
+
+  <li>
+    <strong>Rest:</strong>
+    <%= @shift.rest_id %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: shift_path(@conn, :edit, @shift) %></span>
+<span><%= link "Back", to: shift_path(@conn, :index) %></span>

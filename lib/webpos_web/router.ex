@@ -61,6 +61,7 @@ defmodule WebposWeb.Router do
     get("/:org_name/check_discount", DiscountController, :check_discount)
     resources("/discounts", DiscountController)
     resources("/reports/sales", SaleController)
+    resources("/shifts", ShiftController)
     get("/*path", PageController, :no_page_found)
   end
 
