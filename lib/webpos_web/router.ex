@@ -43,6 +43,7 @@ defmodule WebposWeb.Router do
     resources("/combos", ComboController)
     get("/organization/:org_id/organization_prices", OrganizationPriceController, :index)
     get("/organization/:org_id/organization_prices/new", OrganizationPriceController, :new)
+
     resources("/organization_price", OrganizationPriceController)
     post("/update_item_price", OrganizationPriceController, :update_item_price)
     get("/:org_name/get_item_price", OrganizationPriceController, :get_item_price)
@@ -61,7 +62,21 @@ defmodule WebposWeb.Router do
     get("/:org_name/check_discount", DiscountController, :check_discount)
     resources("/discounts", DiscountController)
     resources("/reports/sales", SaleController)
+
     resources("/shifts", ShiftController)
+
+    get(
+      "/organizations/:branch/sales_by_category/:start_date/:end_date",
+      PageController,
+      :sales_by_category
+    )
+
+    get(
+      "/organizations/:branch/top_10_sales/:start_date/:end_date",
+      PageController,
+      :top_10_sales
+    )
+
     get("/*path", PageController, :no_page_found)
   end
 
