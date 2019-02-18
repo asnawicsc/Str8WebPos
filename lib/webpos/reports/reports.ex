@@ -8,14 +8,14 @@ defmodule Webpos.Reports do
 
   alias Webpos.Reports.{Sale, SalesPayment, SalesDetail}
 
-  def list_sales_payment(startd, endd) do
+  def list_sales_payment(startd, endd, rest_name) do
     a =
       Repo.all(
         from(
           s in Sale,
           left_join: p in SalesPayment,
           on: s.salesid == p.salesid,
-          where: s.salesdate >= ^startd and s.salesdate <= ^endd,
+          where: s.salesdate >= ^startd and s.salesdate <= ^endd and s.rest_name == ^rest_name,
           select: %{
             st: sum(p.sub_total),
             tax: sum(p.gst_charge),

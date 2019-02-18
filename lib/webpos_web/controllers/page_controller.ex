@@ -39,7 +39,7 @@ defmodule WebposWeb.PageController do
 
   def sales_payment(conn, restaurant, code, params) do
     payment_list =
-      Reports.list_sales_payment(params["start"], params["end"])
+      Reports.list_sales_payment(params["start"], params["end"], restaurant.name)
       |> Enum.map(fn x -> Map.put(x, :name, restaurant.name) end)
       |> Poison.encode!()
 
@@ -87,7 +87,8 @@ defmodule WebposWeb.PageController do
           select: %{
             staff_id: u.id,
             staff_name: u.username,
-            staff_pin: u.pin
+            staff_pin: u.pin,
+            staff_level: u.user_level
           }
         )
       )

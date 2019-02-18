@@ -8,6 +8,7 @@ defmodule Webpos.Settings.User do
     field(:password, :string)
     field(:username, :string)
     field(:user_type, :string)
+    field(:user_level, :string, default: "Cashier")
     field(:pin, :string)
     field(:organization_id, :integer)
     timestamps()
@@ -17,6 +18,7 @@ defmodule Webpos.Settings.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [
+      :user_level,
       :organization_id,
       :user_type,
       :pin,
