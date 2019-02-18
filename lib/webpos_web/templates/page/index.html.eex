@@ -1,36 +1,122 @@
-<div class="jumbotron">
-  <h2><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h2>
-  <p class="lead">A productive web framework that<br />does not compromise speed and maintainability.</p>
+
+
+              <link rel="stylesheet" href="/vendor/fullcalendar/dist/fullcalendar.css">
+<!-- MOMENT JS-->
+<script src="/vendor/moment/min/moment-with-locales.js"></script>
+<!-- FULLCALENDAR-->
+<script src="/vendor/fullcalendar/dist/fullcalendar.js"></script>
+<script src="/vendor/fullcalendar/dist/gcal.js"></script>
+<div class="content-heading">
+
+   <div>Dashboard
+      <small><%= gettext("Welcome")%>!</small>
+   </div>
+
+
+
 </div>
 
-<div class="row marketing">
-  <div class="col-lg-6">
-    <h4>Resources</h4>
-    <ul>
-      <li>
-        <a href="http://phoenixframework.org/docs/overview">Guides</a>
-      </li>
-      <li>
-        <a href="https://hexdocs.pm/phoenix">Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-    </ul>
-  </div>
 
-  <div class="col-lg-6">
-    <h4>Help</h4>
-    <ul>
-      <li>
-        <a href="http://groups.google.com/group/phoenix-talk">Mailing list</a>
-      </li>
-      <li>
-        <a href="http://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">@elixirphoenix</a>
-      </li>
-    </ul>
+<div class="row">
+
+  <div class="col-lg-9">
+
+
+      <div class="row">
+
+                <div class="col-lg-6">
+        <div class="card card-default mb-3">
+           
+           <div class="card-body">
+                 <em class="fa-2x mr-2 mb-3 fas fa-bell"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Product Management")%></span>
+                 <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("See all menu item.")%></p></li>
+                    <li><p class="card-text"><%= gettext("See all discount item.")%></p></li>
+                   
+                  </ol>
+              <a href ="/<%= @conn.private.plug_session["org_name"]%>/items"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Menu Items</button></a>
+              <a href ="/<%= @conn.private.plug_session["org_name"]%>/discounts"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Discount Items</button></a>
+        
+           </div>
+        </div>
+      </div>
+            <div class="col-lg-6">
+        <div class="card card-default mb-3">
+
+           <div class="card-body">
+                 <em class="fa-2x mr-2 mb-3 fas fa-university"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Shop Management")%></span>
+                 <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("See organization detail.")%></p></li>
+                    <li><p class="card-text"><%= gettext("See restaurant detail.")%></p></li>
+                   
+                  </ol>
+              <a href ="/organizations"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Organizations</button></a>
+               <a href ="/<%= @conn.private.plug_session["org_name"]%>/restaurants"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Restaurants</button></a>
+        
+           </div>
+        </div>
+      </div>
+       
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card card-default mb-3">
+
+             <div class="card-body">
+                  <em class="fa-2x mr-2 mb-3 fas fa-chalkboard-teacher"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Pay Bill Management")%></span>
+          <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("List all teachers and manage their info.")%></p></li>
+                     <li><p class="card-text"><%= gettext("Ad hoc create a teacher.")%></p></li>
+                   
+                  </ol>
+                <a href ="#"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">List</button></a>
+               
+             </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card card-default mb-3">
+
+             <div class="card-body">
+                 <em class="fa-2x mr-2 mb-3 fas fa-edit"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Customer Management")%></span>
+                 <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("View all student's parent information.")%></p></li>
+                    <li><p class="card-text"><%= gettext("Ad hoc create a parent.")%></p></li>
+                  </ol>
+               <a href ="#"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">List</button></a>
+          
+             </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+        <div class="card card-default mb-3">
+
+           <div class="card-body">
+                 <em class="fa-2x mr-2 mb-3 fas fa-lock"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("User Access")%></span>
+                 <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("See all Users")%></p></li>
+                    <li><p class="card-text"><%= gettext("See all Staffs")%></p></li>
+                 
+                  </ol>
+                    <a href ="/users"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Users</button></a>
+             
+               <a href ="/users?q=staff"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Staffs</button></a>
+  
+           </div>
+
+        </div>
+        </div>
+      </div>
+
+   
+   
+
   </div>
 </div>
