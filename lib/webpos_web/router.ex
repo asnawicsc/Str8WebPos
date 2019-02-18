@@ -66,7 +66,7 @@ defmodule WebposWeb.Router do
     resources("/shifts", ShiftController)
 
     get(
-      "/organizations/:branch/sales_by_category/:start_date/:end_date",
+      "/organizations/:branch/sales_details/:start_date/:end_date",
       PageController,
       :sales_details
     )

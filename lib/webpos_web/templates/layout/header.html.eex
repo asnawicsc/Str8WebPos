@@ -1,0 +1,5 @@
+<div class="content-heading">
+   <div><%= @header%>
+      <small><%= @small %></small>
+   </div>
+</div>

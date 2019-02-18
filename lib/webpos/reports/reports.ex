@@ -8,14 +8,14 @@ defmodule Webpos.Reports do
 
   alias Webpos.Reports.{Sale, SalesPayment, SalesDetail}
 
-  def list_sales_payment(startd, endd) do
+  def list_sales_payment(startd, endd, rest_name) do
     a =
       Repo.all(
         from(
           s in Sale,
           left_join: p in SalesPayment,
           on: s.salesid == p.salesid,
-          where: s.salesdate >= ^startd and s.salesdate <= ^endd,
+          where: s.salesdate >= ^startd and s.salesdate <= ^endd and s.rest_name == ^rest_name,
           select: %{
             st: sum(p.sub_total),
             tax: sum(p.gst_charge),
@@ -34,6 +34,28 @@ defmodule Webpos.Reports do
           Decimal.round(if(x.changes != nil, do: x.changes, else: Decimal.new(0)), 2)
         )
       end)
+
+    a
+  end
+
+  def list_sales_details(startd, endd, rest_name) do
+    a =
+      Repo.all(
+        from(
+          s in Sale,
+          left_join: p in SalesDetail,
+          on: s.salesid == p.salesid,
+          where: s.salesdate >= ^startd and s.salesdate <= ^endd and s.rest_name == ^rest_name,
+          select: %{
+            salesdate: s.salesdate,
+            branch: s.rest_name,
+            itemname: p.itemname,
+            unit_price: p.unit_price,
+            sub_total: p.sub_total,
+            qty: p.qty
+          }
+        )
+      )
 
     a
   end

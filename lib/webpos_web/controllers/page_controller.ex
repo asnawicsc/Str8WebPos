@@ -39,7 +39,7 @@ defmodule WebposWeb.PageController do
 
   def sales_payment(conn, restaurant, code, params) do
     payment_list =
-      Reports.list_sales_payment(params["start"], params["end"])
+      Reports.list_sales_payment(params["start"], params["end"], restaurant.name)
       |> Enum.map(fn x -> Map.put(x, :name, restaurant.name) end)
       |> Poison.encode!()
 
@@ -87,7 +87,8 @@ defmodule WebposWeb.PageController do
           select: %{
             staff_id: u.id,
             staff_name: u.username,
-            staff_pin: u.pin
+            staff_pin: u.pin,
+            staff_level: u.user_level
           }
         )
       )
@@ -121,37 +122,20 @@ defmodule WebposWeb.PageController do
   def csv_salesdetails(conn, params) do
     branch = Repo.get_by(Restaurant, code: params["branch"])
 
-    all =
-      Repo.all(
-        from(
-          sd in Webpos.Reports.SalesDetail,
-          left_join: s in Webpos.Reports.Sale,
-          on: s.salesid == sd.salesid,
-          where:
-            s.salesdate >= ^params["start_date"] and s.salesdate <= ^params["end_date"] and
-              s.rest_name == ^branch.name,
-          group_by: [s.salesdate, sd.itemname, s.rest_name],
-          select: %{
-            salesdate: s.salesdate,
-            branch: s.rest_name,
-            itemname: sd.itemname,
-            sub_total: sum(sd.sub_total),
-            qty: sum(sd.qty)
-          }
-        )
-      )
+    all = Reports.list_sales_details(params["start_date"], params["end_date"], branch.name)
 
     csv_content = [
       'Date',
       'Branch',
       'Item Name',
-      'Total Quantity',
-      'Sub Total'
+      'Unit Price',
+      'Sub Total',
+      'Total Quantity'
     ]
 
     data =
       for item <- all do
-        [item.salesdate, item.branch, item.itemname, item.qty, item.sub_total]
+        [item.salesdate, item.branch, item.itemname, item.unit_price, item.sub_total, item.qty]
       end
 
     csv_content =
