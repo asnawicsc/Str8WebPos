@@ -34,5 +34,6 @@ defmodule Webpos.Settings.Restaurant do
       :tax_code
     ])
     |> validate_required([:op_id, :name, :code, :key, :address, :tax_id, :reg_id, :tax_code])
+    |> unique_constraint(:code, name: :org_rest_code)
   end
 end

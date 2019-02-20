@@ -7,7 +7,7 @@ defmodule Webpos.Reports.Sale do
     field(:discount_name, :string)
     field(:discounted_amount, :decimal)
     field(:grand_total, :decimal)
-    field(:invoiceno, :string)
+    field(:invoiceno, :integer)
     field(:pax, :integer)
     field(:rounding, :decimal)
     field(:salesdate, :date)
@@ -118,6 +118,7 @@ defmodule Webpos.Reports.SalesPayment do
     field(:changes, :decimal)
     field(:salesdate, :string)
     field(:salesdatetime, :string)
+    field(:remarks, :string)
     timestamps()
   end
 
@@ -125,6 +126,7 @@ defmodule Webpos.Reports.SalesPayment do
   def changeset(sales_payment, attrs) do
     sales_payment
     |> cast(attrs, [
+      :remarks,
       :salesid,
       :order_id,
       :payment_type,

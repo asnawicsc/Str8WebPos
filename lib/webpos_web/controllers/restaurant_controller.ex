@@ -8,18 +8,48 @@ defmodule WebposWeb.RestaurantController do
   def get_api2(conn, %{"code" => branch_code, "license_key" => api_key}) do
     IO.inspect(conn)
     branch = Repo.all(from(b in Restaurant, where: b.code == ^branch_code))
+    invoice = 1000
+
+    result =
+      Repo.all(
+        from(
+          s in Sale,
+          where: s.organization_id == ^branch.organization_id and s.rest_name == ^branch.name,
+          select: s.invoiceno,
+          order_by: [desc: s.invoiceno],
+          limit: 10
+        )
+      )
+
+    invoice =
+      if result != [] do
+        hd(result)
+      else
+        1000
+      end
 
     if branch != [] do
       IO.inspect(api_key)
       IO.inspect(hd(branch).key)
 
+      json = %{
+        auth: "ok",
+        invoice: invoice,
+        tax_id: branch.tax_id,
+        reg_id: branch.reg_id,
+        tax_perc: branch.tax_perc,
+        serv: branch.serv
+      }
+
       if api_key == hd(branch).key do
-        send_resp(conn, 200, "ok")
+        send_resp(conn, 200, Poison.encode!(json))
       else
-        send_resp(conn, 500, "not ok")
+        json = %{auth: "not ok", invoice: invoice}
+        send_resp(conn, 500, Poison.encode!(json))
       end
     else
-      send_resp(conn, 500, "not ok")
+      json = %{auth: "not ok", invoice: invoice}
+      send_resp(conn, 500, Poison.encode!(json))
     end
   end
 
@@ -41,7 +71,9 @@ defmodule WebposWeb.RestaurantController do
       {:ok, restaurant} ->
         conn
         |> put_flash(:info, "Restaurant created successfully.")
-        |> redirect(to: restaurant_path(conn, :show, restaurant))
+        |> redirect(
+          to: restaurant_path(conn, :show, Settings.get_org_name_encoded(conn), restaurant)
+        )
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
