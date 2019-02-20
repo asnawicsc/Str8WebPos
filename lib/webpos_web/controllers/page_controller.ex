@@ -124,28 +124,16 @@ defmodule WebposWeb.PageController do
 
     # all = Reports.list_sales_details(params["start_date"], params["end_date"], branch.name)
 
-    # csv_content = [
-    #   'Date',
-    #   'Branch',
-    #   'Item Name',
-    #   'Unit Price',
-    #   'Sub Total',
-    #   'Total Quantity'
-    # ]
-
-    # data =
-    #   for item <- all do
-    #     [item.salesdate, item.branch, item.itemname, item.unit_price, item.sub_total, item.qty]
-    #   end
-
-    # item_sales_outlet
-    # |> Stream.map(fn x ->
-    #   combo_item_report_csv_content(
-    #     x,
-    #     conn,
-    #     params
-    #   )
-    # end)
+    csv_header = [
+      [
+        'Date',
+        'Branch',
+        'Item Name',
+        'Unit Price',
+        'Sub Total',
+        'Total Quantity'
+      ]
+    ]
 
     q =
       from(
@@ -155,27 +143,20 @@ defmodule WebposWeb.PageController do
         where:
           s.salesdate >= ^params["start_date"] and s.salesdate <= ^params["end_date"] and
             s.rest_name == ^branch.name,
-        select: %{
-          salesdate: s.salesdate,
-          branch: s.rest_name,
-          itemname: p.itemname,
-          unit_price: p.unit_price,
-          sub_total: p.sub_total,
-          qty: p.qty
-        }
+        select: [s.salesdate, s.rest_name, p.itemname, p.unit_price, p.sub_total, p.qty]
       )
 
     Repo.transaction(fn ->
-      # |> (fn stream -> Stream.concat(csv_header, stream) end).()
       q
       |> Repo.stream()
+      |> (fn stream -> Stream.concat(csv_header, stream) end).()
       |> CSV.encode()
       |> Enum.into(
         conn
         |> put_resp_content_type("text/csv")
         |> put_resp_header(
           "content-disposition",
-          "attachment; filename=\"Sales By Category.csv.csv\""
+          "attachment; filename=\"SalesDetails.csv\""
         )
         |> send_chunked(200)
       )
