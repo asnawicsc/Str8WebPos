@@ -1,13 +1,124 @@
-<%= WebposWeb.LayoutView.header( "Welcome", "Dashboard") %>
+<<<<<<< HEAD
+
+
+              <link rel="stylesheet" href="/vendor/fullcalendar/dist/fullcalendar.css">
+<!-- MOMENT JS-->
+<script src="/vendor/moment/min/moment-with-locales.js"></script>
+<!-- FULLCALENDAR-->
+<script src="/vendor/fullcalendar/dist/fullcalendar.js"></script>
+<script src="/vendor/fullcalendar/dist/gcal.js"></script>
+<div class="content-heading">
+
+   <div>Dashboard
+      <small><%= gettext("Welcome")%>!</small>
+   </div>
+
+
+
+</div>
+
+
 <div class="row">
-  <div class="col-lg-6"> 
-    <div class="card">
-      <div class="card-header">
+
+  <div class="col-lg-9">
+
+
+      <div class="row">
+
+                <div class="col-lg-6">
+        <div class="card card-default mb-3">
+           
+           <div class="card-body">
+                 <em class="fa-2x mr-2 mb-3 fas fa-bell"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Product Management")%></span>
+                 <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("See all menu item.")%></p></li>
+                    <li><p class="card-text"><%= gettext("See all discount item.")%></p></li>
+                   
+                  </ol>
+              <a href ="/<%= @conn.private.plug_session["org_name"]%>/items"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Menu Items</button></a>
+              <a href ="/<%= @conn.private.plug_session["org_name"]%>/discounts"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Discount Items</button></a>
         
+           </div>
+        </div>
       </div>
-      <div class="card-body">
+            <div class="col-lg-6">
+        <div class="card card-default mb-3">
+
+           <div class="card-body">
+                 <em class="fa-2x mr-2 mb-3 fas fa-university"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Shop Management")%></span>
+                 <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("See organization detail.")%></p></li>
+                    <li><p class="card-text"><%= gettext("See restaurant detail.")%></p></li>
+                   
+                  </ol>
+              <a href ="/organizations"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Organizations</button></a>
+               <a href ="/<%= @conn.private.plug_session["org_name"]%>/restaurants"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Restaurants</button></a>
         
+           </div>
+        </div>
       </div>
-    </div>
+       
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card card-default mb-3">
+
+             <div class="card-body">
+                  <em class="fa-2x mr-2 mb-3 fas fa-chalkboard-teacher"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Pay Bill Management")%></span>
+          <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("List all teachers and manage their info.")%></p></li>
+                     <li><p class="card-text"><%= gettext("Ad hoc create a teacher.")%></p></li>
+                   
+                  </ol>
+                <a href ="#"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">List</button></a>
+               
+             </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card card-default mb-3">
+
+             <div class="card-body">
+                 <em class="fa-2x mr-2 mb-3 fas fa-edit"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Customer Management")%></span>
+                 <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("View all student's parent information.")%></p></li>
+                    <li><p class="card-text"><%= gettext("Ad hoc create a parent.")%></p></li>
+                  </ol>
+               <a href ="#"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">List</button></a>
+          
+             </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+        <div class="card card-default mb-3">
+
+           <div class="card-body">
+                 <em class="fa-2x mr-2 mb-3 fas fa-lock"></em>
+                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("User Access")%></span>
+                 <ol style="padding-left: 15px;">
+                    <li><p class="card-text"><%= gettext("See all Users")%></p></li>
+                    <li><p class="card-text"><%= gettext("See all Staffs")%></p></li>
+                 
+                  </ol>
+                    <a href ="/users"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Users</button></a>
+             
+               <a href ="/users?q=staff"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Staffs</button></a>
+  
+           </div>
+
+        </div>
+        </div>
+      </div>
+
+   
+   
+
   </div>
 </div>
+

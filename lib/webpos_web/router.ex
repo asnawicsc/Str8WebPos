@@ -83,6 +83,18 @@ defmodule WebposWeb.Router do
       :top_10_sales
     )
 
+    get(
+      "/organizations/:branch/hourlysales/:start_date/:end_date",
+      PageController,
+      :hourly_sales
+    )
+
+    get(
+      "/organizations/:branch/discountsales/:start_date/:end_date",
+      PageController,
+      :discountsales
+    )
+
     get("/*path", PageController, :no_page_found)
   end
 

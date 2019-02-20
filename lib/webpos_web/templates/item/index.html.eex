@@ -1,20 +1,30 @@
-<h2>Listing Items</h2>
+<div class="content-heading">
+    <div>Listing Items
+    </div>
+</div>
 
-<table class="table">
-  <thead>
-    <tr>
+
+<div class="row">
+          
+                <div class="col-lg-12" >
+                  <div class="card card-default d-none d-lg-block">
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table" id="datatable1">
+                          <thead>
+                            <tr>
       <th>Name</th>
       <th>Img url</th>
       <th>Code</th>
       <th>Desc</th>
-        <th>Category</th>
+       <th>Category</th>
       <th>Customizations</th>
 
-      <th></th>
+      <th>Action</th>
     </tr>
-  </thead>
-  <tbody>
-<%= for item <- @items do %>
+                            </thead>
+                            <tbody>
+                         <%= for item <- @items do %>
     <tr>
       <td><%= item.name %></td>
       <td><%= item.img_url %></td>
@@ -22,7 +32,6 @@
       <td><%= item.desc %></td>
        <td><%= item.category %></td>
       <td><%= item.customizations %></td>
-
       <td class="text-right">
         <span><%= link "Show", to: item_path(@conn, :show, item), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Edit", to: item_path(@conn, :edit, item), class: "btn btn-default btn-xs" %></span>
@@ -30,7 +39,13 @@
       </td>
     </tr>
 <% end %>
-  </tbody>
-</table>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                                 
+</div>
 
 <span><%= link "New Item", to: item_path(@conn, :new) %></span>

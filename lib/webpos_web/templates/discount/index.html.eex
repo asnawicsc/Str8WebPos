@@ -1,9 +1,22 @@
 <style type="text/css">
 .choose {display: none;}
 </style>
-<h2>Listing Discounts</h2>
-<table class="table">
-  <thead>
+
+<div class="content-heading">
+    <div>Listing Discounts
+    </div>
+</div>
+
+
+<div class="row">
+          
+                <div class="col-lg-12" >
+                  <div class="card card-default d-none d-lg-block">
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table" id="datatable1">
+                          <thead>
+
     <tr>
       <th>Name</th>
       <th>Description</th>
@@ -56,8 +69,14 @@
         </td>
       </tr>
       <% end %>
-    </tbody>
-  </table>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                                 
+</div>
   <span><%= link "New Discount", to: discount_path(@conn, :new, @conn.params["org_name"]) %></span>
   <span><div class="btn btn-primary choose" id="save">Save Changes</div></span>
   <script type="text/javascript">
