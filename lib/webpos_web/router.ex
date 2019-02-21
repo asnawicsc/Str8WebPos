@@ -66,31 +66,31 @@ defmodule WebposWeb.Router do
     resources("/shifts", ShiftController)
 
     get(
-      "/organizations/:branch/sales_details/:start_date/:end_date",
+      "/organizations/:branch/sales_details/:output/:start_date/:end_date",
       PageController,
       :sales_details
     )
 
     get(
-      "/organizations/:branch/sales_by_category/:start_date/:end_date",
+      "/organizations/:branch/sales_by_category/:output/:start_date/:end_date",
       PageController,
       :sales_by_category
     )
 
     get(
-      "/organizations/:branch/top_10_sales/:start_date/:end_date",
+      "/organizations/:branch/top_10_sales/:output/:start_date/:end_date",
       PageController,
       :top_10_sales
     )
 
     get(
-      "/organizations/:branch/hourlysales/:start_date/:end_date",
+      "/organizations/:branch/hourlysales/:output/:start_date/:end_date",
       PageController,
       :hourly_sales
     )
 
     get(
-      "/organizations/:branch/discountsales/:start_date/:end_date",
+      "/organizations/:branch/discountsales/:output/:start_date/:end_date",
       PageController,
       :discountsales
     )

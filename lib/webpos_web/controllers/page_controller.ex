@@ -111,24 +111,60 @@ defmodule WebposWeb.PageController do
     send_resp(conn, 200, staff_list)
   end
 
-  # def sales_details(conn, params) do
-  #   conn
-  #   |> put_resp_content_type("text/csv")
-  #   |> put_resp_header(
-  #     "content-disposition",
-  #     "attachment; filename=\"Sales By Category.csv.csv\""
-  #   )
-  #   |> send_resp(200, csv_salesdetails(conn, params))
-  # end
-
   def sales_by_category(conn, params) do
-    conn
-    |> put_resp_content_type("text/csv")
-    |> put_resp_header(
-      "content-disposition",
-      "attachment; filename=\"Sales By Category.csv.csv\""
-    )
-    |> send_resp(200, csv_content(conn, params))
+    branch = Repo.get_by(Restaurant, code: params["branch"])
+
+    all =
+      from(
+        sd in Webpos.Reports.SalesDetail,
+        left_join: s in Webpos.Reports.Sale,
+        on: s.salesid == sd.salesid,
+        where:
+          s.salesdate >= ^params["start_date"] and s.salesdate <= ^params["end_date"] and
+            s.rest_name == ^branch.name,
+        group_by: [s.salesdate, sd.itemname, s.rest_name],
+        select: [
+          s.salesdate,
+          s.rest_name,
+          sd.itemname,
+          sum(sd.sub_total),
+          sum(sd.qty)
+        ]
+      )
+
+    csv_header = [
+      [
+        'Date',
+        'Branch',
+        'Item Name',
+        'Total Quantity',
+        'Sub Total'
+      ]
+    ]
+
+    if params["output"] == "csv" do
+      Repo.transaction(fn ->
+        all
+        |> Repo.stream()
+        |> (fn stream -> Stream.concat(csv_header, stream) end).()
+        |> CSV.encode()
+        |> Enum.into(
+          conn
+          |> put_resp_content_type("text/csv")
+          |> put_resp_header(
+            "content-disposition",
+            "attachment; filename=\"Sales By Category.csv\""
+          )
+          |> send_chunked(200)
+        )
+      end)
+    else
+      list = all |> Repo.all() |> Poison.encode!()
+
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, list)
+    end
   end
 
   def sales_details(conn, params) do
@@ -158,64 +194,29 @@ defmodule WebposWeb.PageController do
         select: [s.salesdate, s.rest_name, p.itemname, p.unit_price, p.sub_total, p.qty]
       )
 
-    Repo.transaction(fn ->
-      q
-      |> Repo.stream()
-      |> (fn stream -> Stream.concat(csv_header, stream) end).()
-      |> CSV.encode()
-      |> Enum.into(
-        conn
-        |> put_resp_content_type("text/csv")
-        |> put_resp_header(
-          "content-disposition",
-          "attachment; filename=\"SalesDetails.csv\""
+    if params["output"] == "csv" do
+      Repo.transaction(fn ->
+        q
+        |> Repo.stream()
+        |> (fn stream -> Stream.concat(csv_header, stream) end).()
+        |> CSV.encode()
+        |> Enum.into(
+          conn
+          |> put_resp_content_type("text/csv")
+          |> put_resp_header(
+            "content-disposition",
+            "attachment; filename=\"SalesDetails.csv\""
+          )
+          |> send_chunked(200)
         )
-        |> send_chunked(200)
-      )
-    end)
-  end
+      end)
+    else
+      list = q |> Repo.all() |> Poison.encode!()
 
-  def csv_content(conn, params) do
-    branch = Repo.get_by(Restaurant, code: params["branch"])
-
-    all =
-      Repo.all(
-        from(
-          sd in Webpos.Reports.SalesDetail,
-          left_join: s in Webpos.Reports.Sale,
-          on: s.salesid == sd.salesid,
-          where:
-            s.salesdate >= ^params["start_date"] and s.salesdate <= ^params["end_date"] and
-              s.rest_name == ^branch.name,
-          group_by: [s.salesdate, sd.itemname, s.rest_name],
-          select: %{
-            salesdate: s.salesdate,
-            branch: s.rest_name,
-            itemname: sd.itemname,
-            sub_total: sum(sd.sub_total),
-            qty: sum(sd.qty)
-          }
-        )
-      )
-
-    csv_content = [
-      'Date',
-      'Branch',
-      'Item Name',
-      'Total Quantity',
-      'Sub Total'
-    ]
-
-    data =
-      for item <- all do
-        [item.salesdate, item.branch, item.itemname, item.qty, item.sub_total]
-      end
-
-    csv_content =
-      List.insert_at(data, 0, csv_content)
-      |> CSV.encode()
-      |> Enum.to_list()
-      |> to_string
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, list)
+    end
   end
 
   def top_10_sales(conn, params) do
@@ -231,122 +232,98 @@ defmodule WebposWeb.PageController do
             s.rest_name == ^branch.name,
         group_by: [sd.itemname],
         order_by: [desc: sum(sd.sub_total)],
-        select: %{
-          itemname: sd.itemname,
-          sub_total: sum(sd.sub_total),
-          qty: sum(sd.qty)
-        },
+        select: [
+          sd.itemname,
+          sum(sd.sub_total),
+          sum(sd.qty)
+        ],
         limit: 10
       )
 
-    csv_content = [
-      'Item Name',
-      'Total Quantity',
-      'Sub Total'
+    csv_header = [
+      [
+        'Item Name',
+        'Total Quantity',
+        'Sub Total'
+      ]
     ]
 
-    stream = Repo.stream(all)
+    if params["output"] == "csv" do
+      Repo.transaction(fn ->
+        all
+        |> Repo.stream()
+        |> (fn stream -> Stream.concat(csv_header, stream) end).()
+        |> CSV.encode()
+        |> Enum.into(
+          conn
+          |> put_resp_content_type("text/csv")
+          |> put_resp_header(
+            "content-disposition",
+            "attachment; filename=\"Top 10 Sales.csv\""
+          )
+          |> send_chunked(200)
+        )
+      end)
+    else
+      list = all |> Repo.all() |> Poison.encode!()
 
-    display = Repo.transaction(fn -> Enum.to_list(stream) end)
-
-    # a =
-    #   Repo.transaction(fn ->
-    #     Ecto.Adapters.SQL.stream(Repo, all)
-    #     |> Stream.map(&chunk(conn, &1.rows))
-    #     |> Stream.run()
-    #   end)
-
-    conn
-    |> put_resp_content_type("text/csv")
-    |> put_resp_header(
-      "content-disposition",
-      "attachment; filename=\"Top 10 Sales.csv.csv\""
-    )
-    |> send_chunked(200)
-
-    Repo.transaction(fn ->
-      stream
-      |> CSV.encode()
-    end)
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, list)
+    end
   end
 
-  # def csv_content_top_10_sales(conn, params) do
-  #   branch = Repo.get_by(Restaurant, code: params["branch"])
+  def discountsales(conn, params) do
+    branch = Repo.get_by(Restaurant, code: params["branch"])
 
-  #   all =
-  #     from(
-  #       sd in Webpos.Reports.SalesDetail,
-  #       left_join: s in Webpos.Reports.Sale,
-  #       on: s.salesid == sd.salesid,
-  #       where:
-  #         s.salesdate >= ^params["start_date"] and s.salesdate <= ^params["end_date"] and
-  #           s.rest_name == ^branch.name,
-  #       group_by: [sd.itemname],
-  #       order_by: [desc: sum(sd.sub_total)],
-  #       select: %{
-  #         itemname: sd.itemname,
-  #         sub_total: sum(sd.sub_total),
-  #         qty: sum(sd.qty)
-  #       },
-  #       limit: 10
-  #     )
+    all =
+      from(
+        s in Webpos.Reports.Sale,
+        where:
+          s.salesdate >= ^params["start_date"] and s.salesdate <= ^params["end_date"] and
+            s.rest_name == ^branch.name and s.discount_name != "n/a",
+        group_by: [s.salesdate, s.discount_name, s.discount_description],
+        select: [
+          s.salesdate,
+          s.discount_name,
+          s.discount_description,
+          sum(s.discounted_amount)
+        ]
+      )
 
-  #   # stream = Repo.stream(all)
+    csv_header = [
+      [
+        'Date',
+        'Discount Name',
+        'Discount Description',
+        'Total Discount Amount'
+      ]
+    ]
 
-  #   # display = Repo.transaction(fn -> Enum.to_list(stream) end)
+    if params["output"] == "csv" do
+      Repo.transaction(fn ->
+        all
+        |> Repo.stream()
+        |> (fn stream -> Stream.concat(csv_header, stream) end).()
+        |> CSV.encode()
+        |> Enum.into(
+          conn
+          |> put_resp_content_type("text/csv")
+          |> put_resp_header(
+            "content-disposition",
+            "attachment; filename=\"Discount Sales.csv\""
+          )
+          |> send_chunked(200)
+        )
+      end)
+    else
+      list = all |> Repo.all() |> Poison.encode!()
 
-  #   Repo.transaction(fn ->
-  #     stream = Ecto.Adapters.SQL.stream(Repo, all, [])
-  #   end)
-  #   |> send_chunked(:ok)
-
-  #   #     csv_content = [
-  #   #   'Item Name',
-  #   #   'Total Quantity',
-  #   #   'Sub Total'
-  #   # ]
-
-  #   # data =
-  #   #   for item <- all do
-  #   #     [item.itemname, item.qty, item.sub_total]
-  #   #   end
-
-  #   # ap = Stream.with_index(data, 1) |> Enum.reduce(%{}, fn {v, k}, acc -> Map.put(acc, k, v) end)
-  #   # IEx.pry()
-  #   # path = "users.csv"
-
-  #   # trf =
-  #   #   Repo.transaction(fn ->
-  #   #     data
-  #   #     |> Repo.stream()
-  #   #     |> Flow.from_enumerable()
-  #   #     |> Flow.each(fn x -> IO.inspect(x) end)
-  #   #     |> Flow.run()
-  #   #   end)
-
-  #   # csv_content =
-  #   # Repo.transaction(fn ->
-  #   #   data
-  #   #   |> Repo.steream()
-  #   #   |> Stream.map(&IO.inspect(&1))
-  #   #   |> CSV.encode()
-  #   #   |> Enum.into(File.stream!(path, [:write, :utf8]))
-  #   #   |> Enum.to_list()
-  #   # end)
-
-  #   # File.stream!(data)
-  #   # |> CSV.encode(headers: csv_content)
-  #   # |> Enum.reduce(%{}, &Enum.into/2)
-  #   # |> File.write()
-
-  #   # IEx.pry()
-
-  #   # csv_content =
-  #   #   List.insert_at(data, 0, csv_content)
-  #   #   |> CSV.encode()
-  #   #   |> Enum.to_list()
-  #   #   |> to_string
-  # end
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, list)
+    end
+  end
 
   def hourly_sales(conn, params) do
     conn
@@ -418,76 +395,27 @@ defmodule WebposWeb.PageController do
         all
       end
 
-    for a <- data do
-      csv_content = [
-        'Date',
-        'Hour',
-        'Quantity',
-        'Sub Total'
-      ]
+    if params["output"] == "csv" do
+      for a <- data do
+        csv_content = [
+          'Date',
+          'Hour',
+          'Quantity',
+          'Sub Total'
+        ]
 
-      csv_content =
-        List.insert_at(a, 0, csv_content)
-        |> CSV.encode()
-        |> Enum.to_list()
-        |> to_string
+        csv_content =
+          List.insert_at(a, 0, csv_content)
+          |> CSV.encode()
+          |> Enum.to_list()
+          |> to_string
+      end
+    else
+      list = data |> Poison.encode!()
+
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, list)
     end
-  end
-
-  def discountsales(conn, params) do
-    conn
-    |> put_resp_content_type("text/csv")
-    |> put_resp_header(
-      "content-disposition",
-      "attachment; filename=\"Discount Sales.csv.csv\""
-    )
-    |> send_resp(200, csv_content_discount_sales(conn, params))
-  end
-
-  def csv_content_discount_sales(conn, params) do
-    branch = Repo.get_by(Restaurant, code: params["branch"])
-
-    all =
-      from(
-        s in Webpos.Reports.Sale,
-        where:
-          s.salesdate >= ^params["start_date"] and s.salesdate <= ^params["end_date"] and
-            s.rest_name == ^branch.name and s.discount_name != "n/a",
-        group_by: [s.salesdate, s.discount_name, s.discount_description],
-        select: %{
-          date: s.salesdate,
-          discount_name: s.discount_name,
-          discounted_amount: sum(s.discounted_amount),
-          discount_description: s.discount_description
-        }
-      )
-
-    csv_content = [
-      'Date',
-      'Discount Name',
-      'Discount Description',
-      'Total Discount Amount'
-    ]
-
-    stream = Repo.stream(all)
-
-    display = Repo.transaction(fn -> Enum.to_list(stream) end)
-
-    a =
-      Repo.transaction(fn ->
-        stream
-        |> CSV.encode()
-      end)
-
-    # data =
-    #   for item <- all do
-    #     [item.date, item.discount_name, item.discount_description, item.discounted_amount]
-    #   end
-
-    # csv_content =
-    #   List.insert_at(data, 0, csv_content)
-    #   |> CSV.encode()
-    #   |> Enum.to_list()
-    #   |> to_string
   end
 end
