@@ -6,7 +6,6 @@ defmodule WebposWeb.RestaurantController do
   require IEx
 
   def get_api2(conn, %{"code" => branch_code, "license_key" => api_key}) do
-    IO.inspect(conn)
     branch = Repo.all(from(b in Restaurant, where: b.code == ^branch_code))
     invoice = 1000
 
@@ -14,34 +13,40 @@ defmodule WebposWeb.RestaurantController do
       Repo.all(
         from(
           s in Sale,
-          where: s.organization_id == ^branch.organization_id and s.rest_name == ^branch.name,
+          where:
+            s.organization_id == ^hd(branch).organization_id and s.rest_name == ^hd(branch).name,
           select: s.invoiceno,
           order_by: [desc: s.invoiceno],
           limit: 10
         )
       )
+      |> Enum.reject(fn x -> x == nil end)
+
+    IO.inspect(result)
 
     invoice =
       if result != [] do
-        hd(result)
+        hd(result) + 1
       else
         1000
       end
 
+    IO.inspect(invoice)
+
     if branch != [] do
-      IO.inspect(api_key)
-      IO.inspect(hd(branch).key)
-
-      json = %{
-        auth: "ok",
-        invoice: invoice,
-        tax_id: branch.tax_id,
-        reg_id: branch.reg_id,
-        tax_perc: branch.tax_perc,
-        serv: branch.serv
-      }
-
       if api_key == hd(branch).key do
+        branch = hd(branch)
+
+        json = %{
+          auth: "ok",
+          invoice: invoice,
+          tax_id: branch.tax_id,
+          reg_id: branch.reg_id,
+          tax_perc: branch.tax_perc,
+          serv: branch.serv
+        }
+
+        IO.inspect(json)
         send_resp(conn, 200, Poison.encode!(json))
       else
         json = %{auth: "not ok", invoice: invoice}
