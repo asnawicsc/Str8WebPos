@@ -1,0 +1,61 @@
+<div class="content-heading">
+    <div>Listing Modallogs
+    </div>
+</div>
+
+
+
+          
+        
+                  <div class="card card-default d-none d-lg-block">
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table" id="datatable1">
+                          <thead>
+                  
+
+    <tr>
+      <th>User name</th>
+      <th>User type</th>
+    
+      <th>Datetime</th>
+      <th>Category</th>
+      <th>Primary ID</th>
+      <th>Changes</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for modal_lllog <- @modallogs do %>
+    <tr>
+      <td><%= modal_lllog.user_name %></td>
+      <td><%= modal_lllog.user_type %></td>
+    
+      <td><%= modal_lllog.datetime %></td>
+      <td><%= modal_lllog.category %></td>
+      <td><%= modal_lllog.primary_id %></td>
+
+      <% require IEx %>
+    
+       <td><%= for item <- modal_lllog.changes|>Poison.decode!|>Enum.with_index do %>
+       
+         <% no = item|>elem(1) %>
+         <% item = item|> elem(0) %>
+         <%= no + 1 %>. <%= item %> <br>
+      <% end %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: modal_lllog_path(@conn, :show, modal_lllog), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: modal_lllog_path(@conn, :edit, modal_lllog), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: modal_lllog_path(@conn, :delete, modal_lllog), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+                </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+           
+

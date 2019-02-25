@@ -2,4 +2,4 @@
 
 <%= render "form.html", Map.put(assigns, :action, printer_path(@conn, :update, @printer)) %>
 
-<span><%= link "Back", to: printer_path(@conn, :index) %></span>
+<span><%= link "Back", to: printer_path(@conn, :index,@printer) %></span>

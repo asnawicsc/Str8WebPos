@@ -1,12 +1,21 @@
-<h2>Listing Organizations</h2>
+<div class="content-heading">
+    <div>Listing Organizations
+    </div>
+</div>
 
-<table class="table">
+<div class="row" >
+          
+  
+   <div class="card card-default d-none d-lg-block">
+   <div class="card-body">
+   
+  <table class="table" id="datatable1">
   <thead>
     <tr>
       <th>Name</th>
       <th>Address</th>
 
-      <th></th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
@@ -15,18 +24,26 @@
       <td><%= organization.name %></td>
       <td><%= organization.address %></td>
 
-      <td class="text-right">
+      <td >
+
         <span><%= link "Restaurants", to: restaurant_path(@conn, :index, Base.url_encode64(organization.name)), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Printers", to: printer_path(@conn, :index, Base.url_encode64(organization.name)), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Items", to: item_path(@conn, :index, Base.url_encode64(organization.name)), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Pricings", to: organization_price_path(@conn, :index, organization), class: "btn btn-default btn-xs" %></span>
+        
         <span><%= link "Show", to: organization_path(@conn, :show, organization), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Edit", to: organization_path(@conn, :edit, organization), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Delete", to: organization_path(@conn, :delete, organization), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
       </td>
     </tr>
 <% end %>
-  </tbody>
-</table>
+                           </tbody>
+                        </table>
+                      </div>
+                    </div>
+                
+               
+                                 
+</div>
 
 <span><%= link "New Organization", to: organization_path(@conn, :new) %></span>

@@ -1,6 +1,19 @@
-<h2>Listing Sales</h2>
 
-<table class="table">
+<div class="content-heading">
+    <div>LListing Sales
+    </div>
+</div>
+
+
+<div class="row">
+          
+            
+                  <div class="card card-default d-none d-lg-block">
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table" id="datatable1">
+
+
   <thead>
     <tr>
       <th>Salesid</th>
@@ -50,7 +63,18 @@
       </td>
     </tr>
 <% end %>
-  </tbody>
-</table>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                
+                                 
+</div>
 
 <span><%= link "New Sale", to: sale_path(@conn, :new) %></span>
+
+<script type="text/javascript">
+  
+
+</script>

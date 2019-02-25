@@ -25,4 +25,4 @@
 </ul>
 
 <span><%= link "Edit", to: printer_path(@conn, :edit, @printer) %></span>
-<span><%= link "Back", to: printer_path(@conn, :index) %></span>
+<span><%= link "Back", to: printer_path(@conn, :index,@printer) %></span>

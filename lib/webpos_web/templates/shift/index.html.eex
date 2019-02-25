@@ -1,7 +1,21 @@
-<h2>Listing Shifts</h2>
 
-<table class="table">
+<div class="content-heading">
+    <div>Listing Shifts
+    </div>
+</div>
+
+
+<div class="row">
+          
+            
+                  <div class="card card-default d-none d-lg-block">
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table" id="datatable1">
+
   <thead>
+
+
     <tr>
       <th>Opening staff</th>
       <th>Start datetime</th>
@@ -34,7 +48,13 @@
       </td>
     </tr>
 <% end %>
-  </tbody>
-</table>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+             
+                                 
+</div>
 
 <span><%= link "New Shift", to: shift_path(@conn, :new) %></span>

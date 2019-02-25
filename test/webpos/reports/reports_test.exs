@@ -166,4 +166,76 @@ defmodule Webpos.ReportsTest do
       assert %Ecto.Changeset{} = Reports.change_shift(shift)
     end
   end
+
+  describe "modallogs" do
+    alias Webpos.Reports.ModalLllog
+
+    @valid_attrs %{after_change: "some after_change", before_change: "some before_change", category: "some category", datetime: ~N[2010-04-17 14:00:00.000000], primary_id: 42, user_name: "some user_name", user_type: "some user_type"}
+    @update_attrs %{after_change: "some updated after_change", before_change: "some updated before_change", category: "some updated category", datetime: ~N[2011-05-18 15:01:01.000000], primary_id: 43, user_name: "some updated user_name", user_type: "some updated user_type"}
+    @invalid_attrs %{after_change: nil, before_change: nil, category: nil, datetime: nil, primary_id: nil, user_name: nil, user_type: nil}
+
+    def modal_lllog_fixture(attrs \\ %{}) do
+      {:ok, modal_lllog} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Reports.create_modal_lllog()
+
+      modal_lllog
+    end
+
+    test "list_modallogs/0 returns all modallogs" do
+      modal_lllog = modal_lllog_fixture()
+      assert Reports.list_modallogs() == [modal_lllog]
+    end
+
+    test "get_modal_lllog!/1 returns the modal_lllog with given id" do
+      modal_lllog = modal_lllog_fixture()
+      assert Reports.get_modal_lllog!(modal_lllog.id) == modal_lllog
+    end
+
+    test "create_modal_lllog/1 with valid data creates a modal_lllog" do
+      assert {:ok, %ModalLllog{} = modal_lllog} = Reports.create_modal_lllog(@valid_attrs)
+      assert modal_lllog.after_change == "some after_change"
+      assert modal_lllog.before_change == "some before_change"
+      assert modal_lllog.category == "some category"
+      assert modal_lllog.datetime == ~N[2010-04-17 14:00:00.000000]
+      assert modal_lllog.primary_id == 42
+      assert modal_lllog.user_name == "some user_name"
+      assert modal_lllog.user_type == "some user_type"
+    end
+
+    test "create_modal_lllog/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Reports.create_modal_lllog(@invalid_attrs)
+    end
+
+    test "update_modal_lllog/2 with valid data updates the modal_lllog" do
+      modal_lllog = modal_lllog_fixture()
+      assert {:ok, modal_lllog} = Reports.update_modal_lllog(modal_lllog, @update_attrs)
+      assert %ModalLllog{} = modal_lllog
+      assert modal_lllog.after_change == "some updated after_change"
+      assert modal_lllog.before_change == "some updated before_change"
+      assert modal_lllog.category == "some updated category"
+      assert modal_lllog.datetime == ~N[2011-05-18 15:01:01.000000]
+      assert modal_lllog.primary_id == 43
+      assert modal_lllog.user_name == "some updated user_name"
+      assert modal_lllog.user_type == "some updated user_type"
+    end
+
+    test "update_modal_lllog/2 with invalid data returns error changeset" do
+      modal_lllog = modal_lllog_fixture()
+      assert {:error, %Ecto.Changeset{}} = Reports.update_modal_lllog(modal_lllog, @invalid_attrs)
+      assert modal_lllog == Reports.get_modal_lllog!(modal_lllog.id)
+    end
+
+    test "delete_modal_lllog/1 deletes the modal_lllog" do
+      modal_lllog = modal_lllog_fixture()
+      assert {:ok, %ModalLllog{}} = Reports.delete_modal_lllog(modal_lllog)
+      assert_raise Ecto.NoResultsError, fn -> Reports.get_modal_lllog!(modal_lllog.id) end
+    end
+
+    test "change_modal_lllog/1 returns a modal_lllog changeset" do
+      modal_lllog = modal_lllog_fixture()
+      assert %Ecto.Changeset{} = Reports.change_modal_lllog(modal_lllog)
+    end
+  end
 end
