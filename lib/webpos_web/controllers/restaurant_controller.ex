@@ -44,7 +44,8 @@ defmodule WebposWeb.RestaurantController do
           reg_id: branch.reg_id,
           tax_perc: branch.tax_perc,
           serv: branch.serv,
-          name: branch.name
+          name: branch.name,
+          address: branch.address
         }
 
         IO.inspect(json)
