@@ -40,6 +40,7 @@
   <%= label f, :customizations, class: "control-label" %>
   <%= text_input f, :customizations, "data-role": "tagsinput", class: "form-control" %>
   <%= error_tag f, :customizations %>
+  <span class="help-block m-b-none" >Example: &nbsp; <font style="color: blue">With Price - less spicy(0.50),&nbsp;  extra onion(1.00) </font>&nbsp;|&nbsp;<font style="color: red">Without Price - less spicy,&nbsp;  extra onion </font></span>
 </div>
 <div class="form-group">
   <div class="checkbox c-checkbox">

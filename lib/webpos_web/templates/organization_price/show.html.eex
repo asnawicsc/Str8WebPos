@@ -15,4 +15,4 @@
 </ul>
 
 <span><%= link "Edit", to: organization_price_path(@conn, :edit, @organization_price) %></span>
-<span><%= link "Back", to: organization_price_path(@conn, :index) %></span>
+<span><%= link "Back", to: organization_price_path(@conn, :index,@organization_price) %></span>

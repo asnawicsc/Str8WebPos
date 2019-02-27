@@ -48,8 +48,16 @@ defmodule WebposWeb.DiscountController do
     discount = Menu.get_discount!(id)
     discount_params = Map.put(discount_params, "organization_id", Settings.get_org_id(conn))
 
+    log_before =
+      discount |> Map.from_struct() |> Map.drop([:__meta__, :__struct__]) |> Poison.encode!()
+
     case Menu.update_discount(discount, discount_params) do
       {:ok, discount} ->
+        log_after =
+          discount |> Map.from_struct() |> Map.drop([:__meta__, :__struct__]) |> Poison.encode!()
+
+        Settings.modal_log_create(conn, log_before, log_after, discount)
+
         conn
         |> put_flash(:info, "Discount updated successfully.")
         |> redirect(to: discount_path(conn, :index, Settings.get_org_name_encoded(conn)))

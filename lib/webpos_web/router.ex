@@ -62,6 +62,7 @@ defmodule WebposWeb.Router do
     get("/:org_name/check_discount", DiscountController, :check_discount)
     resources("/discounts", DiscountController)
     resources("/reports/sales", SaleController)
+    resources("/modallogs", ModalLllogController)
 
     resources("/shifts", ShiftController)
 
@@ -94,6 +95,8 @@ defmodule WebposWeb.Router do
       PageController,
       :discountsales
     )
+
+    get("/organization/:org_id/payment_type/new", OrganizationController, :payment_type)
 
     get("/*path", PageController, :no_page_found)
   end

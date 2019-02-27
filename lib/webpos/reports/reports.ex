@@ -253,4 +253,100 @@ defmodule Webpos.Reports do
   def change_shift(%Shift{} = shift) do
     Shift.changeset(shift, %{})
   end
+
+  alias Webpos.Reports.ModalLllog
+
+  @doc """
+  Returns the list of modallogs.
+
+  ## Examples
+
+      iex> list_modallogs()
+      [%ModalLllog{}, ...]
+
+  """
+  def list_modallogs do
+    Repo.all(ModalLllog)
+  end
+
+  @doc """
+  Gets a single modal_lllog.
+
+  Raises `Ecto.NoResultsError` if the Modal lllog does not exist.
+
+  ## Examples
+
+      iex> get_modal_lllog!(123)
+      %ModalLllog{}
+
+      iex> get_modal_lllog!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_modal_lllog!(id), do: Repo.get!(ModalLllog, id)
+
+  @doc """
+  Creates a modal_lllog.
+
+  ## Examples
+
+      iex> create_modal_lllog(%{field: value})
+      {:ok, %ModalLllog{}}
+
+      iex> create_modal_lllog(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_modal_lllog(attrs \\ %{}) do
+    %ModalLllog{}
+    |> ModalLllog.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a modal_lllog.
+
+  ## Examples
+
+      iex> update_modal_lllog(modal_lllog, %{field: new_value})
+      {:ok, %ModalLllog{}}
+
+      iex> update_modal_lllog(modal_lllog, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_modal_lllog(%ModalLllog{} = modal_lllog, attrs) do
+    modal_lllog
+    |> ModalLllog.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a ModalLllog.
+
+  ## Examples
+
+      iex> delete_modal_lllog(modal_lllog)
+      {:ok, %ModalLllog{}}
+
+      iex> delete_modal_lllog(modal_lllog)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_modal_lllog(%ModalLllog{} = modal_lllog) do
+    Repo.delete(modal_lllog)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking modal_lllog changes.
+
+  ## Examples
+
+      iex> change_modal_lllog(modal_lllog)
+      %Ecto.Changeset{source: %ModalLllog{}}
+
+  """
+  def change_modal_lllog(%ModalLllog{} = modal_lllog) do
+    ModalLllog.changeset(modal_lllog, %{})
+  end
 end

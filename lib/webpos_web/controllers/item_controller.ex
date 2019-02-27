@@ -3,6 +3,7 @@ defmodule WebposWeb.ItemController do
 
   alias Webpos.Menu
   alias Webpos.Menu.Item
+  alias Webpos.Reports.ModalLllog
   require IEx
 
   def index(conn, params) do
@@ -49,6 +50,7 @@ defmodule WebposWeb.ItemController do
   def edit(conn, %{"id" => id}) do
     item = Menu.get_item!(id)
     changeset = Menu.change_item(item)
+
     render(conn, "edit.html", item: item, changeset: changeset)
   end
 
@@ -61,8 +63,16 @@ defmodule WebposWeb.ItemController do
       item_params = Map.put(item_params, "img_url", img_url)
     end
 
+    log_before =
+      item |> Map.from_struct() |> Map.drop([:__meta__, :__struct__]) |> Poison.encode!()
+
     case Menu.update_item(item, item_params) do
       {:ok, item} ->
+        log_after =
+          item |> Map.from_struct() |> Map.drop([:__meta__, :__struct__]) |> Poison.encode!()
+
+        Settings.modal_log_create(conn, log_before, log_after, item)
+
         conn
         |> put_flash(:info, "Item updated successfully.")
         |> redirect(to: item_path(conn, :show, item))
@@ -79,5 +89,8 @@ defmodule WebposWeb.ItemController do
     conn
     |> put_flash(:info, "Item deleted successfully.")
     |> redirect(to: item_path(conn, :index))
+  end
+
+  def modal_log(user_name, user_type, org_id) do
   end
 end

@@ -129,8 +129,19 @@ defmodule WebposWeb.RestaurantController do
     restaurant = Settings.get_restaurant!(id)
     restaurant_params = Map.put(restaurant_params, "organization_id", Settings.get_org_id(conn))
 
+    log_before =
+      restaurant |> Map.from_struct() |> Map.drop([:__meta__, :__struct__]) |> Poison.encode!()
+
     case Settings.update_restaurant(restaurant, restaurant_params) do
       {:ok, restaurant} ->
+        log_after =
+          restaurant
+          |> Map.from_struct()
+          |> Map.drop([:__meta__, :__struct__])
+          |> Poison.encode!()
+
+        Settings.modal_log_create(conn, log_before, log_after, restaurant)
+
         conn
         |> put_flash(:info, "Restaurant updated successfully.")
         |> redirect(

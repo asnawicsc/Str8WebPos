@@ -83,8 +83,19 @@ defmodule WebposWeb.UserController do
         Map.delete(user_params, "password")
       end
 
+    log_before =
+      user |> Map.from_struct() |> Map.drop([:__meta__, :__struct__]) |> Poison.encode!()
+
     case Settings.update_user(user, user_params) do
       {:ok, user} ->
+        log_after =
+          user
+          |> Map.from_struct()
+          |> Map.drop([:__meta__, :__struct__])
+          |> Poison.encode!()
+
+        Settings.modal_log_create(conn, log_before, log_after, user)
+
         conn
         |> put_flash(:info, "User updated successfully.")
         |> redirect(to: user_path(conn, :show, user))

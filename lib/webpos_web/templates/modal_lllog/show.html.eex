@@ -1,0 +1,43 @@
+<h2>Show Modal lllog</h2>
+
+<ul>
+
+  <li>
+    <strong>User name:</strong>
+    <%= @modal_lllog.user_name %>
+  </li>
+
+  <li>
+    <strong>User type:</strong>
+    <%= @modal_lllog.user_type %>
+  </li>
+
+  <li>
+    <strong>Before change:</strong>
+    <%= @modal_lllog.before_change %>
+  </li>
+
+  <li>
+    <strong>After change:</strong>
+    <%= @modal_lllog.after_change %>
+  </li>
+
+  <li>
+    <strong>Datetime:</strong>
+    <%= @modal_lllog.datetime %>
+  </li>
+
+  <li>
+    <strong>Category:</strong>
+    <%= @modal_lllog.category %>
+  </li>
+
+  <li>
+    <strong>Primary:</strong>
+    <%= @modal_lllog.primary_id %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: modal_lllog_path(@conn, :edit, @modal_lllog) %></span>
+<span><%= link "Back", to: modal_lllog_path(@conn, :index) %></span>
