@@ -83,10 +83,6 @@ defmodule WebposWeb.UserController do
         Map.delete(user_params, "password")
       end
 
-    user_name = conn.private.plug_session["user_name"]
-    user_type = conn.private.plug_session["user_type"]
-    org_id = conn.private.plug_session["org_id"]
-
     log_before =
       user |> Map.from_struct() |> Map.drop([:__meta__, :__struct__]) |> Poison.encode!()
 
@@ -98,40 +94,7 @@ defmodule WebposWeb.UserController do
           |> Map.drop([:__meta__, :__struct__])
           |> Poison.encode!()
 
-        a = log_before |> Poison.decode!() |> Enum.map(fn x -> x end)
-        b = log_after |> Poison.decode!() |> Enum.map(fn x -> x end)
-        bef = a -- b
-        aft = b -- a
-
-        fullsec =
-          for item <- aft |> Enum.filter(fn x -> x |> elem(0) != "updated_at" end) do
-            data = item |> elem(0)
-            data2 = item |> elem(1)
-
-            bef = bef |> Enum.filter(fn x -> x |> elem(0) == data end) |> hd
-
-            full_bef = bef |> elem(1)
-
-            fullsec = data <> ": change " <> full_bef <> " to " <> data2
-            fullsec
-          end
-          |> Poison.encode!()
-
-        datetime = Timex.now() |> DateTime.to_naive()
-
-        modal_log_params = %{
-          user_name: user_name,
-          user_type: user_type,
-          before_change: log_before,
-          after_change: log_after,
-          datetime: datetime,
-          category: conn.path_info |> hd,
-          primary_id: user.id,
-          changes: fullsec,
-          organization_id: org_id
-        }
-
-        Reports.create_modal_lllog(modal_log_params)
+        Settings.modal_log_create(conn, log_before, log_after, user)
 
         conn
         |> put_flash(:info, "User updated successfully.")

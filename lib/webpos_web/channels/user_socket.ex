@@ -5,6 +5,7 @@ defmodule WebposWeb.UserSocket do
   # channel "room:*", WebposWeb.RoomChannel
   channel("user:*", WebposWeb.UserChannel)
   channel("restaurant:*", WebposWeb.RestaurantChannel)
+  channel("organization:*", WebposWeb.OrganizationChannel)
 
   ## Transports
   transport(:websocket, Phoenix.Transports.WebSocket)
