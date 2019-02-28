@@ -26,24 +26,53 @@ defmodule WebposWeb.OrganizationChannel do
   defp authorized?(payload, code) do
     IO.inspect(payload)
     organization = Repo.get_by(Organization, name: code)
-
+    IO.inspect(payload["license_key"])
     password = Comeonin.Bcrypt.hashpwsalt(payload["license_key"])
+    IO.inspect(organization)
 
     organization =
       if organization != nil do
         user =
           Repo.all(
             from(s in User,
-              where: s.crypted_password == ^password
+              where: s.organization == ^organization.id
             )
           )
-          |> hd
 
-        %{password: user.crypted_password}
+        check =
+          for item <- user do
+            pass =
+              if Comeonin.Bcrypt.hashpwsalt(payload["license_key"], item.crypted_password) == true do
+                %{password: payload["license_key"]}
+              else
+                %{password: nil}
+              end
+
+            pass
+          end
+          |> Enum.filter(fn x -> x.password != nil end)
+
+        IO.inspect(check)
+
+        user =
+          if check != [] do
+            check |> hd
+
+            %{password: check.password}
+          else
+            %{password: nil}
+          end
+
+        user
       else
         %{password: nil}
       end
 
-    password == organization.password
+    IO.inspect(password)
+    IO.inspect(organization.password)
+    a = payload["license_key"] == organization.password
+    IO.inspect(a)
+
+    a
   end
 end
