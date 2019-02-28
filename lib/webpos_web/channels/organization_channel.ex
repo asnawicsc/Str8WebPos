@@ -25,7 +25,7 @@ defmodule WebposWeb.OrganizationChannel do
   # Add authorization logic here as required.
   defp authorized?(payload, code) do
     IO.inspect(payload)
-    organization = Repo.get_by(Organization, name: code)
+    organization = Repo.get_by(Organization, code: code)
     IO.inspect(payload["license_key"])
     password = Comeonin.Bcrypt.hashpwsalt(payload["license_key"])
     IO.inspect(organization)
