@@ -10,6 +10,10 @@
 				<strong>Address:</strong>
 				<%= @organization.address %>
 			</li>
+			<li>
+				<strong>Code:</strong>
+				<%= @organization.code %>
+			</li>
 		</ul>
 		<span><%= link "Edit", to: organization_path(@conn, :edit, @organization) %></span>
 		<span><%= link "Back", to: organization_path(@conn, :index) %></span>

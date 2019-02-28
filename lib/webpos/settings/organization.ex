@@ -7,13 +7,14 @@ defmodule Webpos.Settings.Organization do
     field(:name, :string)
     field(:categories, :string)
     field(:payments, :string)
+    field(:code, :string)
     timestamps()
   end
 
   @doc false
   def changeset(organization, attrs) do
     organization
-    |> cast(attrs, [:categories, :payments, :name, :address])
+    |> cast(attrs, [:categories, :payments, :name, :address, :code])
     |> validate_required([:name, :address])
   end
 end
