@@ -1,0 +1,5 @@
+<h2>Edit Payment</h2>
+
+<%= render "form.html", Map.put(assigns, :action, payment_path(@conn, :update, @payment)) %>
+
+<span><%= link "Back", to: payment_path(@conn, :index) %></span>
