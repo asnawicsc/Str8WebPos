@@ -1,0 +1,43 @@
+<h2>Show Void item</h2>
+
+<ul>
+
+  <li>
+    <strong>Item name:</strong>
+    <%= @void_item.item_name %>
+  </li>
+
+  <li>
+    <strong>Void by:</strong>
+    <%= @void_item.void_by %>
+  </li>
+
+  <li>
+    <strong>Order:</strong>
+    <%= @void_item.order_id %>
+  </li>
+
+  <li>
+    <strong>Table name:</strong>
+    <%= @void_item.table_name %>
+  </li>
+
+  <li>
+    <strong>Rest:</strong>
+    <%= @void_item.rest_id %>
+  </li>
+
+  <li>
+    <strong>Void datetime:</strong>
+    <%= @void_item.void_datetime %>
+  </li>
+
+  <li>
+    <strong>Reason:</strong>
+    <%= @void_item.reason %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: void_item_path(@conn, :edit, @void_item) %></span>
+<span><%= link "Back", to: void_item_path(@conn, :index) %></span>

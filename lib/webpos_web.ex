@@ -41,7 +41,7 @@ defmodule WebposWeb do
       }
 
       alias Webpos.Reports
-      alias Webpos.Reports.{Sale, SalesDetail, SalesPayment, Shift}
+      alias Webpos.Reports.{Sale, SalesDetail, SalesPayment, Shift, VoidItem}
 
       import Ecto.Query
     end
@@ -81,7 +81,7 @@ defmodule WebposWeb do
       }
 
       alias Webpos.Reports
-      alias Webpos.Reports.{Sale, SalesDetail, SalesPayment, Shift}
+      alias Webpos.Reports.{Sale, SalesDetail, SalesPayment, Shift, VoidItem}
       import Ecto.Query
     end
   end
@@ -117,7 +117,7 @@ defmodule WebposWeb do
       }
 
       alias Webpos.Reports
-      alias Webpos.Reports.{Sale, SalesDetail, SalesPayment, Shift}
+      alias Webpos.Reports.{Sale, SalesDetail, SalesPayment, Shift, VoidItem}
       import Ecto.Query
     end
   end

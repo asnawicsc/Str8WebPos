@@ -10,6 +10,27 @@ defmodule WebposWeb.RestaurantChannel do
     end
   end
 
+  def handle_in("void_item", payload, socket) do
+    code = String.split(socket.topic, ":") |> List.last()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+    item_map = payload["void_item"]
+
+    {:ok, v} =
+      Reports.create_void_item(%{
+        item_name: item_map["item_name"],
+        void_by: item_map["void_by"],
+        order_id: item_map["order_id"],
+        table_name: item_map["table_name"],
+        rest_id: item_map["rest_id"],
+        void_datetime: item_map["void_datetime"],
+        reason: item_map["reason"]
+      })
+
+    IO.inspect(v)
+
+    {:noreply, socket}
+  end
+
   def handle_in("update_table", payload, socket) do
     code = String.split(socket.topic, ":") |> List.last()
     restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()

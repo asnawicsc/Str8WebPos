@@ -100,6 +100,7 @@ defmodule WebposWeb.Router do
 
     resources("/payments", PaymentController)
     resources("/tables", TableController)
+    resources("/void_items", VoidItemController)
 
     get("/*path", PageController, :no_page_found)
   end
