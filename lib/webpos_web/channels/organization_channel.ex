@@ -334,6 +334,7 @@ defmodule WebposWeb.OrganizationChannel do
 
     date_start = Date.from_iso8601!(payload["date_start"])
     date_end = Date.from_iso8601!(payload["date_end"])
+    date_end = Timex.end_of_month(date_end)
 
     list = Date.range(Timex.beginning_of_month(date_start), Timex.end_of_month(date_start))
 
@@ -387,6 +388,7 @@ defmodule WebposWeb.OrganizationChannel do
 
     date_start = Date.from_iso8601!(payload["date_start"])
     date_end = Date.from_iso8601!(payload["date_end"])
+    date_end = Timex.end_of_week(date_end)
 
     list = Date.range(Timex.beginning_of_week(date_start), Timex.end_of_week(date_start))
 
@@ -427,6 +429,60 @@ defmodule WebposWeb.OrganizationChannel do
     IO.inspect(final)
 
     broadcast(socket, "this_week_sales_reply", %{result: final})
+    {:noreply, socket}
+  end
+
+  def handle_in("this_year_sales", payload, socket) do
+    # broadcast(socket, "shout", payload)
+    IO.inspect(payload["date_start"])
+    IO.inspect(payload["date_end"])
+
+    IO.inspect(payload)
+    IO.inspect(socket)
+
+    date_start = Date.from_iso8601!(payload["date_start"])
+    date_end = Date.from_iso8601!(payload["date_end"])
+    date_end = Timex.end_of_year(date_end)
+
+    list = Date.range(Timex.beginning_of_year(date_start), Timex.end_of_year(date_start))
+
+    list_month = list |> Enum.map(fn x -> x.month end) |> Enum.uniq()
+
+    sales =
+      Repo.all(
+        from(
+          i in Reports.Sale,
+          where: i.salesdate >= ^date_start and i.salesdate <= ^date_end,
+          select: %{
+            salesdate: i.salesdate,
+            sales: i.grand_total
+          }
+        )
+      )
+
+    final =
+      for item <- list_month do
+        sales = sales |> Enum.filter(fn x -> x.salesdate.month == item end)
+
+        total =
+          if sales == [] do
+            %{month: item, sales: 0}
+          else
+            sales =
+              sales
+              |> Enum.map(fn x -> Decimal.to_float(x.sales) end)
+              |> Enum.sum()
+              |> Float.round(2)
+
+            %{month: item, sales: sales}
+          end
+
+        total
+      end
+
+    IO.inspect(final)
+
+    broadcast(socket, "this_year_sales_reply", %{result: final})
     {:noreply, socket}
   end
 end
