@@ -6,7 +6,7 @@ defmodule Webpos.Reports.VoidItem do
     field(:item_name, :string)
     field(:order_id, :string)
     field(:reason, :string)
-    field(:rest_id, :string)
+    field(:rest_id, :integer)
     field(:table_name, :string)
     field(:void_by, :string)
     field(:void_datetime, :naive_datetime)
