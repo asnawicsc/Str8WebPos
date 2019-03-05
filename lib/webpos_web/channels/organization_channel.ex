@@ -324,6 +324,62 @@ defmodule WebposWeb.OrganizationChannel do
     {:noreply, socket}
   end
 
+  def handle_in("this_week_sales", payload, socket) do
+    # broadcast(socket, "shout", payload)
+    IO.inspect(payload["date_start"])
+    IO.inspect(payload["date_end"])
+
+    IO.inspect(payload)
+    IO.inspect(socket)
+
+    date = Date.from_iso8601!(payload["date_start"])
+
+    list = Date.range(Timex.beginning_of_week(date), Timex.end_of_week(date))
+
+    list_day = list |> Enum.map(fn x -> x.day end) |> Enum.uniq()
+
+    date_start = Timex.beginning_of_week(date)
+
+    date_end = Timex.end_of_week(date)
+
+    sales =
+      Repo.all(
+        from(
+          i in Reports.Sale,
+          where: i.salesdate >= ^date_start and i.salesdate <= ^date_end,
+          select: %{
+            salesdate: i.salesdate,
+            sales: i.grand_total
+          }
+        )
+      )
+
+    final =
+      for item <- list_day do
+        sales = sales |> Enum.filter(fn x -> x.salesdate.day == item end)
+
+        total =
+          if sales == [] do
+            %{day: item, sales: 0}
+          else
+            sales =
+              sales
+              |> Enum.map(fn x -> Decimal.to_float(x.sales) end)
+              |> Enum.sum()
+              |> Float.round(2)
+
+            %{day: item, sales: sales}
+          end
+
+        total
+      end
+
+    IO.inspect(final)
+
+    broadcast(socket, "this_week_sales_reply", %{result: final})
+    {:noreply, socket}
+  end
+
   def handle_in("this_month_sales", payload, socket) do
     # broadcast(socket, "shout", payload)
     IO.inspect(payload["date_start"])
@@ -332,12 +388,15 @@ defmodule WebposWeb.OrganizationChannel do
     IO.inspect(payload)
     IO.inspect(socket)
 
-    date_start = Date.from_iso8601!(payload["date_start"])
-    date_end = Date.from_iso8601!(payload["date_end"])
+    date = Date.from_iso8601!(payload["date_start"])
 
-    list = Date.range(Timex.beginning_of_month(date_start), Timex.end_of_month(date_start))
+    list = Date.range(Timex.beginning_of_month(date), Timex.end_of_month(date))
 
     list_day = list |> Enum.map(fn x -> x.day end) |> Enum.uniq()
+
+    date_start = Timex.beginning_of_month(date)
+
+    date_end = Timex.end_of_month(date)
 
     sales =
       Repo.all(
@@ -377,7 +436,7 @@ defmodule WebposWeb.OrganizationChannel do
     {:noreply, socket}
   end
 
-  def handle_in("this_week_sales", payload, socket) do
+  def handle_in("this_year_sales", payload, socket) do
     # broadcast(socket, "shout", payload)
     IO.inspect(payload["date_start"])
     IO.inspect(payload["date_end"])
@@ -385,12 +444,15 @@ defmodule WebposWeb.OrganizationChannel do
     IO.inspect(payload)
     IO.inspect(socket)
 
-    date_start = Date.from_iso8601!(payload["date_start"])
-    date_end = Date.from_iso8601!(payload["date_end"])
+    date = Date.from_iso8601!(payload["date_start"])
 
-    list = Date.range(Timex.beginning_of_week(date_start), Timex.end_of_week(date_start))
+    list = Date.range(Timex.beginning_of_year(date), Timex.end_of_year(date))
 
-    list_day = list |> Enum.map(fn x -> x.day end) |> Enum.uniq()
+    list_month = list |> Enum.map(fn x -> x.month end) |> Enum.uniq()
+
+    date_start = Timex.beginning_of_year(date)
+
+    date_end = Timex.end_of_year(date)
 
     sales =
       Repo.all(
@@ -405,12 +467,12 @@ defmodule WebposWeb.OrganizationChannel do
       )
 
     final =
-      for item <- list_day do
-        sales = sales |> Enum.filter(fn x -> x.salesdate.day == item end)
+      for item <- list_month do
+        sales = sales |> Enum.filter(fn x -> x.salesdate.month == item end)
 
         total =
           if sales == [] do
-            %{day: item, sales: 0}
+            %{month: item, sales: 0}
           else
             sales =
               sales
@@ -418,7 +480,7 @@ defmodule WebposWeb.OrganizationChannel do
               |> Enum.sum()
               |> Float.round(2)
 
-            %{day: item, sales: sales}
+            %{month: item, sales: sales}
           end
 
         total
@@ -426,7 +488,7 @@ defmodule WebposWeb.OrganizationChannel do
 
     IO.inspect(final)
 
-    broadcast(socket, "this_week_sales_reply", %{result: final})
+    broadcast(socket, "this_year_sales_reply", %{result: final})
     {:noreply, socket}
   end
 end
