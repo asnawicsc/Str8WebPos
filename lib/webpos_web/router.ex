@@ -99,6 +99,7 @@ defmodule WebposWeb.Router do
     get("/organization/:org_id/payment_type/new", OrganizationController, :payment_type)
 
     resources("/payments", PaymentController)
+    resources("/tables", TableController)
 
     get("/*path", PageController, :no_page_found)
   end

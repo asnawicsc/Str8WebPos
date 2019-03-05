@@ -266,4 +266,72 @@ defmodule Webpos.SettingsTest do
       assert %Ecto.Changeset{} = Settings.change_payment(payment)
     end
   end
+
+  describe "tables" do
+    alias Webpos.Settings.Table
+
+    @valid_attrs %{name: "some name", pos_x: 120.5, pos_y: 120.5, rest_id: 42, rest_table_id: 42}
+    @update_attrs %{name: "some updated name", pos_x: 456.7, pos_y: 456.7, rest_id: 43, rest_table_id: 43}
+    @invalid_attrs %{name: nil, pos_x: nil, pos_y: nil, rest_id: nil, rest_table_id: nil}
+
+    def table_fixture(attrs \\ %{}) do
+      {:ok, table} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Settings.create_table()
+
+      table
+    end
+
+    test "list_tables/0 returns all tables" do
+      table = table_fixture()
+      assert Settings.list_tables() == [table]
+    end
+
+    test "get_table!/1 returns the table with given id" do
+      table = table_fixture()
+      assert Settings.get_table!(table.id) == table
+    end
+
+    test "create_table/1 with valid data creates a table" do
+      assert {:ok, %Table{} = table} = Settings.create_table(@valid_attrs)
+      assert table.name == "some name"
+      assert table.pos_x == 120.5
+      assert table.pos_y == 120.5
+      assert table.rest_id == 42
+      assert table.rest_table_id == 42
+    end
+
+    test "create_table/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Settings.create_table(@invalid_attrs)
+    end
+
+    test "update_table/2 with valid data updates the table" do
+      table = table_fixture()
+      assert {:ok, table} = Settings.update_table(table, @update_attrs)
+      assert %Table{} = table
+      assert table.name == "some updated name"
+      assert table.pos_x == 456.7
+      assert table.pos_y == 456.7
+      assert table.rest_id == 43
+      assert table.rest_table_id == 43
+    end
+
+    test "update_table/2 with invalid data returns error changeset" do
+      table = table_fixture()
+      assert {:error, %Ecto.Changeset{}} = Settings.update_table(table, @invalid_attrs)
+      assert table == Settings.get_table!(table.id)
+    end
+
+    test "delete_table/1 deletes the table" do
+      table = table_fixture()
+      assert {:ok, %Table{}} = Settings.delete_table(table)
+      assert_raise Ecto.NoResultsError, fn -> Settings.get_table!(table.id) end
+    end
+
+    test "change_table/1 returns a table changeset" do
+      table = table_fixture()
+      assert %Ecto.Changeset{} = Settings.change_table(table)
+    end
+  end
 end

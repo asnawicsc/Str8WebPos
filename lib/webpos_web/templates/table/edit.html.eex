@@ -1,0 +1,5 @@
+<h2>Edit Table</h2>
+
+<%= render "form.html", Map.put(assigns, :action, table_path(@conn, :update, @table)) %>
+
+<span><%= link "Back", to: table_path(@conn, :index) %></span>

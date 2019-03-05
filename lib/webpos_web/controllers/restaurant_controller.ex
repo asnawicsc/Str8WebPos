@@ -47,11 +47,17 @@ defmodule WebposWeb.RestaurantController do
           serv: branch.serv,
           name: branch.name,
           address: branch.address,
-          payments: regex_payments(organization.payments)
+          payments: regex_payments(organization.payments),
+          tables: restTables(branch.id),
+          printers: getPrinters(branch.id),
+          menu_items: WebposWeb.RestaurantChannel.map_items(branch.op_id, branch.id)
         }
 
         IO.inspect(json)
-        send_resp(conn, 200, Poison.encode!(json))
+
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(200, Poison.encode!(json))
       else
         json = %{auth: "not ok", invoice: invoice}
         send_resp(conn, 500, Poison.encode!(json))
@@ -60,6 +66,41 @@ defmodule WebposWeb.RestaurantController do
       json = %{auth: "not ok", invoice: invoice}
       send_resp(conn, 500, Poison.encode!(json))
     end
+  end
+
+  def getPrinters(rest_id) do
+    Repo.all(
+      from(
+        r in RestItemPrinter,
+        left_join: p in Printer,
+        on: p.id == r.printer_id,
+        where: r.rest_id == ^rest_id and is_nil(r.item_id),
+        select: %{
+          name: p.name,
+          ip: p.ip_address,
+          port: p.port_no
+        }
+      )
+    )
+  end
+
+  def restTables(rest_id) do
+    Repo.all(
+      from(
+        t in Table,
+        where: t.rest_id == ^rest_id,
+        select: %{
+          id: t.rest_table_id,
+          name: t.name,
+          dx: t.pos_x,
+          dy: t.pos_y
+        }
+      )
+    )
+    |> Enum.map(fn x -> Map.put(x, :dx, Decimal.new(x.dx)) end)
+    |> Enum.map(fn x -> Map.put(x, :dy, Decimal.new(x.dy)) end)
+
+    #  |> Enum.map(fn x -> Map.put(:dy, Decimal.new(x.dy) end))
   end
 
   def regex_payments(p) do

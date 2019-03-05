@@ -10,6 +10,48 @@ defmodule WebposWeb.RestaurantChannel do
     end
   end
 
+  def handle_in("update_table", payload, socket) do
+    code = String.split(socket.topic, ":") |> List.last()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+    table_map = payload["table"]
+
+    table =
+      Repo.get_by(
+        Table,
+        name: table_map["name"],
+        rest_table_id: table_map["id"],
+        rest_id: restaurant.id
+      )
+
+    table =
+      if table == nil do
+        {:ok, table} =
+          Settings.create_table(%{
+            name: table_map["name"],
+            rest_table_id: table_map["id"],
+            pos_x: table_map["dx"],
+            pos_y: table_map["dy"],
+            rest_id: restaurant.id
+          })
+
+        table
+      else
+        {:ok, table} =
+          Settings.update_table(table, %{
+            name: table_map["name"],
+            rest_table_id: table_map["id"],
+            pos_x: table_map["dx"],
+            pos_y: table_map["dy"],
+            rest_id: restaurant.id
+          })
+
+        table
+      end
+
+    IO.inspect(table)
+    {:noreply, socket}
+  end
+
   def handle_in("get_menu_items", payload, socket) do
     code = String.split(socket.topic, ":") |> List.last()
     restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
