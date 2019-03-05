@@ -7,6 +7,7 @@ defmodule WebposWeb.RestaurantController do
 
   def get_api2(conn, %{"code" => branch_code, "license_key" => api_key}) do
     branch = Repo.all(from(b in Restaurant, where: b.code == ^branch_code))
+    organization = Repo.get(Organization, hd(branch).organization_id)
     invoice = 1000
 
     result =
@@ -44,7 +45,9 @@ defmodule WebposWeb.RestaurantController do
           reg_id: branch.reg_id,
           tax_perc: branch.tax_perc,
           serv: branch.serv,
-          name: branch.name
+          name: branch.name,
+          address: branch.address,
+          payments: regex_payments(organization.payments)
         }
 
         IO.inspect(json)
@@ -57,6 +60,21 @@ defmodule WebposWeb.RestaurantController do
       json = %{auth: "not ok", invoice: invoice}
       send_resp(conn, 500, Poison.encode!(json))
     end
+  end
+
+  def regex_payments(p) do
+    list = p |> String.split(",")
+
+    b =
+      for l <- list do
+        l
+
+        a = Repo.all(from(p in Payment, where: p.name == ^l)) |> hd()
+
+        %{name: a.name, description: a.description, regex: a.regex}
+      end
+
+    b
   end
 
   def index(conn, _params) do

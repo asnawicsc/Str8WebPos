@@ -1,0 +1,23 @@
+<h2>Show Payment</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @payment.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @payment.description %>
+  </li>
+
+  <li>
+    <strong>Regex:</strong>
+    <%= @payment.regex %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: payment_path(@conn, :edit, @payment) %></span>
+<span><%= link "Back", to: payment_path(@conn, :index) %></span>
