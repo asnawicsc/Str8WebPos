@@ -334,11 +334,14 @@ defmodule WebposWeb.OrganizationChannel do
 
     date_start = Date.from_iso8601!(payload["date_start"])
     date_end = Date.from_iso8601!(payload["date_end"])
-    date_end = Timex.end_of_month(date_end)
 
     list = Date.range(Timex.beginning_of_month(date_start), Timex.end_of_month(date_start))
 
     list_day = list |> Enum.map(fn x -> x.day end) |> Enum.uniq()
+
+    date_start = Timex.beginning_of_month(date_start)
+
+    date_end = Timex.beginning_of_month(date_end)
 
     sales =
       Repo.all(
@@ -388,11 +391,14 @@ defmodule WebposWeb.OrganizationChannel do
 
     date_start = Date.from_iso8601!(payload["date_start"])
     date_end = Date.from_iso8601!(payload["date_end"])
-    date_end = Timex.end_of_week(date_end)
 
     list = Date.range(Timex.beginning_of_week(date_start), Timex.end_of_week(date_start))
 
     list_day = list |> Enum.map(fn x -> x.day end) |> Enum.uniq()
+
+    date_start = Timex.beginning_of_week(date_start)
+
+    date_end = Timex.beginning_of_week(date_end)
 
     sales =
       Repo.all(
@@ -442,11 +448,14 @@ defmodule WebposWeb.OrganizationChannel do
 
     date_start = Date.from_iso8601!(payload["date_start"])
     date_end = Date.from_iso8601!(payload["date_end"])
-    date_end = Timex.end_of_year(date_end)
 
     list = Date.range(Timex.beginning_of_year(date_start), Timex.end_of_year(date_start))
 
     list_month = list |> Enum.map(fn x -> x.month end) |> Enum.uniq()
+
+    date_start = Timex.beginning_of_year(date_start)
+
+    date_end = Timex.end_of_year(date_end)
 
     sales =
       Repo.all(
