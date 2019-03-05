@@ -323,4 +323,110 @@ defmodule WebposWeb.OrganizationChannel do
     broadcast(socket, "today_sales_reply", %{result: final})
     {:noreply, socket}
   end
+
+  def handle_in("this_month_sales", payload, socket) do
+    # broadcast(socket, "shout", payload)
+    IO.inspect(payload["date_start"])
+    IO.inspect(payload["date_end"])
+
+    IO.inspect(payload)
+    IO.inspect(socket)
+
+    date_start = Date.from_iso8601!(payload["date_start"])
+    date_end = Date.from_iso8601!(payload["date_end"])
+
+    list = Date.range(Timex.beginning_of_month(date_start), Timex.end_of_month(date_start))
+
+    list_day = list |> Enum.map(fn x -> x.day end) |> Enum.uniq()
+
+    sales =
+      Repo.all(
+        from(
+          i in Reports.Sale,
+          where: i.salesdate >= ^date_start and i.salesdate <= ^date_end,
+          select: %{
+            salesdate: i.salesdate,
+            sales: i.grand_total
+          }
+        )
+      )
+
+    final =
+      for item <- list_day do
+        sales = sales |> Enum.filter(fn x -> x.salesdate.day == item end)
+
+        total =
+          if sales == [] do
+            %{day: item, sales: 0}
+          else
+            sales =
+              sales
+              |> Enum.map(fn x -> Decimal.to_float(x.sales) end)
+              |> Enum.sum()
+              |> Float.round(2)
+
+            %{day: item, sales: sales}
+          end
+
+        total
+      end
+
+    IO.inspect(final)
+
+    broadcast(socket, "this_month_sales_reply", %{result: final})
+    {:noreply, socket}
+  end
+
+  def handle_in("this_week_sales", payload, socket) do
+    # broadcast(socket, "shout", payload)
+    IO.inspect(payload["date_start"])
+    IO.inspect(payload["date_end"])
+
+    IO.inspect(payload)
+    IO.inspect(socket)
+
+    date_start = Date.from_iso8601!(payload["date_start"])
+    date_end = Date.from_iso8601!(payload["date_end"])
+
+    list = Date.range(Timex.beginning_of_week(date_start), Timex.end_of_week(date_start))
+
+    list_day = list |> Enum.map(fn x -> x.day end) |> Enum.uniq()
+
+    sales =
+      Repo.all(
+        from(
+          i in Reports.Sale,
+          where: i.salesdate >= ^date_start and i.salesdate <= ^date_end,
+          select: %{
+            salesdate: i.salesdate,
+            sales: i.grand_total
+          }
+        )
+      )
+
+    final =
+      for item <- list_day do
+        sales = sales |> Enum.filter(fn x -> x.salesdate.day == item end)
+
+        total =
+          if sales == [] do
+            %{day: item, sales: 0}
+          else
+            sales =
+              sales
+              |> Enum.map(fn x -> Decimal.to_float(x.sales) end)
+              |> Enum.sum()
+              |> Float.round(2)
+
+            %{day: item, sales: sales}
+          end
+
+        total
+      end
+
+    IO.inspect(final)
+
+    broadcast(socket, "this_week_sales_reply", %{result: final})
+    {:noreply, socket}
+  end
 end
