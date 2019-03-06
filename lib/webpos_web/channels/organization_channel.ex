@@ -472,7 +472,7 @@ defmodule WebposWeb.OrganizationChannel do
 
         total =
           if sales == [] do
-            %{month: item, sales: 0}
+            %{day: item, sales: 0}
           else
             sales =
               sales
@@ -480,7 +480,7 @@ defmodule WebposWeb.OrganizationChannel do
               |> Enum.sum()
               |> Float.round(2)
 
-            %{month: item, sales: sales}
+            %{day: item, sales: sales}
           end
 
         total
@@ -489,6 +489,27 @@ defmodule WebposWeb.OrganizationChannel do
     IO.inspect(final)
 
     broadcast(socket, "this_year_sales_reply", %{result: final})
+    {:noreply, socket}
+  end
+
+  def handle_in("organization_branch", payload, socket) do
+    # broadcast(socket, "shout", payload)
+    IO.inspect(payload["organization_code"])
+
+    organization = Repo.get_by(Organization, code: payload["organization_code"])
+
+    code =
+      Repo.all(
+        from(
+          i in Webpos.Settings.Restaurant,
+          where: i.organization_id == ^organization.id,
+          select: %{
+            name: i.name
+          }
+        )
+      )
+
+    broadcast(socket, "organization_branch_reply", %{result: code})
     {:noreply, socket}
   end
 end
