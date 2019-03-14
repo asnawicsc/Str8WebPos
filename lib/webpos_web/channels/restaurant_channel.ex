@@ -197,25 +197,28 @@ defmodule WebposWeb.RestaurantChannel do
     sales_param = Map.put(sales_param, "organization_id", restaurant.organization_id)
     sales_param = Map.put(sales_param, "rest_name", restaurant.name)
 
-    a = Sale.changeset(%Sale{}, sales_param) |> Repo.insert()
-    IO.inspect(a)
+    case Sale.changeset(%Sale{}, sales_param) |> Repo.insert() do
+      {:ok, sl} ->
+        for map <- payload["sales"]["sales_details"] do
+          sales_detail_param = map
+          # sales_detail_param = Map.put(sales_detail_param, "brand_id", brand_id)
+          b = SalesDetail.changeset(%SalesDetail{}, sales_detail_param) |> Repo.insert()
+          IO.inspect(b)
+        end
 
-    for map <- payload["sales"]["sales_details"] do
-      sales_detail_param = map
-      # sales_detail_param = Map.put(sales_detail_param, "brand_id", brand_id)
-      b = SalesDetail.changeset(%SalesDetail{}, sales_detail_param) |> Repo.insert()
-      IO.inspect(b)
-    end
+        for map <- payload["sales"]["sales_payment"] do
+          sales_payment_param = map
+          # sales_payment_param = Map.put(sales_payment_param, "brand_id", brand_id)
 
-    for map <- payload["sales"]["sales_payment"] do
-      sales_payment_param = map
-      # sales_payment_param = Map.put(sales_payment_param, "brand_id", brand_id)
+          c =
+            SalesPayment.changeset(%SalesPayment{}, sales_payment_param)
+            |> Repo.insert()
 
-      c =
-        SalesPayment.changeset(%SalesPayment{}, sales_payment_param)
-        |> Repo.insert()
+          IO.inspect(c)
+        end
 
-      IO.inspect(c)
+      {:error, changeset} ->
+        IO.inspect(changeset)
     end
 
     {:noreply, socket}

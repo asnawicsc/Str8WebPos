@@ -21,6 +21,8 @@ defmodule Webpos.Reports.Sale do
     field(:transaction_type, :string)
     field(:organization_id, :integer)
     field(:rest_name, :string)
+    field(:uuid, :string)
+    field(:device_name, :string)
     timestamps()
   end
 
@@ -28,6 +30,8 @@ defmodule Webpos.Reports.Sale do
   def changeset(sale, attrs) do
     sale
     |> cast(attrs, [
+      :uuid,
+      :device_name,
       :rest_name,
       :organization_id,
       :salesid,
@@ -65,6 +69,7 @@ defmodule Webpos.Reports.Sale do
       :discounted_amount,
       :discount_description
     ])
+    |> unique_constraint(:invoiceno, name: :sales_invoiceno_rest_name_index)
   end
 end
 

@@ -4,6 +4,18 @@ defmodule WebposWeb.SaleController do
   alias Webpos.Reports
   alias Webpos.Reports.Sale
 
+  def sync(conn, %{"code" => code, "invoice" => invoice}) do
+    r = Repo.get_by(Restaurant, name: code)
+    topic = "restaurant:#{r.code}"
+    event = "query_sales_today"
+    IO.inspect(topic)
+    WebposWeb.Endpoint.broadcast(topic, event, %{invoice_no: invoice})
+
+    conn
+    |> put_flash(:info, "Sale sync requested successfully.")
+    |> redirect(to: sale_path(conn, :index))
+  end
+
   def index(conn, _params) do
     organization_id = Settings.get_org_id(conn)
     sales = Reports.list_sales(organization_id)

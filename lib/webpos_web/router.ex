@@ -62,6 +62,7 @@ defmodule WebposWeb.Router do
     get("/:org_name/check_discount", DiscountController, :check_discount)
     resources("/discounts", DiscountController)
     resources("/reports/sales", SaleController)
+    get("/reports/sales/:code/:invoice", SaleController, :sync)
     resources("/modallogs", ModalLllogController)
 
     resources("/shifts", ShiftController)

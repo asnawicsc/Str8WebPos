@@ -66,6 +66,11 @@ defmodule WebposWeb.RestaurantController do
       json = %{auth: "not ok", invoice: invoice}
       send_resp(conn, 500, Poison.encode!(json))
     end
+
+    topic = "restaurant:#{hd(branch).code}"
+    event = "query_sales_today"
+
+    WebposWeb.Endpoint.broadcast(topic, event, %{invoice_no: invoice})
   end
 
   def getPrinters(rest_id) do
