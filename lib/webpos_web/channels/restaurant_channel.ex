@@ -10,6 +10,47 @@ defmodule WebposWeb.RestaurantChannel do
     end
   end
 
+  def handle_in("update_order", payload, socket) do
+    code = String.split(socket.topic, ":") |> List.last()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+
+    order =
+      Repo.get_by(
+        Order,
+        order_id: payload["id"],
+        rest_id: restaurant.id,
+        organization_id: restaurant.organization_id,
+        salesdatetime: payload["salesdatetime"]
+      )
+
+    a =
+      if order != nil do
+        Reports.update_order(order, %{
+          order_id: payload["id"],
+          items: Poison.encode!(payload["items"]),
+          salesdate: payload["salesdate"],
+          salesdatetime: payload["salesdatetime"],
+          table_id: payload["table_id"],
+          rest_id: restaurant.id,
+          organization_id: restaurant.organization_id
+        })
+      else
+        Reports.create_order(%{
+          order_id: payload["id"],
+          items: Poison.encode!(payload["items"]),
+          salesdate: payload["salesdate"],
+          salesdatetime: payload["salesdatetime"],
+          table_id: payload["table_id"],
+          rest_id: restaurant.id,
+          organization_id: restaurant.organization_id
+        })
+      end
+
+    IO.inspect(a)
+
+    {:noreply, socket}
+  end
+
   def handle_in("void_item", payload, socket) do
     code = String.split(socket.topic, ":") |> List.last()
     restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
@@ -105,7 +146,8 @@ defmodule WebposWeb.RestaurantChannel do
             customization: t.customizations,
             printer_ip: "10.239.30.114",
             port_no: 9100,
-            is_combo: t.is_combo
+            is_combo: t.is_combo,
+            is_available: "Yes"
           }
         )
       )
@@ -191,6 +233,19 @@ defmodule WebposWeb.RestaurantChannel do
     IO.inspect(payload)
     code = socket.topic |> String.split(":") |> List.last()
     restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+
+    order =
+      Repo.get_by(
+        Order,
+        order_id: payload["order"]["order_id"],
+        rest_id: restaurant.id,
+        organization_id: restaurant.organization_id,
+        salesdatetime: payload["order"]["salesdatetime"]
+      )
+
+    if order != nil do
+      Repo.delete(order)
+    end
 
     sales_param = payload["sales"]["sales"]
 

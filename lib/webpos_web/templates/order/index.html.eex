@@ -1,0 +1,38 @@
+<h2>Listing Orders</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Rest</th>
+      <th>Organization</th>
+      <th>Order</th>
+      <th>Salesdate</th>
+      <th>Salesdatetime</th>
+      <th>Table</th>
+      <th>Items</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for order <- @orders do %>
+    <tr>
+      <td><%= order.rest_id %></td>
+      <td><%= order.organization_id %></td>
+      <td><%= order.order_id %></td>
+      <td><%= order.salesdate %></td>
+      <td><%= order.salesdatetime %></td>
+      <td><%= order.table_id %></td>
+      <td><%= order.items %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: order_path(@conn, :show, order), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: order_path(@conn, :edit, order), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: order_path(@conn, :delete, order), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Order", to: order_path(@conn, :new) %></span>

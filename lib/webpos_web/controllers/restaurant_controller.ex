@@ -5,6 +5,23 @@ defmodule WebposWeb.RestaurantController do
   alias Webpos.Settings.Restaurant
   require IEx
 
+  def rest_orders(rest_id, organization_id) do
+    Repo.all(
+      from(
+        o in Order,
+        where: o.rest_id == ^rest_id and o.organization_id == ^organization_id,
+        select: %{
+          id: o.order_id,
+          items: o.items,
+          salesdate: o.salesdate,
+          salesdatetime: o.salesdatetime,
+          table_id: o.table_id
+        }
+      )
+    )
+    |> Enum.map(fn x -> Map.put(x, :items, Poison.decode!(x.items)) end)
+  end
+
   def get_api2(conn, %{"code" => branch_code, "license_key" => api_key}) do
     branch = Repo.all(from(b in Restaurant, where: b.code == ^branch_code))
     organization = Repo.get(Organization, hd(branch).organization_id)
@@ -50,7 +67,9 @@ defmodule WebposWeb.RestaurantController do
           payments: regex_payments(organization.payments),
           tables: restTables(branch.id),
           printers: getPrinters(branch.id),
-          menu_items: WebposWeb.RestaurantChannel.map_items(branch.op_id, branch.id)
+          menu_items: WebposWeb.RestaurantChannel.map_items(branch.op_id, branch.id),
+          orders: rest_orders(branch.id, branch.organization_id),
+          shift: latest_unclosed_shift(branch.id)
         }
 
         IO.inspect(json)
@@ -71,6 +90,27 @@ defmodule WebposWeb.RestaurantController do
     event = "query_sales_today"
 
     WebposWeb.Endpoint.broadcast(topic, event, %{invoice_no: invoice})
+  end
+
+  def latest_unclosed_shift(rest_id) do
+    res =
+      Repo.all(
+        from(
+          s in Shift,
+          where: s.rest_id == ^rest_id and is_nil(s.close_amount),
+          select: %{
+            opening_staff_name: s.opening_staff,
+            start_datetime: s.start_datetime,
+            open_amount: s.open_amount
+          }
+        )
+      )
+
+    if res != [] do
+      List.last(res)
+    else
+      nil
+    end
   end
 
   def getPrinters(rest_id) do

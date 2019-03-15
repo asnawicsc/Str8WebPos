@@ -1,0 +1,43 @@
+<h2>Show Order</h2>
+
+<ul>
+
+  <li>
+    <strong>Rest:</strong>
+    <%= @order.rest_id %>
+  </li>
+
+  <li>
+    <strong>Organization:</strong>
+    <%= @order.organization_id %>
+  </li>
+
+  <li>
+    <strong>Order:</strong>
+    <%= @order.order_id %>
+  </li>
+
+  <li>
+    <strong>Salesdate:</strong>
+    <%= @order.salesdate %>
+  </li>
+
+  <li>
+    <strong>Salesdatetime:</strong>
+    <%= @order.salesdatetime %>
+  </li>
+
+  <li>
+    <strong>Table:</strong>
+    <%= @order.table_id %>
+  </li>
+
+  <li>
+    <strong>Items:</strong>
+    <%= @order.items %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: order_path(@conn, :edit, @order) %></span>
+<span><%= link "Back", to: order_path(@conn, :index) %></span>
