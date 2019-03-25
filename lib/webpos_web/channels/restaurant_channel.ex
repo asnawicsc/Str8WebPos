@@ -262,7 +262,7 @@ defmodule WebposWeb.RestaurantChannel do
           i in ItemPrice,
           left_join: t in Item,
           on: t.id == i.item_id,
-          where: i.op_id == ^op_id,
+          where: i.op_id == ^op_id and i.price > ^0,
           select: %{
             id: t.id,
             name: t.name,
