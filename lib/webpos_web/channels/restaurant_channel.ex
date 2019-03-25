@@ -10,6 +10,132 @@ defmodule WebposWeb.RestaurantChannel do
     end
   end
 
+  def handle_in("split_order", payload, socket) do
+    code = String.split(socket.topic, ":") |> List.last()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+
+    order =
+      Repo.get_by(
+        Order,
+        order_id: payload["new"]["id"],
+        rest_id: restaurant.id,
+        organization_id: restaurant.organization_id,
+        salesdatetime: payload["new"]["salesdatetime"]
+      )
+
+    a =
+      if order != nil do
+        Reports.update_order(order, %{
+          order_id: payload["new"]["id"],
+          items: Poison.encode!(payload["new"]["items"]),
+          salesdate: payload["new"]["salesdate"],
+          salesdatetime: payload["new"]["salesdatetime"],
+          table_id: payload["new"]["table_id"],
+          rest_id: restaurant.id,
+          organization_id: restaurant.organization_id
+        })
+      else
+        Reports.create_order(%{
+          order_id: payload["new"]["id"],
+          items: Poison.encode!(payload["new"]["items"]),
+          salesdate: payload["new"]["salesdate"],
+          salesdatetime: payload["new"]["salesdatetime"],
+          table_id: payload["new"]["table_id"],
+          rest_id: restaurant.id,
+          organization_id: restaurant.organization_id
+        })
+      end
+
+    order_old =
+      Repo.get_by(
+        Order,
+        order_id: payload["old"]["id"],
+        rest_id: restaurant.id,
+        organization_id: restaurant.organization_id,
+        salesdatetime: payload["old"]["salesdatetime"]
+      )
+
+    b =
+      if order_old != nil do
+        Reports.update_order(order_old, %{
+          order_id: payload["old"]["id"],
+          items: Poison.encode!(payload["old"]["items"]),
+          salesdate: payload["old"]["salesdate"],
+          salesdatetime: payload["old"]["salesdatetime"],
+          table_id: payload["old"]["table_id"],
+          rest_id: restaurant.id,
+          organization_id: restaurant.organization_id
+        })
+      else
+        Reports.create_order(%{
+          order_id: payload["old"]["id"],
+          items: Poison.encode!(payload["old"]["items"]),
+          salesdate: payload["old"]["salesdate"],
+          salesdatetime: payload["old"]["salesdatetime"],
+          table_id: payload["old"]["table_id"],
+          rest_id: restaurant.id,
+          organization_id: restaurant.organization_id
+        })
+      end
+
+    IO.inspect(a)
+    IO.inspect(b)
+
+    {:noreply, socket}
+  end
+
+  def handle_in("combine_order", payload, socket) do
+    code = String.split(socket.topic, ":") |> List.last()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+
+    order =
+      Repo.get_by(
+        Order,
+        order_id: payload["new"]["id"],
+        rest_id: restaurant.id,
+        organization_id: restaurant.organization_id,
+        salesdatetime: payload["new"]["salesdatetime"]
+      )
+
+    a =
+      if order != nil do
+        Reports.update_order(order, %{
+          order_id: payload["new"]["id"],
+          items: Poison.encode!(payload["new"]["items"]),
+          salesdate: payload["new"]["salesdate"],
+          salesdatetime: payload["new"]["salesdatetime"],
+          table_id: payload["new"]["table_id"],
+          rest_id: restaurant.id,
+          organization_id: restaurant.organization_id
+        })
+      else
+        Reports.create_order(%{
+          order_id: payload["new"]["id"],
+          items: Poison.encode!(payload["new"]["items"]),
+          salesdate: payload["new"]["salesdate"],
+          salesdatetime: payload["new"]["salesdatetime"],
+          table_id: payload["new"]["table_id"],
+          rest_id: restaurant.id,
+          organization_id: restaurant.organization_id
+        })
+      end
+
+    order_old =
+      Repo.get_by(
+        Order,
+        order_id: payload["old"]["id"],
+        rest_id: restaurant.id,
+        organization_id: restaurant.organization_id,
+        salesdatetime: payload["old"]["salesdatetime"]
+      )
+
+    Repo.delete(order_old)
+
+    IO.inspect(a)
+
+    {:noreply, socket}
+  end
+
   def handle_in("update_order", payload, socket) do
     code = String.split(socket.topic, ":") |> List.last()
     restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
