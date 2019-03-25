@@ -382,7 +382,11 @@ defmodule WebposWeb.RestaurantChannel do
       {:ok, sl} ->
         for map <- payload["sales"]["sales_details"] do
           sales_detail_param = map
-          # sales_detail_param = Map.put(sales_detail_param, "brand_id", brand_id)
+
+          {:ok, datetime} =
+            DateTime.from_unix(String.to_integer(map["inserted_at"]), :millisecond)
+
+          sales_detail_param = Map.put(sales_detail_param, "inserted_time", datetime)
           b = SalesDetail.changeset(%SalesDetail{}, sales_detail_param) |> Repo.insert()
           IO.inspect(b)
         end

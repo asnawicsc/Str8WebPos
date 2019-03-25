@@ -23,6 +23,7 @@ defmodule Webpos.Reports.Sale do
     field(:rest_name, :string)
     field(:uuid, :string)
     field(:device_name, :string)
+
     timestamps()
   end
 
@@ -85,6 +86,8 @@ defmodule Webpos.Reports.SalesDetail do
     field(:unit_price, :decimal)
     field(:qty, :integer)
     field(:sub_total, :decimal)
+    field(:inserted_by, :string)
+    field(:inserted_time, :naive_datetime)
     timestamps()
   end
 
@@ -98,7 +101,9 @@ defmodule Webpos.Reports.SalesDetail do
       :itemname,
       :unit_price,
       :qty,
-      :sub_total
+      :sub_total,
+      :inserted_time,
+      :inserted_by
     ])
     |> validate_required([
       :salesid
