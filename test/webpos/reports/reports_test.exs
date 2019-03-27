@@ -238,4 +238,76 @@ defmodule Webpos.ReportsTest do
       assert %Ecto.Changeset{} = Reports.change_modal_lllog(modal_lllog)
     end
   end
+
+  describe "void_items" do
+    alias Webpos.Reports.VoidItem
+
+    @valid_attrs %{item_name: "some item_name", order_id: "some order_id", reason: "some reason", rest_id: "some rest_id", table_name: "some table_name", void_by: "some void_by", void_datetime: ~N[2010-04-17 14:00:00.000000]}
+    @update_attrs %{item_name: "some updated item_name", order_id: "some updated order_id", reason: "some updated reason", rest_id: "some updated rest_id", table_name: "some updated table_name", void_by: "some updated void_by", void_datetime: ~N[2011-05-18 15:01:01.000000]}
+    @invalid_attrs %{item_name: nil, order_id: nil, reason: nil, rest_id: nil, table_name: nil, void_by: nil, void_datetime: nil}
+
+    def void_item_fixture(attrs \\ %{}) do
+      {:ok, void_item} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Reports.create_void_item()
+
+      void_item
+    end
+
+    test "list_void_items/0 returns all void_items" do
+      void_item = void_item_fixture()
+      assert Reports.list_void_items() == [void_item]
+    end
+
+    test "get_void_item!/1 returns the void_item with given id" do
+      void_item = void_item_fixture()
+      assert Reports.get_void_item!(void_item.id) == void_item
+    end
+
+    test "create_void_item/1 with valid data creates a void_item" do
+      assert {:ok, %VoidItem{} = void_item} = Reports.create_void_item(@valid_attrs)
+      assert void_item.item_name == "some item_name"
+      assert void_item.order_id == "some order_id"
+      assert void_item.reason == "some reason"
+      assert void_item.rest_id == "some rest_id"
+      assert void_item.table_name == "some table_name"
+      assert void_item.void_by == "some void_by"
+      assert void_item.void_datetime == ~N[2010-04-17 14:00:00.000000]
+    end
+
+    test "create_void_item/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Reports.create_void_item(@invalid_attrs)
+    end
+
+    test "update_void_item/2 with valid data updates the void_item" do
+      void_item = void_item_fixture()
+      assert {:ok, void_item} = Reports.update_void_item(void_item, @update_attrs)
+      assert %VoidItem{} = void_item
+      assert void_item.item_name == "some updated item_name"
+      assert void_item.order_id == "some updated order_id"
+      assert void_item.reason == "some updated reason"
+      assert void_item.rest_id == "some updated rest_id"
+      assert void_item.table_name == "some updated table_name"
+      assert void_item.void_by == "some updated void_by"
+      assert void_item.void_datetime == ~N[2011-05-18 15:01:01.000000]
+    end
+
+    test "update_void_item/2 with invalid data returns error changeset" do
+      void_item = void_item_fixture()
+      assert {:error, %Ecto.Changeset{}} = Reports.update_void_item(void_item, @invalid_attrs)
+      assert void_item == Reports.get_void_item!(void_item.id)
+    end
+
+    test "delete_void_item/1 deletes the void_item" do
+      void_item = void_item_fixture()
+      assert {:ok, %VoidItem{}} = Reports.delete_void_item(void_item)
+      assert_raise Ecto.NoResultsError, fn -> Reports.get_void_item!(void_item.id) end
+    end
+
+    test "change_void_item/1 returns a void_item changeset" do
+      void_item = void_item_fixture()
+      assert %Ecto.Changeset{} = Reports.change_void_item(void_item)
+    end
+  end
 end

@@ -62,6 +62,7 @@ defmodule WebposWeb.Router do
     get("/:org_name/check_discount", DiscountController, :check_discount)
     resources("/discounts", DiscountController)
     resources("/reports/sales", SaleController)
+    get("/reports/sales/:code/:invoice", SaleController, :sync)
     resources("/modallogs", ModalLllogController)
 
     resources("/shifts", ShiftController)
@@ -99,6 +100,9 @@ defmodule WebposWeb.Router do
     get("/organization/:org_id/payment_type/new", OrganizationController, :payment_type)
 
     resources("/payments", PaymentController)
+    resources("/tables", TableController)
+    resources("/void_items", VoidItemController)
+    resources("/orders", OrderController)
 
     get("/*path", PageController, :no_page_found)
   end

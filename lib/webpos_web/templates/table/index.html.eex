@@ -1,0 +1,34 @@
+<h2>Listing Tables</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Rest</th>
+      <th>Rest table</th>
+      <th>Name</th>
+      <th>Pos x</th>
+      <th>Pos y</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for table <- @tables do %>
+    <tr>
+      <td><%= table.rest_id %></td>
+      <td><%= table.rest_table_id %></td>
+      <td><%= table.name %></td>
+      <td><%= table.pos_x %></td>
+      <td><%= table.pos_y %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: table_path(@conn, :show, table), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: table_path(@conn, :edit, table), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: table_path(@conn, :delete, table), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Table", to: table_path(@conn, :new) %></span>

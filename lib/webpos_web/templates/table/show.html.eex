@@ -1,0 +1,33 @@
+<h2>Show Table</h2>
+
+<ul>
+
+  <li>
+    <strong>Rest:</strong>
+    <%= @table.rest_id %>
+  </li>
+
+  <li>
+    <strong>Rest table:</strong>
+    <%= @table.rest_table_id %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @table.name %>
+  </li>
+
+  <li>
+    <strong>Pos x:</strong>
+    <%= @table.pos_x %>
+  </li>
+
+  <li>
+    <strong>Pos y:</strong>
+    <%= @table.pos_y %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: table_path(@conn, :edit, @table) %></span>
+<span><%= link "Back", to: table_path(@conn, :index) %></span>

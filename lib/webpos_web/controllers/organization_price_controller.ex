@@ -53,11 +53,20 @@ defmodule WebposWeb.OrganizationPriceController do
 
     for item_id <- item_ids do
       # find new or update
-      changes = %{
-        op_id: op_id,
-        item_id: item_id,
-        price: Decimal.new(items[item_id])
-      }
+      changes =
+        if items[item_id] == "" do
+          %{
+            op_id: op_id,
+            item_id: item_id,
+            price: Decimal.new(0)
+          }
+        else
+          %{
+            op_id: op_id,
+            item_id: item_id,
+            price: Decimal.new(items[item_id])
+          }
+        end
 
       result =
         case Repo.get_by(ItemPrice, op_id: op_id, item_id: item_id) do

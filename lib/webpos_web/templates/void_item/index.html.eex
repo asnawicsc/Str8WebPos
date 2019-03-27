@@ -1,0 +1,38 @@
+<h2>Listing Void items</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Item name</th>
+      <th>Void by</th>
+      <th>Order</th>
+      <th>Table name</th>
+      <th>Rest</th>
+      <th>Void datetime</th>
+      <th>Reason</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for void_item <- @void_items do %>
+    <tr>
+      <td><%= void_item.item_name %></td>
+      <td><%= void_item.void_by %></td>
+      <td><%= void_item.order_id %></td>
+      <td><%= void_item.table_name %></td>
+      <td><%= void_item.rest_id %></td>
+      <td><%= void_item.void_datetime %></td>
+      <td><%= void_item.reason %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: void_item_path(@conn, :show, void_item), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: void_item_path(@conn, :edit, void_item), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: void_item_path(@conn, :delete, void_item), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Void item", to: void_item_path(@conn, :new) %></span>

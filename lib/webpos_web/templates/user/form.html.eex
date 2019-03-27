@@ -28,7 +28,7 @@
 
 <div class="form-group">
   <%= label f, :user_level, class: "control-label" %>
-  <%= select f, :user_level, [{"Cashier", "Cashier"}, {"Manager", "Manager"}], class: "form-control" %>
+  <%= select f, :user_level, [{"Chef", "Chef"}, {"Cashier", "Cashier"}, {"Manager", "Manager"}], class: "form-control" %>
   <%= error_tag f, :user_level %>
 </div>
 

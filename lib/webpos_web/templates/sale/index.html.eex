@@ -57,6 +57,7 @@
       <td><%= sale.discount_description %></td>
 
       <td class="text-right">
+       <span><%= link "Sync", to: sale_path(@conn, :sync, ( if sale.rest_name != nil, do: sale.rest_name, else: ""), (if sale.invoiceno != nil, do: sale.invoiceno, else: 0)), class: "btn btn-default btn-xs" %></span>   
         <span><%= link "Show", to: sale_path(@conn, :show, sale), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Edit", to: sale_path(@conn, :edit, sale), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Delete", to: sale_path(@conn, :delete, sale), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
