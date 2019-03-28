@@ -606,4 +606,218 @@ defmodule Webpos.Settings do
   def change_table(%Table{} = table) do
     Table.changeset(table, %{})
   end
+
+  alias Webpos.Settings.Patron
+
+  @doc """
+  Returns the list of patrons.
+
+  ## Examples
+
+      iex> list_patrons()
+      [%Patron{}, ...]
+
+  """
+  def list_patrons do
+    Repo.all(Patron)
+  end
+
+  @doc """
+  Gets a single patron.
+
+  Raises `Ecto.NoResultsError` if the Patron does not exist.
+
+  ## Examples
+
+      iex> get_patron!(123)
+      %Patron{}
+
+      iex> get_patron!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_patron!(id), do: Repo.get!(Patron, id)
+
+  @doc """
+  Creates a patron.
+
+  ## Examples
+
+      iex> create_patron(%{field: value})
+      {:ok, %Patron{}}
+
+      iex> create_patron(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_patron(attrs \\ %{}) do
+    %Patron{}
+    |> Patron.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a patron.
+
+  ## Examples
+
+      iex> update_patron(patron, %{field: new_value})
+      {:ok, %Patron{}}
+
+      iex> update_patron(patron, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_patron(%Patron{} = patron, attrs) do
+    patron
+    |> Patron.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Patron.
+
+  ## Examples
+
+      iex> delete_patron(patron)
+      {:ok, %Patron{}}
+
+      iex> delete_patron(patron)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_patron(%Patron{} = patron) do
+    Repo.delete(patron)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking patron changes.
+
+  ## Examples
+
+      iex> change_patron(patron)
+      %Ecto.Changeset{source: %Patron{}}
+
+  """
+  def change_patron(%Patron{} = patron) do
+    Patron.changeset(patron, %{})
+  end
+
+  alias Webpos.Settings.PatronPoint
+
+  @doc """
+  Returns the list of patron_points.
+
+  ## Examples
+
+      iex> list_patron_points()
+      [%PatronPoint{}, ...]
+
+  """
+  def list_patron_points do
+    Repo.all(PatronPoint)
+  end
+
+  @doc """
+  Gets a single patron_point.
+
+  Raises `Ecto.NoResultsError` if the Patron point does not exist.
+
+  ## Examples
+
+      iex> get_patron_point!(123)
+      %PatronPoint{}
+
+      iex> get_patron_point!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_patron_point!(id), do: Repo.get!(PatronPoint, id)
+
+  @doc """
+  Creates a patron_point.
+
+  ## Examples
+
+      iex> create_patron_point(%{field: value})
+      {:ok, %PatronPoint{}}
+
+      iex> create_patron_point(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_patron_point(attrs \\ %{}) do
+    result =
+      Repo.all(
+        from(
+          p in PatronPoint,
+          where: p.patron_id == ^attrs["patron_id"],
+          select: %{"in" => p.in, "out" => p.out}
+        )
+      )
+      |> Enum.map(fn x -> Map.put(x, "total", x["in"] - x["out"]) end)
+      |> Enum.map(fn x -> x["total"] end)
+      |> Enum.sum()
+
+    IO.inspect(attrs)
+    a_in = if attrs["in"] != nil, do: attrs["in"], else: 0
+    a_out = if attrs["out"] != nil, do: attrs["in"], else: 0
+    attrs = Map.put(attrs, "accumulated", result + a_in - a_out)
+    IO.inspect(attrs)
+
+    a =
+      %PatronPoint{}
+      |> PatronPoint.changeset(attrs)
+      |> Repo.insert()
+
+    a
+  end
+
+  @doc """
+
+  Updates a patron_point.
+
+  ## Examples
+
+      iex> update_patron_point(patron_point, %{field: new_value})
+      {:ok, %PatronPoint{}}
+
+      iex> update_patron_point(patron_point, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_patron_point(%PatronPoint{} = patron_point, attrs) do
+    patron_point
+    |> PatronPoint.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a PatronPoint.
+
+  ## Examples
+
+      iex> delete_patron_point(patron_point)
+      {:ok, %PatronPoint{}}
+
+      iex> delete_patron_point(patron_point)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_patron_point(%PatronPoint{} = patron_point) do
+    Repo.delete(patron_point)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking patron_point changes.
+
+  ## Examples
+
+      iex> change_patron_point(patron_point)
+      %Ecto.Changeset{source: %PatronPoint{}}
+
+  """
+  def change_patron_point(%PatronPoint{} = patron_point) do
+    PatronPoint.changeset(patron_point, %{})
+  end
 end

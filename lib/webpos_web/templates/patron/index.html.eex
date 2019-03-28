@@ -1,0 +1,36 @@
+<h2>Listing Patrons</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Birthday</th>
+      <th>Remarks</th>
+      <th>Points</th>
+      <th>Rest</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for patron <- @patrons do %>
+    <tr>
+      <td><%= patron.name %></td>
+      <td><%= patron.phone %></td>
+      <td><%= patron.birthday %></td>
+      <td><%= patron.remarks %></td>
+      <td><%= patron.points %></td>
+      <td><%= patron.rest_id %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: patron_path(@conn, :show, patron), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: patron_path(@conn, :edit, patron), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: patron_path(@conn, :delete, patron), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Patron", to: patron_path(@conn, :new) %></span>

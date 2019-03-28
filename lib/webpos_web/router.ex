@@ -103,6 +103,8 @@ defmodule WebposWeb.Router do
     resources("/tables", TableController)
     resources("/void_items", VoidItemController)
     resources("/orders", OrderController)
+    resources("/patrons", PatronController)
+    resources("/patron_points", PatronPointController)
 
     get("/*path", PageController, :no_page_found)
   end

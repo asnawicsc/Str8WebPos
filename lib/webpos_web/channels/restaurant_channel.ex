@@ -200,6 +200,80 @@ defmodule WebposWeb.RestaurantChannel do
     {:noreply, socket}
   end
 
+  def handle_in("query_patron", payload, socket) do
+    code = String.split(socket.topic, ":") |> List.last()
+    restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
+    patron_map = payload["patron"]
+
+    result =
+      Repo.get_by(
+        Patron,
+        rest_id: restaurant.id,
+        phone: patron_map["phone"]
+      )
+
+    patron =
+      if result != nil do
+        result
+      else
+        {:ok, patron} =
+          Settings.create_patron(%{
+            name: patron_map["name"],
+            phone: patron_map["phone"],
+            rest_id: restaurant.id
+          })
+
+        Settings.create_patron_point(%{
+          "patron_id" => patron.id,
+          "in" => 0,
+          "remarks" => "initial",
+          "salesdate" => Timex.today(),
+          "salesid" => "0"
+        })
+
+        patron
+      end
+
+    res =
+      Repo.all(
+        from(
+          p in PatronPoint,
+          where: p.patron_id == ^patron.id,
+          order_by: [desc: :id]
+        )
+      )
+
+    points =
+      if res != [] do
+        hd(res).accumulated
+      else
+        0
+      end
+
+    salesids = Enum.map(res, fn x -> x.salesid end)
+
+    food_history =
+      Repo.all(
+        from(
+          sd in SalesDetail,
+          where: sd.salesid in ^salesids,
+          group_by: [sd.itemname],
+          select: %{itemname: sd.itemname, qty: sum(sd.qty)}
+        )
+      )
+
+    IO.inspect(patron)
+
+    broadcast(socket, "patron_data", %{
+      points: points,
+      name: patron.name,
+      phone: patron.phone,
+      food_history: food_history
+    })
+
+    {:noreply, socket}
+  end
+
   def handle_in("update_table", payload, socket) do
     code = String.split(socket.topic, ":") |> List.last()
     restaurant = Repo.all(from(b in Restaurant, where: b.code == ^code)) |> List.first()
@@ -399,6 +473,22 @@ defmodule WebposWeb.RestaurantChannel do
             |> Repo.insert()
 
           IO.inspect(c)
+        end
+
+        patron = Repo.get_by(Patron, phone: sales_param["cus_phone"], rest_id: restaurant.id)
+        IO.inspect(patron)
+
+        if patron != nil do
+          v =
+            Settings.create_patron_point(%{
+              "patron_id" => patron.id,
+              "in" => Kernel.trunc(sales_param["grand_total"] * 100),
+              "remarks" => "get points from spending #{sales_param["salesid"]}",
+              "salesid" => sales_param["salesid"],
+              "salesdate" => sales_param["salesdate"]
+            })
+
+          IO.inspect(v)
         end
 
       {:error, changeset} ->

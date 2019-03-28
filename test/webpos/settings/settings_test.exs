@@ -334,4 +334,146 @@ defmodule Webpos.SettingsTest do
       assert %Ecto.Changeset{} = Settings.change_table(table)
     end
   end
+
+  describe "patrons" do
+    alias Webpos.Settings.Patron
+
+    @valid_attrs %{birthday: "some birthday", name: "some name", phone: "some phone", points: 42, remarks: "some remarks", rest_id: 42}
+    @update_attrs %{birthday: "some updated birthday", name: "some updated name", phone: "some updated phone", points: 43, remarks: "some updated remarks", rest_id: 43}
+    @invalid_attrs %{birthday: nil, name: nil, phone: nil, points: nil, remarks: nil, rest_id: nil}
+
+    def patron_fixture(attrs \\ %{}) do
+      {:ok, patron} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Settings.create_patron()
+
+      patron
+    end
+
+    test "list_patrons/0 returns all patrons" do
+      patron = patron_fixture()
+      assert Settings.list_patrons() == [patron]
+    end
+
+    test "get_patron!/1 returns the patron with given id" do
+      patron = patron_fixture()
+      assert Settings.get_patron!(patron.id) == patron
+    end
+
+    test "create_patron/1 with valid data creates a patron" do
+      assert {:ok, %Patron{} = patron} = Settings.create_patron(@valid_attrs)
+      assert patron.birthday == "some birthday"
+      assert patron.name == "some name"
+      assert patron.phone == "some phone"
+      assert patron.points == 42
+      assert patron.remarks == "some remarks"
+      assert patron.rest_id == 42
+    end
+
+    test "create_patron/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Settings.create_patron(@invalid_attrs)
+    end
+
+    test "update_patron/2 with valid data updates the patron" do
+      patron = patron_fixture()
+      assert {:ok, patron} = Settings.update_patron(patron, @update_attrs)
+      assert %Patron{} = patron
+      assert patron.birthday == "some updated birthday"
+      assert patron.name == "some updated name"
+      assert patron.phone == "some updated phone"
+      assert patron.points == 43
+      assert patron.remarks == "some updated remarks"
+      assert patron.rest_id == 43
+    end
+
+    test "update_patron/2 with invalid data returns error changeset" do
+      patron = patron_fixture()
+      assert {:error, %Ecto.Changeset{}} = Settings.update_patron(patron, @invalid_attrs)
+      assert patron == Settings.get_patron!(patron.id)
+    end
+
+    test "delete_patron/1 deletes the patron" do
+      patron = patron_fixture()
+      assert {:ok, %Patron{}} = Settings.delete_patron(patron)
+      assert_raise Ecto.NoResultsError, fn -> Settings.get_patron!(patron.id) end
+    end
+
+    test "change_patron/1 returns a patron changeset" do
+      patron = patron_fixture()
+      assert %Ecto.Changeset{} = Settings.change_patron(patron)
+    end
+  end
+
+  describe "patron_points" do
+    alias Webpos.Settings.PatronPoint
+
+    @valid_attrs %{accumulated: 42, in: 42, out: 42, patron_id: 42, remarks: "some remarks", salesdate: ~D[2010-04-17], salesid: "some salesid"}
+    @update_attrs %{accumulated: 43, in: 43, out: 43, patron_id: 43, remarks: "some updated remarks", salesdate: ~D[2011-05-18], salesid: "some updated salesid"}
+    @invalid_attrs %{accumulated: nil, in: nil, out: nil, patron_id: nil, remarks: nil, salesdate: nil, salesid: nil}
+
+    def patron_point_fixture(attrs \\ %{}) do
+      {:ok, patron_point} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Settings.create_patron_point()
+
+      patron_point
+    end
+
+    test "list_patron_points/0 returns all patron_points" do
+      patron_point = patron_point_fixture()
+      assert Settings.list_patron_points() == [patron_point]
+    end
+
+    test "get_patron_point!/1 returns the patron_point with given id" do
+      patron_point = patron_point_fixture()
+      assert Settings.get_patron_point!(patron_point.id) == patron_point
+    end
+
+    test "create_patron_point/1 with valid data creates a patron_point" do
+      assert {:ok, %PatronPoint{} = patron_point} = Settings.create_patron_point(@valid_attrs)
+      assert patron_point.accumulated == 42
+      assert patron_point.in == 42
+      assert patron_point.out == 42
+      assert patron_point.patron_id == 42
+      assert patron_point.remarks == "some remarks"
+      assert patron_point.salesdate == ~D[2010-04-17]
+      assert patron_point.salesid == "some salesid"
+    end
+
+    test "create_patron_point/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Settings.create_patron_point(@invalid_attrs)
+    end
+
+    test "update_patron_point/2 with valid data updates the patron_point" do
+      patron_point = patron_point_fixture()
+      assert {:ok, patron_point} = Settings.update_patron_point(patron_point, @update_attrs)
+      assert %PatronPoint{} = patron_point
+      assert patron_point.accumulated == 43
+      assert patron_point.in == 43
+      assert patron_point.out == 43
+      assert patron_point.patron_id == 43
+      assert patron_point.remarks == "some updated remarks"
+      assert patron_point.salesdate == ~D[2011-05-18]
+      assert patron_point.salesid == "some updated salesid"
+    end
+
+    test "update_patron_point/2 with invalid data returns error changeset" do
+      patron_point = patron_point_fixture()
+      assert {:error, %Ecto.Changeset{}} = Settings.update_patron_point(patron_point, @invalid_attrs)
+      assert patron_point == Settings.get_patron_point!(patron_point.id)
+    end
+
+    test "delete_patron_point/1 deletes the patron_point" do
+      patron_point = patron_point_fixture()
+      assert {:ok, %PatronPoint{}} = Settings.delete_patron_point(patron_point)
+      assert_raise Ecto.NoResultsError, fn -> Settings.get_patron_point!(patron_point.id) end
+    end
+
+    test "change_patron_point/1 returns a patron_point changeset" do
+      patron_point = patron_point_fixture()
+      assert %Ecto.Changeset{} = Settings.change_patron_point(patron_point)
+    end
+  end
 end
