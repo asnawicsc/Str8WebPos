@@ -23,8 +23,8 @@ defmodule WebposWeb.RestaurantController do
   end
 
   def get_api2(conn, %{"code" => branch_code, "license_key" => api_key}) do
-    branch = Repo.all(from(b in Restaurant, where: b.code == ^branch_code))
-    organization = Repo.get(Organization, hd(branch).organization_id)
+    branch_res = Repo.all(from(b in Restaurant, where: b.code == ^branch_code))
+    organization = Repo.get(Organization, hd(branch_res).organization_id)
     invoice = 1000
 
     result =
@@ -32,7 +32,8 @@ defmodule WebposWeb.RestaurantController do
         from(
           s in Sale,
           where:
-            s.organization_id == ^hd(branch).organization_id and s.rest_name == ^hd(branch).name,
+            s.organization_id == ^hd(branch_res).organization_id and
+              s.rest_name == ^hd(branch_res).name,
           select: s.invoiceno,
           order_by: [desc: s.invoiceno],
           limit: 10
@@ -51,9 +52,9 @@ defmodule WebposWeb.RestaurantController do
 
     IO.inspect(invoice)
 
-    if branch != [] do
-      if api_key == hd(branch).key do
-        branch = hd(branch)
+    if branch_res != [] do
+      if api_key == hd(branch_res).key do
+        branch = hd(branch_res)
 
         json = %{
           auth: "ok",
@@ -74,6 +75,11 @@ defmodule WebposWeb.RestaurantController do
 
         IO.inspect(json)
 
+        topic = "restaurant:#{hd(branch_res).code}"
+        event = "query_sales_today"
+
+        WebposWeb.Endpoint.broadcast(topic, event, %{invoice_no: invoice})
+
         conn
         |> put_resp_content_type("application/json")
         |> send_resp(200, Poison.encode!(json))
@@ -85,11 +91,6 @@ defmodule WebposWeb.RestaurantController do
       json = %{auth: "not ok", invoice: invoice}
       send_resp(conn, 500, Poison.encode!(json))
     end
-
-    topic = "restaurant:#{hd(branch).code}"
-    event = "query_sales_today"
-
-    WebposWeb.Endpoint.broadcast(topic, event, %{invoice_no: invoice})
   end
 
   def latest_unclosed_shift(rest_id) do

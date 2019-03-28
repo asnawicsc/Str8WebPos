@@ -383,8 +383,7 @@ defmodule WebposWeb.RestaurantChannel do
         for map <- payload["sales"]["sales_details"] do
           sales_detail_param = map
 
-          {:ok, datetime} =
-            DateTime.from_unix(String.to_integer(map["inserted_at"]), :millisecond)
+          {:ok, datetime} = DateTime.from_unix(map["inserted_at"], :millisecond)
 
           sales_detail_param = Map.put(sales_detail_param, "inserted_time", datetime)
           b = SalesDetail.changeset(%SalesDetail{}, sales_detail_param) |> Repo.insert()
