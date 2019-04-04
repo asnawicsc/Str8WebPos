@@ -25,7 +25,7 @@ defmodule WebposWeb do
       import WebposWeb.Gettext
       alias Webpos.Repo
       alias Webpos.Settings
-      alias Webpos.Settings.{User, Organization, Restaurant, Payment, Table}
+      alias Webpos.Settings.{User, Organization, Restaurant, Payment, Table, Patron, PatronPoint}
       alias Webpos.Menu
 
       alias Webpos.Menu.{
@@ -65,7 +65,7 @@ defmodule WebposWeb do
 
       alias Webpos.Repo
       alias Webpos.Settings
-      alias Webpos.Settings.{User, Organization, Restaurant, Payment, Table}
+      alias Webpos.Settings.{User, Organization, Restaurant, Payment, Table, Patron, PatronPoint}
       alias Webpos.Menu
 
       alias Webpos.Menu.{
@@ -101,7 +101,7 @@ defmodule WebposWeb do
 
       alias Webpos.Repo
       alias Webpos.Settings
-      alias Webpos.Settings.{User, Organization, Restaurant, Payment, Table}
+      alias Webpos.Settings.{User, Organization, Restaurant, Payment, Table, Patron, PatronPoint}
       alias Webpos.Menu
 
       alias Webpos.Menu.{

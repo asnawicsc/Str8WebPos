@@ -1,0 +1,38 @@
+<h2>Listing Patron points</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>In</th>
+      <th>Out</th>
+      <th>Remarks</th>
+      <th>Patron</th>
+      <th>Accumulated</th>
+      <th>Salesdate</th>
+      <th>Salesid</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for patron_point <- @patron_points do %>
+    <tr>
+      <td><%= patron_point.in %></td>
+      <td><%= patron_point.out %></td>
+      <td><%= patron_point.remarks %></td>
+      <td><%= patron_point.patron_id %></td>
+      <td><%= patron_point.accumulated %></td>
+      <td><%= patron_point.salesdate %></td>
+      <td><%= patron_point.salesid %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: patron_point_path(@conn, :show, patron_point), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: patron_point_path(@conn, :edit, patron_point), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: patron_point_path(@conn, :delete, patron_point), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Patron point", to: patron_point_path(@conn, :new) %></span>

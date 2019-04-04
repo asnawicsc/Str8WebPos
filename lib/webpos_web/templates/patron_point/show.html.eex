@@ -1,0 +1,43 @@
+<h2>Show Patron point</h2>
+
+<ul>
+
+  <li>
+    <strong>In:</strong>
+    <%= @patron_point.in %>
+  </li>
+
+  <li>
+    <strong>Out:</strong>
+    <%= @patron_point.out %>
+  </li>
+
+  <li>
+    <strong>Remarks:</strong>
+    <%= @patron_point.remarks %>
+  </li>
+
+  <li>
+    <strong>Patron:</strong>
+    <%= @patron_point.patron_id %>
+  </li>
+
+  <li>
+    <strong>Accumulated:</strong>
+    <%= @patron_point.accumulated %>
+  </li>
+
+  <li>
+    <strong>Salesdate:</strong>
+    <%= @patron_point.salesdate %>
+  </li>
+
+  <li>
+    <strong>Salesid:</strong>
+    <%= @patron_point.salesid %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: patron_point_path(@conn, :edit, @patron_point) %></span>
+<span><%= link "Back", to: patron_point_path(@conn, :index) %></span>

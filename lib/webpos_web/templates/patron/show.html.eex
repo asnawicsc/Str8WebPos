@@ -1,0 +1,38 @@
+<h2>Show Patron</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @patron.name %>
+  </li>
+
+  <li>
+    <strong>Phone:</strong>
+    <%= @patron.phone %>
+  </li>
+
+  <li>
+    <strong>Birthday:</strong>
+    <%= @patron.birthday %>
+  </li>
+
+  <li>
+    <strong>Remarks:</strong>
+    <%= @patron.remarks %>
+  </li>
+
+  <li>
+    <strong>Points:</strong>
+    <%= @patron.points %>
+  </li>
+
+  <li>
+    <strong>Rest:</strong>
+    <%= @patron.rest_id %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: patron_path(@conn, :edit, @patron) %></span>
+<span><%= link "Back", to: patron_path(@conn, :index) %></span>

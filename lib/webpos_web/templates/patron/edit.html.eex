@@ -1,0 +1,5 @@
+<h2>Edit Patron</h2>
+
+<%= render "form.html", Map.put(assigns, :action, patron_path(@conn, :update, @patron)) %>
+
+<span><%= link "Back", to: patron_path(@conn, :index) %></span>
