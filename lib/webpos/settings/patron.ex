@@ -4,7 +4,7 @@ defmodule Webpos.Settings.Patron do
 
   schema "patrons" do
     field(:birthday, :string)
-    field(:name, :string)
+    field(:name, :string, default: "New Member")
     field(:phone, :string)
     field(:points, :integer, default: 0)
     field(:remarks, :binary)
