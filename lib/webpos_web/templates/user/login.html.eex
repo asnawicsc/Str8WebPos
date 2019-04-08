@@ -45,6 +45,7 @@
                <p class="pt-3 text-center">Android Version</p>
                <a class="btn btn-block btn-secondary" href="/images/uploads/app_server.apk">Mainpos APK</a>
                <a class="btn btn-block btn-secondary" href="/images/uploads/app.apk">Sidepos APK</a>
+               <a class="btn btn-block btn-secondary" href="/images/uploads/app_rms.apk">Owner APK</a>
             </div>
          </div>
          <!-- END card-->
