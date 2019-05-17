@@ -1,122 +1,1254 @@
-
-              <link rel="stylesheet" href="/vendor/fullcalendar/dist/fullcalendar.css">
-<!-- MOMENT JS-->
-<script src="/vendor/moment/min/moment-with-locales.js"></script>
-<!-- FULLCALENDAR-->
-<script src="/vendor/fullcalendar/dist/fullcalendar.js"></script>
-<script src="/vendor/fullcalendar/dist/gcal.js"></script>
-<div class="content-heading">
-
-   <div>Dashboard
-      <small><%= gettext("Welcome")%>!</small>
-   </div>
-
+<div class="row"><div class="form-group col-md-12" align="center">
+   
+            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                <i class="fa fa-calendar"></i>&nbsp;
+                <span></span> <i class="fa fa-caret-down"></i>
+            </div>
 
 
 </div>
-
-
+</div>
 <div class="row">
+  <div class="col-lg-2">
+    <div class="card card-primary">
+      <div class="event_result"></div>
 
-  <div class="col-lg-9">
+    <form>
+      <input  id="locations" value="1"  type="hidden">
+                    <div class="form-group">
+                        <label>Search</label>
+                        <input class="form-control" id="qs" placeholder="Enter query" type="text">
+                    </div>
+                </form>
 
 
-      <div class="row">
-
-                <div class="col-lg-6">
-        <div class="card card-default mb-3">
-           
-           <div class="card-body">
-                 <em class="fa-2x mr-2 mb-3 fas fa-bell"></em>
-                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Product Management")%></span>
-                 <ol style="padding-left: 15px;">
-                    <li><p class="card-text"><%= gettext("See all menu item.")%></p></li>
-                    <li><p class="card-text"><%= gettext("See all discount item.")%></p></li>
-                   
-                  </ol>
-              <a href ="/<%= @conn.private.plug_session["org_name"]%>/items"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Menu Items</button></a>
-              <a href ="/<%= @conn.private.plug_session["org_name"]%>/discounts"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Discount Items</button></a>
+      <div class="card-body"  id="tree" style="overflow-y: scroll;">
         
-           </div>
-        </div>
-      </div>
-            <div class="col-lg-6">
-        <div class="card card-default mb-3">
 
-           <div class="card-body">
-                 <em class="fa-2x mr-2 mb-3 fas fa-university"></em>
-                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Shop Management")%></span>
-                 <ol style="padding-left: 15px;">
-                    <li><p class="card-text"><%= gettext("See organization detail.")%></p></li>
-                    <li><p class="card-text"><%= gettext("See restaurant detail.")%></p></li>
-                   
-                  </ol>
-              <a href ="/organizations"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Organizations</button></a>
-               <a href ="/<%= @conn.private.plug_session["org_name"]%>/restaurants"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Restaurants</button></a>
-        
-           </div>
-        </div>
-      </div>
-       
-      </div>
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="card card-default mb-3">
-
-             <div class="card-body">
-                  <em class="fa-2x mr-2 mb-3 fas fa-chalkboard-teacher"></em>
-                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Pay Bill Management")%></span>
-          <ol style="padding-left: 15px;">
-                    <li><p class="card-text"><%= gettext("List all teachers and manage their info.")%></p></li>
-                     <li><p class="card-text"><%= gettext("Ad hoc create a teacher.")%></p></li>
-                   
-                  </ol>
-                <a href ="#"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">List</button></a>
-               
-             </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="card card-default mb-3">
-
-             <div class="card-body">
-                 <em class="fa-2x mr-2 mb-3 fas fa-edit"></em>
-                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("Customer Management")%></span>
-                 <ol style="padding-left: 15px;">
-                    <li><p class="card-text"><%= gettext("View all student's parent information.")%></p></li>
-                    <li><p class="card-text"><%= gettext("Ad hoc create a parent.")%></p></li>
-                  </ol>
-               <a href ="#"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">List</button></a>
-          
-             </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-6">
-        <div class="card card-default mb-3">
-
-           <div class="card-body">
-                 <em class="fa-2x mr-2 mb-3 fas fa-lock"></em>
-                  <span style="font-weight: bolder;font-size: 17px;"><%= gettext("User Access")%></span>
-                 <ol style="padding-left: 15px;">
-                    <li><p class="card-text"><%= gettext("See all Users")%></p></li>
-                    <li><p class="card-text"><%= gettext("See all Staffs")%></p></li>
-                 
-                  </ol>
-                    <a href ="/users"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Users</button></a>
-             
-               <a href ="/users?q=staff"><button class="mb-1 btn-sm btn btn-outline-primary" type="button">Staffs</button></a>
-  
-           </div>
-
-        </div>
-        </div>
       </div>
 
-   
-   
-
+    </div>
   </div>
+
+  <div class="col-lg-10" id="show_html">
+  </div>
+
 </div>
 
+
+<script type="text/javascript">
+
+
+
+  var locations;
+
+
+    $(function() {
+
+
+      if (localStorage.getItem('start_date') == null) 
+{   var start = moment().subtract(6, 'days');
+    var end = moment();
+
+    localStorage.setItem('start_date',start.format('YYYY-MM-DD'));
+    localStorage.setItem('end_date',end.format('YYYY-MM-DD'));
+
+} 
+else
+{ 
+     st= localStorage.getItem('start_date')
+     en= localStorage.getItem('end_date')  
+    
+    var start = moment(st);
+    var end = moment(en);
+}
+    
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    
+            start_date=moment(start).format('YYYY-MM-DD');
+          end_date=moment(end).format('YYYY-MM-DD');
+    
+
+
+             localStorage.setItem('start_date', start_date);
+              localStorage.setItem('end_date', end_date);
+
+
+                   $.ajax({
+        url: "/api/tree",
+        dataType: "json",
+        data: {
+          scope: "show_html",
+          data: locations,
+          start_date: start_date,
+          end_date: end_date,
+        }
+      }).done(function(j) {
+
+            
+             if (locations=="discount_analysis") {
+               $("div#show_html").html(j["html"]);
+
+
+        var data=j["data"];
+
+
+          var data = [{
+            "label": "Discount Sales (RM)",
+            "color": "#9cd159",
+            "data": data
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar');
+        if (chart.length)
+            $.plot(chart, data, options);
+
+          
+   var data2 = j["data2"]
+
+        var options = {
+            series: {
+                pie: {
+                    show: true,
+                    innerRadius: 0,
+                    label: {
+                        show: true,
+                        radius: 0.8,
+                        formatter: function(label, series) {
+                            return '<div class="flot-pie-label">' +
+                                //label + ' : ' +
+                                Math.round(series.percent) +
+                                '%</div>';
+                        },
+                        background: {
+                            opacity: 0.8,
+                            color: '#222'
+                        }
+                    }
+                }
+            }
+        };
+
+        var chart = $('.chart-pie');
+        if (chart.length)
+            $.plot(chart, data2, options);
+
+
+
+     }
+
+      if (locations=="item_sales")
+     {
+
+              $("div#show_html").html(j["html"]);
+              var data = j["data"]
+
+
+              Highcharts.chart('container', {
+
+    chart: {
+        type: 'bubble',
+        plotBorderWidth: 1,
+        zoomType: 'xy'
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    title: {
+        text: 'Item Analysis'
+    },
+
+
+
+    xAxis: {
+        gridLineWidth: 1,
+        title: {
+            text: 'Order Rate (%)'
+        },
+        labels: {
+            format: '{value}'
+        }
+    },
+
+    yAxis: {
+        startOnTick: false,
+        endOnTick: false,
+        title: {
+            text: 'Average Sales Price'
+        },
+        labels: {
+            format: '{value}'
+        },
+       
+    },
+
+    tooltip: {
+        useHTML: true,
+        headerFormat: '<table>',
+        pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
+            '<tr><th>Sales Amount:</th><td>{point.z}</td></tr>' +
+            '<tr><th>Order Rate:</th><td>{point.x}%</td></tr>' +
+            '<tr><th>Average Sales Amount:</th><td>{point.y}</td></tr>',
+        footerFormat: '</table>',
+        followPointer: true
+    },
+
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
+        }
+    },
+
+    series: [{
+        data: data
+    }]
+
+}); 
+
+               var data2 = j["data2"]
+                var data3 = j["data3"]
+                 var data4 = j["data4"]
+
+
+    var data5 = [{
+            "label": "Sales Revenue",
+            "color": "#5ab1ef",
+            "data": data2
+        }, {
+            "label": "Number of Customer",
+            "color": "#f5994e",
+            "data": data3
+        }, {
+            "label": "Sales Per Customer",
+            "color": "#d87a80",
+            "data": data4
+        }];
+
+        var options = {
+            series: {
+                lines: {
+                    show: true,
+                    fill: 0.01
+                },
+                points: {
+                    show: true,
+                    radius: 4
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#eee',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-line');
+        if (chart.length)
+            $.plot(chart, data5, options);
+           
+
+
+     }
+
+     if  (locations=="service_charge"){
+       $("div#show_html").html(j);
+     }
+    
+        if  (locations=="main_dashboard"){
+       $("div#show_html").html(j);
+     }
+
+       if  (locations=="sales_overview"){
+       $("div#show_html").html(j["html"]);
+
+        var data = j["data"]
+         var data2 = j["data2"]
+          var data3 = j["data3"]
+           var data4 = j["data4"]
+           
+
+        var data = [{
+            "label": "Sales Revenue (RM)",
+            "color": "#5ab1ef",
+            "data": data
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar1');
+        if (chart.length)
+            $.plot(chart, data, options);
+    
+
+             var data = [{
+            "label": "Number of Customer",
+            "color": "#d87a80",
+            "data": data2
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar2');
+        if (chart.length)
+            $.plot(chart, data, options);
+    
+    
+
+            var data = [{
+            "label": "Sales per Customer (RM)",
+            "color": "#f5994e",
+            "data": data3
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar3');
+        if (chart.length)
+            $.plot(chart, data, options);
+   
+    
+
+            var data = [{
+            "label": "Discount Amount (RM)",
+            "color": "#ff22cc",
+            "data": data4
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar4');
+        if (chart.length)
+            $.plot(chart, data, options);
+     }
+
+           if (locations=="sales_ranking")
+     {
+
+              $("div#show_html").html(j["html"]);
+              var data = j["data"]
+
+
+              Highcharts.chart('container', {
+
+    chart: {
+        type: 'bubble',
+        plotBorderWidth: 1,
+        zoomType: 'xy'
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    title: {
+        text: 'Item Analysis'
+    },
+
+
+
+    xAxis: {
+        gridLineWidth: 1,
+        title: {
+            text: 'Order Rate (%)'
+        },
+        labels: {
+            format: '{value}'
+        }
+    },
+
+    yAxis: {
+        startOnTick: false,
+        endOnTick: false,
+        title: {
+            text: 'Average Sales Price'
+        },
+        labels: {
+            format: '{value}'
+        },
+       
+    },
+
+    tooltip: {
+        useHTML: true,
+        headerFormat: '<table>',
+        pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
+            '<tr><th>Sales Amount:</th><td>{point.z}</td></tr>' +
+            '<tr><th>Order Rate:</th><td>{point.x}%</td></tr>' +
+            '<tr><th>Average Sales Amount:</th><td>{point.y}</td></tr>',
+        footerFormat: '</table>',
+        followPointer: true
+    },
+
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
+        }
+    },
+
+    series: [{
+        data: data
+    }]
+
+}); 
+
+              
+
+
+     }
+    
+ 
+ 
+
+        $("input[name='_csrf_token']").val("<%= Phoenix.Controller.get_csrf_token() %>")
+        var main = $("table#main").DataTable({
+          "dom": '<p"card-body"irt>f'
+        });
+        $("table#cont").DataTable({
+          "dom": '<p"card-body"irtf>'
+        });
+        $("table#drivers").DataTable({
+          "dom": '<p"card-body"irtf>'
+        });
+        $("ol.route_used").each(function() {
+          var cont_id = $(this).attr("id")
+          var html = $(this)
+          $.ajax({
+            url: "/api/tree",
+            dataType: "json",
+            data: {
+              scope: "route_used",
+              cont_id: cont_id,
+            }
+          }).done(function(j) {
+            var result = j
+            console.log(j)
+            for (i in result) {
+              html.append("<li><span class='badge badge-primary' style='width: 130px; font-size: 8px;'>" + result[i]["from"] + "</span><span class='badge badge-danger' style='width: 130px; font-size: 8px;'>" + result[i]["to"] + "</span><span class='badge badge-warning' style='width: 130px; font-size: 8px;'>" + result[i]["driver"] + " " + result[i]["truck"] + " " + result[i]["no"] + "</span></li>")
+            }
+          })
+        })
+      });
+
+      
+        }
+    
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+               'Today': [moment(), moment()],
+               'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+               'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+               'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+               'This Month': [moment().startOf('month'), moment().endOf('month')],
+               'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+    
+    
+        }, cb);
+    
+      
+    
+        cb(start, end);
+    
+    
+    
+    });
+    
+        var start_date = localStorage.getItem('start_date')
+        var end_date = localStorage.getItem('end_date')
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+    for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+      if (sParameterName[0] === sParam) {
+        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+      }
+    }
+  };
+    $('#tree').on('changed.jstree', function(e, data) {
+    var i, j, r = [], s = [];
+    for (i = 0, j = data.selected.length; i < j; i++) {
+      r.push(data.instance.get_node(data.selected[i]).id);
+            s.push(data.instance.get_node(data.selected[i]).text);
+    }
+    r.map(function(v) {
+    locations=v;
+      $.ajax({
+        url: "/api/tree",
+        dataType: "json",
+        data: {
+          scope: "show_html",
+          data: v,
+          start_date: start_date,
+          end_date: end_date,
+        }
+      }).done(function(j) {
+
+           
+             if (locations=="discount_analysis") {
+               $("div#show_html").html(j["html"]);
+
+
+        var data=j["data"];
+
+
+          var data = [{
+            "label": "Discount Sales (RM)",
+            "color": "#9cd159",
+            "data": data
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar');
+        if (chart.length)
+            $.plot(chart, data, options);
+
+          
+   var data2 = j["data2"]
+
+        var options = {
+            series: {
+                pie: {
+                    show: true,
+                    innerRadius: 0,
+                    label: {
+                        show: true,
+                        radius: 0.8,
+                        formatter: function(label, series) {
+                            return '<div class="flot-pie-label">' +
+                                //label + ' : ' +
+                                Math.round(series.percent) +
+                                '%</div>';
+                        },
+                        background: {
+                            opacity: 0.8,
+                            color: '#222'
+                        }
+                    }
+                }
+            }
+        };
+
+        var chart = $('.chart-pie');
+        if (chart.length)
+            $.plot(chart, data2, options);
+
+
+
+     }
+
+       if (locations=="item_sales")
+     {
+      $("div#show_html").html(j);
+     }
+
+      if (locations=="item_sales")
+     {
+
+              $("div#show_html").html(j["html"]);
+              var data = j["data"]
+
+
+              Highcharts.chart('container', {
+
+    chart: {
+        type: 'bubble',
+        plotBorderWidth: 1,
+        zoomType: 'xy'
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    title: {
+        text: 'Item Analysis'
+    },
+
+
+
+    xAxis: {
+        gridLineWidth: 1,
+        title: {
+            text: 'Order Rate (%)'
+        },
+        labels: {
+            format: '{value}'
+        }
+    },
+
+    yAxis: {
+        startOnTick: false,
+        endOnTick: false,
+        title: {
+            text: 'Average Sales Price'
+        },
+        labels: {
+            format: '{value}'
+        },
+       
+    },
+
+    tooltip: {
+        useHTML: true,
+        headerFormat: '<table>',
+        pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
+            '<tr><th>Sales Amount:</th><td>{point.z}</td></tr>' +
+            '<tr><th>Order Rate:</th><td>{point.x}%</td></tr>' +
+            '<tr><th>Average Sales Amount:</th><td>{point.y}</td></tr>',
+        footerFormat: '</table>',
+        followPointer: true
+    },
+
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
+        }
+    },
+
+    series: [{
+        data: data
+    }]
+
+}); 
+
+                    var data7 = j["data2"]
+                var data8 = j["data3"]
+                 var data9 = j["data4"]
+
+console.log(data7);
+console.log(data8);
+console.log(data9);
+
+    var data5 = [{
+            "label": "Sales Revenue",
+            "color": "#5ab1ef",
+            "data": data7
+        }, {
+            "label": "Number of Customer",
+            "color": "#f5994e",
+            "data": data8
+        }, {
+            "label": "Sales Per Customer",
+            "color": "#d87a80",
+            "data": data9
+        }];
+
+        var options = {
+            series: {
+                lines: {
+                    show: true,
+                    fill: 0.01
+                },
+                points: {
+                    show: true,
+                    radius: 4
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#eee',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-line');
+        if (chart.length)
+            $.plot(chart, data5, options);
+           
+
+       
+
+
+     }
+
+     if  (locations=="service_charge"){
+       $("div#show_html").html(j);
+     }
+    
+
+      if  (locations=="main_dashboard"){
+       $("div#show_html").html(j);
+     }
+
+         if  (locations=="sales_overview"){
+       $("div#show_html").html(j["html"]);
+
+        var data = j["data"]
+         var data2 = j["data2"]
+          var data3 = j["data3"]
+           var data4 = j["data4"]
+           
+
+        var data = [{
+            "label": "Sales Revenue (RM)",
+            "color": "#5ab1ef",
+            "data": data
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar1');
+        if (chart.length)
+            $.plot(chart, data, options);
+    
+
+             var data = [{
+            "label": "Number of Customer",
+            "color": "#d87a80",
+            "data": data2
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar2');
+        if (chart.length)
+            $.plot(chart, data, options);
+    
+    
+
+            var data = [{
+            "label": "Sales per Customer (RM)",
+            "color": "#f5994e",
+            "data": data3
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar3');
+        if (chart.length)
+            $.plot(chart, data, options);
+   
+    
+
+            var data = [{
+            "label": "Discount Amount (RM)",
+            "color": "#ff22cc",
+            "data": data4
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar4');
+        if (chart.length)
+            $.plot(chart, data, options);
+     }
+    
+          if (locations=="sales_ranking")
+     {
+
+              $("div#show_html").html(j["html"]);
+              var data = j["data"]
+
+
+              Highcharts.chart('container', {
+
+    chart: {
+        type: 'bubble',
+        plotBorderWidth: 1,
+        zoomType: 'xy'
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    title: {
+        text: 'Item Analysis'
+    },
+
+
+
+    xAxis: {
+        gridLineWidth: 1,
+        title: {
+            text: 'Order Rate (%)'
+        },
+        labels: {
+            format: '{value}'
+        }
+    },
+
+    yAxis: {
+        startOnTick: false,
+        endOnTick: false,
+        title: {
+            text: 'Average Sales Price'
+        },
+        labels: {
+            format: '{value}'
+        },
+       
+    },
+
+    tooltip: {
+        useHTML: true,
+        headerFormat: '<table>',
+        pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
+            '<tr><th>Sales Amount:</th><td>{point.z}</td></tr>' +
+            '<tr><th>Order Rate:</th><td>{point.x}%</td></tr>' +
+            '<tr><th>Average Sales Amount:</th><td>{point.y}</td></tr>',
+        footerFormat: '</table>',
+        followPointer: true
+    },
+
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
+        }
+    },
+
+    series: [{
+        data: data
+    }]
+
+}); 
+
+           
+           
+
+
+     }
+
+
+     if (locations=="customer_analysis") {
+
+   $("div#show_html").html(j["html"]);
+
+        var data = j["data"]
+
+        console.log(data);
+     
+        var options = {
+            series: {
+                pie: {
+                    show: true,
+                    innerRadius: 0,
+                    label: {
+                        show: true,
+                        radius: 0.8,
+                        formatter: function(label, series) {
+                            return '<div class="flot-pie-label">' +
+                                //label + ' : ' +
+                                Math.round(series.percent) +
+                                '%</div>';
+                        },
+                        background: {
+                            opacity: 0.8,
+                            color: '#222'
+                        }
+                    }
+                }
+            }
+        };
+
+        var chart = $('.chart-pie');
+        if (chart.length)
+            $.plot(chart, data, options);
+     }
+    
+    
+ 
+       
+
+      
+
+          
+        $("input[name='_csrf_token']").val("<%= Phoenix.Controller.get_csrf_token() %>")
+        var main = $("table#main").DataTable({
+          "dom": '<p"card-body"irt>f'
+        });
+        $("table#cont").DataTable({
+          "dom": '<p"card-body"irtf>'
+        });
+        $("table#drivers").DataTable({
+          "dom": '<p"card-body"irtf>'
+        });
+        $("ol.route_used").each(function() {
+          var cont_id = $(this).attr("id")
+          var html = $(this)
+          $.ajax({
+            url: "/api/tree",
+            dataType: "json",
+            data: {
+              scope: "route_used",
+              cont_id: cont_id,
+            }
+          }).done(function(j) {
+            var result = j
+            console.log(j)
+            for (i in result) {
+              html.append("<li><span class='badge badge-primary' style='width: 130px; font-size: 8px;'>" + result[i]["from"] + "</span><span class='badge badge-danger' style='width: 130px; font-size: 8px;'>" + result[i]["to"] + "</span><span class='badge badge-warning' style='width: 130px; font-size: 8px;'>" + result[i]["driver"] + " " + result[i]["truck"] + " " + result[i]["no"] + "</span></li>")
+            }
+          })
+        })
+      });
+    })
+    $('.event_result').html('Selected: ' + s.join(', '));
+  }).on('loaded.jstree', function(e, data) {
+    var tech = getUrlParameter('q');
+    if (tech == undefined) {
+$('#tree').jstree('select_node', 'main_dashboard');
+    } else {
+
+    $('#tree').jstree('select_node', tech);
+    }
+  }).jstree({
+    'core': {
+      'data': {
+        'url': function(node) {
+          return node.id === '#' ?
+            '/api/tree?scope=jobs' :
+            'api/tree?scope=jobs';
+        },
+        'data': function(node) {
+          return {
+            'id': node.id
+          };
+        }
+      }
+    }
+  });
+</script>

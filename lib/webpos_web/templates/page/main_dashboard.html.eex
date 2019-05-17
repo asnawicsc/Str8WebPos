@@ -1,0 +1,57 @@
+<style type="text/css">
+  .tall {
+    min-height: 600px;
+  }
+
+  .large {
+    width: 1600px;
+  }
+
+  .small {
+    width: 600px;
+  }
+</style>
+<div class="row">
+
+
+  <div class="col-sm-12" id="main">
+
+
+
+
+    <div class="card border-primary" style="overflow-x: scroll; ">
+   
+      <table class="table-hover table-bordered large" id="main" style="font-size: 10px; ">
+
+        <thead>
+          <tr>
+            <th>Item Name</th>
+            <th>Total (RM)</th>
+            <th>Total QTY</th>
+           
+          </tr>
+        </thead>
+        <tbody>
+        <%= for item <- @info do %>
+        <tr>
+          <td><%= item.name %></td> 
+          <td><%= item.total_rm %></td> 
+          <td><%= item.total_qty %></td>
+        </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+  <div class="col-sm-6" id="show_job" style="display: none;">
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  
+    
+</script>
+
+  

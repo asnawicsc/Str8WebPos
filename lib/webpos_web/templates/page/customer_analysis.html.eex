@@ -1,0 +1,67 @@
+<style type="text/css">
+  .tall {
+    min-height: 600px;
+  }
+
+  .large {
+    width: 1350px;
+  }
+
+  .small {
+    width: 500px;
+  }
+
+  .highcharts-tooltip h3 {
+    margin: 0.3em 0;
+}
+</style>
+<div class="row">
+
+
+  <div class="col-sm-12" >
+
+
+      
+                     <div class="col-xl-12">
+                     <div class="card card-default">
+                        
+                        <div class="card-body">
+                           <div class="chart-pie flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                   <div class="col-xl-6">
+                     <div class="card card-default">
+                        
+                        <div class="card-body">
+                           <div class="chart-line flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xl-6">
+                     <div class="card card-default">
+                        
+                        <div class="card-body">
+                           <div class="chart-line flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+              </div>
+           
+   
+
+            <div style="float: right;"> <a href="/item_sales_analysis_excel">Download item sales analysis report.xls</a>
+      </div>
+
+
+  </div>
+  <div class="col-sm-6" id="show_job" style="display: none;">
+
+  </div>
+</div>
+<script type="text/javascript">
+	
+
+	     
+</script>

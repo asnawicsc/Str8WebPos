@@ -1,0 +1,63 @@
+
+<style type="text/css">
+  .tall {
+    min-height: 600px;
+  }
+
+  .large {
+    width: 1600px;
+  }
+
+  .small {
+    width: 600px;
+  }
+</style>
+<div class="row">
+
+
+ 
+
+ 
+
+   
+      <div class="card">
+
+        
+     <div style="float: right;"> <a href="/service_charge_excel">Download service charge report.xls</a>
+      </div>
+
+      <div><h4>Total Service Charge Amount: <%= @total %></h4></div>
+      <table class="table-hover table-bordered large" id="main" style="font-size: 10px; ">
+
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Total (RM)</th>
+
+           
+          </tr>
+        </thead>
+        <tbody>
+        <%= for item <- @info do %>
+        <tr>
+          <td><%= item.date %></td> 
+          <td><%= item.total_rm %></td> 
+
+        </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+    </div>
+ 
+  <div class="col-sm-6" id="show_job" style="display: none;">
+
+  </div>
+
+
+<script type="text/javascript">
+  
+    
+</script>
+
+  

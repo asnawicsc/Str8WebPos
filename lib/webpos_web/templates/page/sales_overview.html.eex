@@ -1,0 +1,128 @@
+
+<style type="text/css">
+  .tall {
+    min-height: 600px;
+  }
+
+  .large {
+    width: 1350px;
+  }
+
+  .small {
+    width: 500px;
+  }
+
+  .highcharts-tooltip h3 {
+    margin: 0.3em 0;
+}
+</style>
+<div class="row">
+
+
+  <div class="col-sm-12" id="main">
+
+
+
+
+ 
+
+      
+                 
+        <div class="row">
+                     <div class="col-xl-6">
+                     <div class="card card-default" id="cardChart2">
+                        <div class="card-header">
+                           <div class="card-title">Sales Revenue  </div>
+                           <h4>Total Sales Revenue- RM <%= @total_data.total_sales_revenue %>  </h4>
+                        </div>
+                        <div class="card-body">
+                           <div class="chart-bar1 flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+
+                     <div class="col-xl-6">
+                     <div class="card card-default" id="cardChart2">
+                        <div class="card-header">
+                           <div class="card-title">Number of Customer</div>
+                           <h4>Total Number of Customer- <%= @total_data.total_number_of_customer %>  </h4>
+                        </div>
+                        <div class="card-body">
+                           <div class="chart-bar2 flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+                       <div class="row">
+                    <div class="col-xl-6">
+                     <div class="card card-default" id="cardChart2">
+                        <div class="card-header">
+                           <div class="card-title">Sales per Customer</div>
+                             <h4>Total Sales per Customer- <%= @total_data.total_sales_per_cust %>  </h4>
+                        </div>
+                        <div class="card-body">
+                           <div class="chart-bar3 flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+
+                    <div class="col-xl-6">
+                     <div class="card card-default" id="cardChart2">
+                        <div class="card-header">
+                           <div class="card-title">Discount Amount</div>
+                              <h4>Total Discount Amount- <%= @total_data.total_dis_amount %>  </h4>
+                        </div>
+                        <div class="card-body">
+                           <div class="chart-bar4 flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+
+               </div>
+
+            
+   
+
+            <div style="float: right;"> <a href="/item_sales_overview_excel">Download item sales overview report.xls</a>
+      </div>
+
+      
+      <table class="table-hover table-bordered large" id="main" style="font-size: 10px; ">
+
+        <thead>
+          <tr>
+             <th>Date</th>
+            <th>Sales Revenue</th>
+            <th>Discount Amount</th>
+            <th>Number of customers</th>
+             <th>Sales per Customer</th>
+           
+          </tr>
+        </thead>
+        <tbody>
+      <%= for item <- @info do %>
+        <tr>
+          <td><%= item.a %></td> 
+          <td><%= item.b %></td> 
+            <td><%= item.c %></td> 
+              <td><%= item.d %></td> 
+                <td><%= item.e %></td> 
+               
+
+        </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+  </div>
+  <div class="col-sm-6" id="show_job" style="display: none;">
+
+  </div>
+</div>
+    </div>
+<script type="text/javascript">
+  
+   
+</script>
+

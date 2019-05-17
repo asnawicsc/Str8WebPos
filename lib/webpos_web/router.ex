@@ -21,6 +21,8 @@ defmodule WebposWeb.Router do
     post("/sales", PageController, :webhook_post)
 
     post("/operations", PageController, :webhook_post_operations)
+    get("/tree", PageController, :tree_get)
+    post("/tree", PageController, :tree_post)
   end
 
   scope "/", WebposWeb do
@@ -64,6 +66,10 @@ defmodule WebposWeb.Router do
     resources("/reports/sales", SaleController)
     get("/reports/sales/:code/:invoice", SaleController, :sync)
     resources("/modallogs", ModalLllogController)
+    get("/service_charge_excel", PageController, :service_charge_excel)
+    get("/discount_analysis_excel", PageController, :discount_analysis_excel)
+    get("/item_sales_analysis_excel", PageController, :item_sales_analysis_excel)
+    get("/item_sales_overview_excel", PageController, :item_sales_overview_excel)
 
     resources("/shifts", ShiftController)
 
@@ -71,6 +77,12 @@ defmodule WebposWeb.Router do
       "/organizations/:branch/sales_details/:output/:start_date/:end_date",
       PageController,
       :sales_details
+    )
+
+    get(
+      "/test/:code",
+      SaleController,
+      :test
     )
 
     get(

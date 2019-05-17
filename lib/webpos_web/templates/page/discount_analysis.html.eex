@@ -1,0 +1,87 @@
+<style type="text/css">
+  .tall {
+    min-height: 600px;
+  }
+
+  .large {
+    width: 1350px;
+  }
+
+  .small {
+    width: 500px;
+  }
+</style>
+<div class="row">
+
+
+  <div class="col-sm-12" id="main">
+
+
+
+
+ 
+
+        <div class="row">
+                   <div class="col-xl-6">
+                     <div class="card card-default" id="cardChart2">
+                        
+                        <div class="card-body">
+                           <div class="chart-bar flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+
+                   <div class="col-xl-6">
+                     <div class="card card-default">
+                        
+                        <div class="card-body">
+                           <div class="chart-pie flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+      <div>
+
+            <div style="float: right;"> <a href="/discount_analysis_excel">Download discount analysis report.xls</a>
+      </div>
+
+      
+      <table class="table-hover table-bordered large" id="main" style="font-size: 10px; ">
+
+        <thead>
+          <tr>
+             <th>Date</th>
+            <th>Discount Name</th>
+            <th>Discount Description</th>
+            <th>Discount Amount</th>
+             <th>Discount Percentage</th>
+           
+          </tr>
+        </thead>
+        <tbody>
+        <%= for item <- @info do %>
+        <tr>
+          <td><%= item.a %></td> 
+          <td><%= item.b %></td>
+          <td><%= item.c %></td> 
+          <td><%= item.d %></td>
+          <td><%= item.e %> %</td>
+        </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+  
+  </div>
+  <div class="col-sm-6" id="show_job" style="display: none;">
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  
+   
+    
+</script>
+
+  

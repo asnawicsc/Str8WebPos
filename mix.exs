@@ -51,7 +51,9 @@ defmodule Webpos.Mixfile do
       {:bcrypt_elixir, "~> 0.12"},
       {:httpoison, "~> 1.0"},
       {:csv, "~> 1.4.0"},
-      {:nimble_csv, "~> 0.3"}
+      {:nimble_csv, "~> 0.3"},
+      {:elixlsx, "~> 0.4.1"},
+      {:color_stream, "~> 0.0.1"}
     ]
   end
 
