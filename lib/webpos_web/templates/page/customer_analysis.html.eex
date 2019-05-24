@@ -22,20 +22,24 @@
 
 
       
-                     <div class="col-xl-12">
+         
                      <div class="card card-default">
                         
                         <div class="card-body">
                            <div class="chart-pie flot-chart"></div>
                         </div>
                      </div>
-                  </div>
+    
                   <div class="row">
                    <div class="col-xl-6">
                      <div class="card card-default">
+                      <div class="card-header">
+                           <div class="card-title">Total Customer</div>
+                          <h4>Average number of customer-  <%= @avg %>  </h4>
+                        </div>
                         
                         <div class="card-body">
-                           <div class="chart-line flot-chart"></div>
+                           <div class="chart-bar flot-chart"></div>
                         </div>
                      </div>
                   </div>
@@ -43,7 +47,27 @@
                      <div class="card card-default">
                         
                         <div class="card-body">
-                           <div class="chart-line flot-chart"></div>
+                          <table class="table" >
+
+                              <thead>
+                                <tr>
+                                   <th>Customer Number</th>
+                                  <th>Total Customer</th>
+                                  <th>Percentage (%)</th>
+
+                                </tr>
+                              </thead>
+                              <tbody>
+                              <%= for item <- @per_pax do %>
+                              <tr>
+                                <td><%= item.number %></td> 
+                                <td><%= item.total %></td>
+                                <td><%= item.percentage %></td> 
+                     
+                              </tr>
+                              <% end %>
+                              </tbody>
+                            </table>
                         </div>
                      </div>
                   </div>

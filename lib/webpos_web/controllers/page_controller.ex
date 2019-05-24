@@ -607,6 +607,20 @@ defmodule WebposWeb.PageController do
               )
             )
 
+        "revenue_breakdown" ->
+          all =
+            Repo.all(
+              from(
+                s in Webpos.Reports.Sale,
+                where: s.salesdate >= ^start_date and s.salesdate <= ^end_date,
+                select: %{
+                  date: s.salesdate,
+                  grand_total: s.grand_total,
+                  transaction_type: s.transaction_type
+                }
+              )
+            )
+
         "discount_analysis" ->
           all =
             Repo.all(
@@ -903,8 +917,90 @@ defmodule WebposWeb.PageController do
                   }
                 end
 
+              pax = data |> Enum.group_by(fn x -> x.date end)
+
+              pax_data =
+                for item <- pax do
+                  date = item |> elem(0) |> Date.to_string()
+                  total = item |> elem(1) |> Enum.map(fn x -> x.pax end) |> Enum.sum()
+
+                  [date, total]
+                end
+
+              perctg_pax = data |> Enum.group_by(fn x -> x.pax end)
+
+              total_a = data |> Enum.count()
+
+              per_pax =
+                for item <- perctg_pax do
+                  no = item |> elem(0)
+                  total = item |> elem(1) |> Enum.count()
+                  percentage = total / total_a * 100
+
+                  %{
+                    number: no,
+                    total: total,
+                    percentage: percentage |> Float.round(2)
+                  }
+                end
+
+              totalpp = data |> Enum.map(fn x -> x.pax end) |> Enum.sum()
+
+              st = Date.from_iso8601!(start_date)
+              ed = Date.from_iso8601!(end_date)
+
+              ttt = Date.diff(ed, st)
+
+              avg = (totalpp / ttt) |> Float.round(2)
+
               html =
                 Phoenix.View.render_to_string(WebposWeb.PageView, "customer_analysis.html",
+                  info: data,
+                  per_pax: per_pax,
+                  conn: conn,
+                  avg: avg
+                )
+
+              json_map =
+                Poison.encode!(%{
+                  html: html,
+                  data: chart_date,
+                  data2: pax_data
+                })
+
+            "revenue_breakdown" ->
+              data = data_info(start_date, end_date, "revenue_breakdown")
+
+              pie = data |> Enum.group_by(fn x -> x.transaction_type end)
+
+              tt = pie |> Enum.map(fn x -> x |> elem(0) end) |> Enum.count()
+
+              color = ColorStream.hex() |> Enum.take(tt)
+
+              chart_date =
+                for item <- pie |> Enum.with_index() do
+                  number = item |> elem(1)
+                  name = item |> elem(0) |> elem(0)
+
+                  dine_in =
+                    item
+                    |> elem(0)
+                    |> elem(1)
+                    |> Enum.map(fn x -> Decimal.to_float(x.grand_total) end)
+                    |> Enum.sum()
+
+                  color = color |> Enum.fetch!(number)
+                  color = "#" <> color
+
+                  %{
+                    label: name,
+                    color: color,
+                    data: dine_in
+                  }
+                end
+
+              html =
+                Phoenix.View.render_to_string(WebposWeb.PageView, "revenue_breakdown.html",
                   info: data,
                   conn: conn
                 )
@@ -1158,22 +1254,52 @@ defmodule WebposWeb.PageController do
 
       "jobs" ->
         res = [
-          %{id: "main_dashboard", parent: "#", text: "Main Dashboard"},
-          %{id: "sales_analysis", parent: "#", text: "Sales Analysis"},
-          %{id: "sales_overview", parent: "sales_analysis", text: "Sales Overview"},
-          %{id: "sales_ranking", parent: "sales_analysis", text: "Sales Ranking"},
-          %{id: "customer_analysis", parent: "sales_analysis", text: "Customer Analysis"},
-          %{id: "discount_overview", parent: "sales_analysis", text: "Discount Overview"},
-          %{id: "time_efficiency", parent: "sales_analysis", text: "Time Efficiency"},
+          %{
+            id: "main_dashboard",
+            parent: "#",
+            text: "Main Dashboard",
+            icon: "fa fa-tachometer-alt"
+          },
+          %{id: "sales_analysis", parent: "#", text: "Sales Analysis", icon: "fa fa-th-list"},
+          %{
+            id: "sales_overview",
+            parent: "sales_analysis",
+            text: "Sales Overview",
+            icon: "fa fa-chart-bar"
+          },
+          %{
+            id: "sales_ranking",
+            parent: "sales_analysis",
+            text: "Sales Ranking",
+            icon: "fa fa-chart-bar"
+          },
+          %{
+            id: "customer_analysis",
+            parent: "sales_analysis",
+            text: "Customer Analysis",
+            icon: "fa fa-chart-bar"
+          },
+          %{
+            id: "time_efficiency",
+            parent: "sales_analysis",
+            text: "Time Efficiency",
+            icon: "fa fa-chart-bar"
+          },
           %{
             id: "revenue_breakdown",
             parent: "sales_analysis",
-            text: "Revenue Breakdown & Varience Report"
+            text: "Revenue Breakdown & Varience Report",
+            icon: "fa fa-chart-bar"
           },
-          %{id: "item_sales", parent: "#", text: "Item Sales"},
-          %{id: "modifier_analysis", parent: "#", text: "Modifier Analysis"},
-          %{id: "discount_analysis", parent: "#", text: "Discount Analysis"},
-          %{id: "service_charge", parent: "#", text: "Service Charge"}
+          %{id: "item_sales", parent: "#", text: "Item Sales", icon: "fa fa-dollar-sign"},
+          %{
+            id: "modifier_analysis",
+            parent: "#",
+            text: "Modifier Analysis",
+            icon: "fa fa-plus-square"
+          },
+          %{id: "discount_analysis", parent: "#", text: "Discount Analysis", icon: "fa fa-cut"},
+          %{id: "service_charge", parent: "#", text: "Service Charge", icon: "fa fa-diagnoses"}
         ]
 
         json_map = Poison.encode!(res)

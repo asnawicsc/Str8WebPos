@@ -15,10 +15,7 @@
 
     <form>
       <input  id="locations" value="1"  type="hidden">
-                    <div class="form-group">
-                        <label>Search</label>
-                        <input class="form-control" id="qs" placeholder="Enter query" type="text">
-                    </div>
+
                 </form>
 
 
@@ -566,6 +563,126 @@ else
 
 
      }
+
+          if (locations=="customer_analysis") {
+
+   $("div#show_html").html(j["html"]);
+
+        var data = j["data"]
+
+        console.log(data);
+     
+        var options = {
+            series: {
+                pie: {
+                    show: true,
+                    innerRadius: 0,
+                    label: {
+                        show: true,
+                        radius: 0.8,
+                        formatter: function(label, series) {
+                            return '<div class="flot-pie-label">' +
+                                //label + ' : ' +
+                                Math.round(series.percent) +
+                                '%</div>';
+                        },
+                        background: {
+                            opacity: 0.8,
+                            color: '#222'
+                        }
+                    }
+                }
+            }
+        };
+
+        var chart = $('.chart-pie');
+        if (chart.length)
+            $.plot(chart, data, options);
+
+
+                     var data2=j["data2"];
+
+
+          var data = [{
+            "label": "Total Customer",
+            "color": "#dd23f9",
+            "data": data2
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar');
+        if (chart.length)
+            $.plot(chart, data, options);
+     }
+    
+
+              if (locations=="revenue_breakdown") {
+
+   $("div#show_html").html(j["html"]);
+
+        var data = j["data"]
+
+        console.log(data);
+     
+        var options = {
+            series: {
+                pie: {
+                    show: true,
+                    innerRadius: 0,
+                    label: {
+                        show: true,
+                        radius: 0.8,
+                        formatter: function(label, series) {
+                            return '<div class="flot-pie-label">' +
+                                //label + ' : ' +
+                                Math.round(series.percent) +
+                                '%</div>';
+                        },
+                        background: {
+                            opacity: 0.8,
+                            color: '#222'
+                        }
+                    }
+                }
+            }
+        };
+
+        var chart = $('.chart-pie');
+        if (chart.length)
+            $.plot(chart, data, options);
+       
+     }
+    
     
  
  
@@ -1187,11 +1304,94 @@ console.log(data9);
         var chart = $('.chart-pie');
         if (chart.length)
             $.plot(chart, data, options);
+
+
+             var data2=j["data2"];
+
+
+          var data = [{
+            "label": "Total Customer",
+            "color": "#dd23f9",
+            "data": data2
+        }];
+
+        var options = {
+            series: {
+                bars: {
+                    align: 'center',
+                    lineWidth: 0,
+                    show: true,
+                    barWidth: 0.6,
+                    fill: 0.9
+                }
+            },
+            grid: {
+                borderColor: '#eee',
+                borderWidth: 1,
+                hoverable: true,
+                backgroundColor: '#fcfcfc'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: function(label, x, y) { return x + ' : ' + y; }
+            },
+            xaxis: {
+                tickColor: '#fcfcfc',
+                mode: 'categories'
+            },
+            yaxis: {
+                // position: 'right' or 'left'
+                tickColor: '#eee'
+            },
+            shadowSize: 0
+        };
+
+        var chart = $('.chart-bar');
+        if (chart.length)
+            $.plot(chart, data, options);
      }
     
     
  
-       
+                 if (locations=="revenue_breakdown") {
+
+   $("div#show_html").html(j["html"]);
+
+        var data = j["data"]
+
+        console.log(data);
+     
+        var options = {
+            series: {
+                pie: {
+                    show: true,
+                    innerRadius: 0,
+                    label: {
+                        show: true,
+                        radius: 0.8,
+                        formatter: function(label, series) {
+                            return '<div class="flot-pie-label">' +
+                                //label + ' : ' +
+                                Math.round(series.percent) +
+                                '%</div>';
+                        },
+                        background: {
+                            opacity: 0.8,
+                            color: '#222'
+                        }
+                    }
+                }
+            }
+        };
+
+        var chart = $('.chart-pie');
+        if (chart.length)
+            $.plot(chart, data, options);
+
+
+           
+     }
+    
 
       
 
